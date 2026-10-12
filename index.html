@@ -30,7 +30,6 @@ document.getElementById("year").textContent=new Date().getFullYear();
 document.querySelectorAll("[data-service]").forEach(a=>a.addEventListener("click",()=>document.getElementById("service").value=a.dataset.service));
 document.getElementById("quote").addEventListener("submit",e=>{
  e.preventDefault();
- if(WHATSAPP_NUMBER.includes("X")){alert("Configure d’abord ton numéro WhatsApp dans le code du site.");return;}
  const v=id=>document.getElementById(id).value;
  const msg=["Bonjour Stromtech, je souhaite un devis.","Nom : "+v("name"),"Téléphone : "+v("phone"),"Service : "+v("service"),"Budget : "+v("budget"),"Délai : "+v("deadline"),"Projet : "+v("details")].join("\n");
  window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg),"_blank","noopener");
