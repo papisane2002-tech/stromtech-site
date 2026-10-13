@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Stromtech : sites Web, applications, affiches et CV. Demandez un devis.">
+<title>Stromtech | Création digitale</title>
+<style>
+:root{--bg:#0b1020;--panel:#141d32;--txt:#f6f7ff;--muted:#b8c2d9;--a:#38d6b0;--line:#ffffff20}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 90% 0,#253363,transparent 30%),var(--bg);color:var(--txt);font:16px/1.6 system-ui,sans-serif}
+.container{width:min(1050px,92%);margin:auto}header{position:sticky;top:0;background:#0b1020eF;border-bottom:1px solid var(--line)}nav{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-size:1.4rem;font-weight:900;color:var(--txt);text-decoration:none}.logo span,h1 span{color:var(--a)}nav a{color:var(--txt);text-decoration:none}.links{display:flex;gap:20px;color:var(--muted)}.btn{display:inline-block;border:0;border-radius:12px;padding:12px 17px;font-weight:800;text-decoration:none;cursor:pointer}.primary{background:var(--a);color:#07131a}.secondary{border:1px solid var(--line);color:var(--txt);background:#ffffff08}
+.hero{padding:70px 0}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:center}.tag{display:inline-block;border:1px solid #38d6b055;border-radius:99px;padding:5px 12px;color:var(--a);font-weight:700;font-size:.85rem}h1{font-size:clamp(2.6rem,6vw,4.5rem);line-height:1.05;letter-spacing:-.05em;margin:18px 0}.muted,p{color:var(--muted)}.hero-card,.card,.form-card,.contact{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px}.hero-card{background:linear-gradient(140deg,#7885ff30,#38d6b020)}.chips{display:flex;flex-wrap:wrap;gap:8px}.chips span{padding:7px 10px;border:1px solid var(--line);border-radius:10px}section{padding:45px 0}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.card h3{margin:8px 0}.card p{margin:0 0 12px}.service{color:var(--a);font-weight:800;text-decoration:none}.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:18px}label{display:block;margin:13px 0 5px;font-weight:700;font-size:.92rem}input,select,textarea{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0b1224;color:var(--txt);font:inherit}textarea{min-height:110px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}form button{width:100%;margin-top:18px}.small{font-size:.85rem;color:var(--muted)}footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted)}@media(max-width:720px){.grid,.contact-grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.links{display:none}.two{grid-template-columns:1fr}.hero{padding:45px 0}}
+</style></head><body>
+<header><div class="container"><nav><a class="logo" href="#top">strom<span>tech</span>.</a><div class="links"><a href="#services">Services</a><a href="#devis">Devis</a><a href="#contact">Contact</a></div><a class="btn primary" href="#devis">Commander</a></nav></div></header>
+<main><section class="hero" id="top"><div class="container grid"><div><span class="tag">Création digitale</span><h1>Transformons tes idées en projets <span>numériques.</span></h1><p>Stromtech crée des sites Web, des applications, des affiches et des CV professionnels. Présente-nous ton projet pour recevoir un devis personnalisé.</p><p><a class="btn primary" href="#devis">Demander un devis gratuit</a></p></div><div class="hero-card"><span class="tag">Nos solutions</span><h2>De l’idée au résultat</h2><p>Des créations adaptées à ton activité, ton besoin et ton budget.</p><div class="chips"><span>🌐 Sites Web</span><span>📱 Applications</span><span>🎨 Affiches</span><span>📄 CV</span></div></div></div></section>
+<section id="services"><div class="container"><span class="tag">Nos services</span><h2>Comment Stromtech peut t’aider</h2><div class="cards">
+<article class="card"><h3>🌐 Sites Web</h3><p>Sites vitrines, portfolios et sites d’entreprise adaptés aux téléphones et ordinateurs.</p><a class="service" href="#devis" data-service="Conception de site Web">Choisir ce service →</a></article>
+<article class="card"><h3>📱 Applications Web et mobiles</h3><p>Des outils numériques pratiques pour les entreprises et les particuliers.</p><a class="service" href="#devis" data-service="Application Web ou mobile">Choisir ce service →</a></article>
+<article class="card"><h3>🎨 Affiches et visuels</h3><p>Affiches de mariage, anniversaire, restaurant, événement et promotion.</p><a class="service" href="#devis" data-service="Affiche ou création graphique">Choisir ce service →</a></article>
+<article class="card"><h3>📄 CV professionnels</h3><p>Des CV clairs et soignés pour valoriser ton parcours et tes compétences.</p><a class="service" href="#devis" data-service="CV professionnel">Choisir ce service →</a></article>
+</div></div></section>
+<section id="devis"><div class="container"><span class="tag">Commande & devis</span><h2>Parle-nous de ton projet</h2><p>Remplis le formulaire : WhatsApp s’ouvrira avec ton message prêt à envoyer.</p><div class="contact-grid"><aside class="contact" id="contact"><h3>Travaillons ensemble</h3><p>Explique ton besoin, le délai souhaité et ton budget approximatif si tu en as un.</p><p>✅ Demande de devis<br>✅ Contact direct<br>✅ Réponse personnalisée</p><p class="small">Le site ne stocke pas les données : le formulaire prépare un message WhatsApp que tu dois envoyer.</p></aside>
+<form class="form-card" id="quote"><h3>Demande de devis</h3><div class="two"><div><label for="name">Ton nom *</label><input id="name" required autocomplete="name" placeholder="Nom et prénom"></div><div><label for="phone">Ton numéro *</label><input id="phone" required type="tel" placeholder="Numéro de contact"></div></div>
+<label for="service">Service souhaité *</label><select id="service" required><option value="">Choisir un service</option><option>Conception de site Web</option><option>Application Web ou mobile</option><option>Affiche ou création graphique</option><option>CV professionnel</option><option>Autre demande</option></select>
+<div class="two"><div><label for="budget">Budget estimé</label><select id="budget"><option>À discuter</option><option>Moins de 10 000 FCFA</option><option>10 000 à 25 000 FCFA</option><option>25 000 à 50 000 FCFA</option><option>Plus de 50 000 FCFA</option></select></div><div><label for="deadline">Délai souhaité</label><select id="deadline"><option>À discuter</option><option>Urgent</option><option>Dans la semaine</option><option>Dans le mois</option></select></div></div>
+<label for="details">Décris ton projet *</label><textarea id="details" required placeholder="Explique ce que tu souhaites réaliser…"></textarea><button class="btn primary" type="submit">Envoyer sur WhatsApp ↗</button><p class="small">Configure ton numéro WhatsApp dans le code avant de publier.</p></form></div></div></section></main>
+<footer><div class="container">© <span id="year"></span> Stromtech — Tous droits réservés.</div></footer>
+<script>
+/* Remplace les X par ton numéro WhatsApp international, sans + ni espaces.
+   Exemple fictif pour le Sénégal : 221771234567 */
+const WHATSAPP_NUMBER="221761682257";
+document.getElementById("year").textContent=new Date().getFullYear();
+document.querySelectorAll("[data-service]").forEach(a=>a.addEventListener("click",()=>document.getElementById("service").value=a.dataset.service));
+document.getElementById("quote").addEventListener("submit",e=>{
+ e.preventDefault();
+ const v=id=>document.getElementById(id).value;
+ const msg=["Bonjour Stromtech, je souhaite un devis.","Nom : "+v("name"),"Téléphone : "+v("phone"),"Service : "+v("service"),"Budget : "+v("budget"),"Délai : "+v("deadline"),"Projet : "+v("details")].join("\n");
+ window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg),"_blank","noopener");
+});
+</script>
+<!-- Messagerie Stromtech -->
+<script>
+(function () {
+  var SUPABASE_URL = "https://cbvpllpnrvaeaduqnpgn.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_zlOCLW6lX2XnRM0u8D0r9Q_rXWQPSSj";
+
+  var css = `
+#sc-fab{position:fixed;right:20px;bottom:20px;z-index:9999;background:#2dd4a7;color:#06121f;border:0;border-radius:999px;padding:14px 22px;font:700 16px system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#sc-panel{position:fixed;right:20px;bottom:80px;z-index:9999;width:min(380px,calc(100vw - 40px));height:min(560px,calc(100vh - 110px));background:#0b1426;color:#e8eefc;border:1px solid #1f3050;border-radius:16px;display:none;flex-direction:column;overflow:hidden;font:15px system-ui,sans-serif;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+#sc-panel.open{display:flex}
+#sc-panel [hidden]{display:none!important}
+.sc-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #1f3050;background:#0f1b33}
+.sc-head strong{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-head button{background:none;border:0;color:#9fb3d9;cursor:pointer;font-size:15px}
+#sc-body{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column}
+.sc-pad{padding:16px;display:flex;flex-direction:column;gap:10px}
+.sc-muted{color:#9fb3d9;margin:0}
+.sc-msg{color:#ffb4b4;margin:0;min-height:1em}
+.sc-field,#sc-input{background:#07101f;border:1px solid #1f3050;color:#e8eefc;border-radius:10px;padding:11px 12px;font:inherit}
+.sc-btn,#sc-form button{background:#2dd4a7;color:#06121f;border:0;border-radius:10px;padding:11px 14px;font:700 15px system-ui,sans-serif;cursor:pointer}
+.sc-btn.sc-alt{background:transparent;color:#2dd4a7;border:1px solid #2dd4a7}
+.sc-btn:disabled,#sc-form button:disabled{opacity:.6;cursor:default}
+.sc-list{display:flex;flex-direction:column;gap:8px}
+.sc-item{text-align:left;background:#0f1b33;border:1px solid #1f3050;color:#e8eefc;border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font:inherit}
+.sc-item small{color:#9fb3d9}
+.sc-msgs{flex:1;min-height:0;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.sc-bubble{max-width:80%;padding:9px 12px;border-radius:14px;white-space:pre-wrap;word-break:break-word}
+.sc-me{align-self:flex-end;background:#2dd4a7;color:#06121f}
+.sc-other{align-self:flex-start;background:#16264a}
+#sc-err{color:#ffb4b4;padding:0 14px 6px;font-size:13px}
+#sc-form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #1f3050}
+#sc-input{flex:1;min-width:0}
+`;
+
+  var html = `
+<button id="sc-fab" type="button">💬 Messagerie</button>
+<div id="sc-panel">
+  <div class="sc-head">
+    <button id="sc-back" type="button" title="Retour" hidden>←</button>
+    <strong id="sc-title">Messagerie Stromtech</strong>
+    <button id="sc-logout" type="button" hidden>Déconnexion</button>
+    <button id="sc-close" type="button" title="Fermer">✕</button>
+  </div>
+  <div id="sc-body"></div>
+  <div id="sc-err"></div>
+  <form id="sc-form" hidden>
+    <input id="sc-input" maxlength="2000" placeholder="Écris ton message…" autocomplete="off">
+    <button type="submit">Envoyer</button>
+  </form>
+</div>
+`;
+
+  function mount() {
+    var style = document.createElement("style");
+    style.textContent = css;
+    document.head.appendChild(style);
+
+    var wrap = document.createElement("div");
+    wrap.innerHTML = html;
+    while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
+
+    var s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    s.onload = init;
+    document.head.appendChild(s);
+  }
+
+  function init() {
+    var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var panel = document.getElementById("sc-panel");
+    var body = document.getElementById("sc-body");
+    var form = document.getElementById("sc-form");
+    var input = document.getElementById("sc-input");
+    var sendBtn = form.querySelector("button");
+    var title = document.getElementById("sc-title");
+    var backBtn = document.getElementById("sc-back");
+    var logoutBtn = document.getElementById("sc-logout");
+    var errBox = document.getElementById("sc-err");
+
+    var session = null, conv = null, timer = null, box = null, stick = true;
+
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+
+    async function call(payload) {
+      var res = await sb.functions.invoke("chat", { body: payload });
+      if (res.error) {
+        var msg = res.error.message;
+        try {
+          var j = await res.error.context.json();
+          if (j && j.error) msg = j.error;
+        } catch (_) {}
+        throw new Error(msg);
+      }
+      return res.data;
+    }
+
+    function stopPolling() { clearInterval(timer); timer = null; }
+    function setError(t) { errBox.textContent = t || ""; }
+
+    function renderAuth() {
+      stopPolling(); setError("");
+      title.textContent = "Connexion";
+      backBtn.hidden = true; form.hidden = true;
+      body.replaceChildren();
+      var wrap = el("div", "sc-pad");
+      var email = el("input", "sc-field");
+      email.type = "email"; email.placeholder = "Email"; email.autocomplete = "email";
+      var pass = el("input", "sc-field");
+      pass.type = "password"; pass.placeholder = "Mot de passe (6 caractères min.)"; pass.autocomplete = "current-password";
+      var msg = el("p", "sc-msg");
+      var login = el("button", "sc-btn", "Se connecter");
+      var signup = el("button", "sc-btn sc-alt", "Créer un compte");
+      login.type = "button"; signup.type = "button";
+      login.onclick = async function () {
+        if (!email.value.trim() || !pass.value) { msg.textContent = "Saisis ton e-mail et ton mot de passe."; return; }
+        msg.textContent = "…";
+        var r = await sb.auth.signInWithPassword({ email: email.value.trim(), password: pass.value });
+        msg.textContent = r.error ? r.error.message : "";
+      };
+      signup.onclick = async function () {
+        if (!email.value.trim() || !pass.value) { msg.textContent = "Saisis ton e-mail et ton mot de passe."; return; }
+        msg.textContent = "…";
+        var r = await sb.auth.signUp({
+          email: email.value.trim(),
+          password: pass.value,
+          options: { emailRedirectTo: "https://papisane2002-tech.github.io/stromtech-site/" }
+        });
+        if (r.error) msg.textContent = r.error.message;
+        else if (!r.data.session) msg.textContent = "Compte créé. Vérifie ta boîte mail pour confirmer, puis connecte-toi.";
+      };
+      wrap.append(el("p", "sc-muted", "Connecte-toi pour écrire à Stromtech."), email, pass, login, signup, msg);
+      body.append(wrap);
+    }
+
+    async function renderList() {
+      stopPolling(); setError(""); conv = null;
+      title.textContent = "Mes conversations";
+      backBtn.hidden = true; form.hidden = true;
+      body.replaceChildren();
+      var wrap = el("div", "sc-pad");
+      var newBtn = el("button", "sc-btn", "+ Nouvelle conversation");
+      newBtn.type = "button";
+      newBtn.onclick = function () { conv = null; openChat(); };
+      var list = el("div", "sc-list");
+      wrap.append(newBtn, list);
+      body.append(wrap);
+      list.append(el("p", "sc-muted", "Chargement…"));
+      try {
+        var data = await call({ action: "list" });
+        var conversations = data.conversations;
+        list.replaceChildren();
+        if (!conversations.length) list.append(el("p", "sc-muted", "Aucune conversation pour le moment."));
+        conversations.forEach(function (c) {
+          var b = el("button", "sc-item");
+          b.type = "button";
+          var date = new Date(c.updated_at).toLocaleString("fr-FR");
+          b.append(el("strong", null, c.subject), el("small", null, date + (c.status === "open" ? "" : " · fermée")));
+          b.onclick = function () { conv = c; openChat(); };
+          list.append(b);
+        });
+      } catch (e) {
+        list.replaceChildren(el("p", "sc-msg", e.message));
+      }
+    }
+
+    function openChat() {
+      stopPolling(); setError(""); stick = true;
+      title.textContent = conv ? conv.subject : "Nouvelle conversation";
+      backBtn.hidden = false; form.hidden = false;
+      box = el("div", "sc-msgs");
+      body.replaceChildren(box);
+      if (conv) {
+        loadMessages();
+        timer = setInterval(loadMessages, 8000);
+      } else {
+        box.append(el("p", "sc-muted", "Écris ton premier message ci-dessous."));
+      }
+      input.focus();
+    }
+
+    async function loadMessages() {
+      if (!conv || !session || document.hidden || !panel.classList.contains("open")) return;
+      try {
+        var data = await call({ action: "list", conversation_id: conv.id });
+        var atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+        box.replaceChildren();
+        data.messages.forEach(function (m) {
+          var mine = m.sender_id === session.user.id;
+          box.append(el("div", "sc-bubble " + (mine ? "sc-me" : "sc-other"), m.body));
+        });
+        if (stick || atBottom) { box.scrollTop = box.scrollHeight; stick = false; }
+      } catch (_) { /* silencieux */ }
+    }
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      var text = input.value.trim();
+      if (!text) return;
+      setError(""); sendBtn.disabled = true;
+      try {
+        var payload = { action: "send", body: text };
+        if (conv) payload.conversation_id = conv.id;
+        else payload.subject = "Demande de " + session.user.email;
+        var data = await call(payload);
+        input.value = "";
+        if (!conv) {
+          conv = { id: data.message.conversation_id, subject: payload.subject, status: "open" };
+          title.textContent = conv.subject;
+          timer = setInterval(loadMessages, 8000);
+        }
+        stick = true;
+        await loadMessages();
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
+
+    backBtn.onclick = function () { renderList(); };
+    logoutBtn.onclick = function () { sb.auth.signOut(); };
+    document.getElementById("sc-close").onclick = function () { panel.classList.remove("open"); };
+    document.getElementById("sc-fab").onclick = function () {
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open") && conv) loadMessages();
+    };
+
+    sb.auth.onAuthStateChange(function (_evt, s) {
+      var wasLoggedIn = !!session;
+      session = s;
+      logoutBtn.hidden = !s;
+      if (!s) setTimeout(renderAuth, 0);
+      else if (!wasLoggedIn) setTimeout(renderList, 0);
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
+  else mount();
+})();
+</script>
+</body></html>
