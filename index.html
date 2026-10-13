@@ -34,4 +34,245 @@ document.getElementById("quote").addEventListener("submit",e=>{
  const msg=["Bonjour Stromtech, je souhaite un devis.","Nom : "+v("name"),"Téléphone : "+v("phone"),"Service : "+v("service"),"Budget : "+v("budget"),"Délai : "+v("deadline"),"Projet : "+v("details")].join("\n");
  window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg),"_blank","noopener");
 });
-</script></body></html>
+</script>
+<!-- Messagerie Stromtech -->
+<script>
+(function () {
+  var SUPABASE_URL = "https://cbvpllpnrvaeaduqnpgn.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_zlOCLW6lX2XnRM0u8D0r9Q_rXWQPSSj";
+
+  var css = `
+#sc-fab{position:fixed;right:20px;bottom:20px;z-index:9999;background:#2dd4a7;color:#06121f;border:0;border-radius:999px;padding:14px 22px;font:700 16px system-ui,sans-serif;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#sc-panel{position:fixed;right:20px;bottom:80px;z-index:9999;width:min(380px,calc(100vw - 40px));height:min(560px,calc(100vh - 110px));background:#0b1426;color:#e8eefc;border:1px solid #1f3050;border-radius:16px;display:none;flex-direction:column;overflow:hidden;font:15px system-ui,sans-serif;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+#sc-panel.open{display:flex}
+#sc-panel [hidden]{display:none!important}
+.sc-head{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid #1f3050;background:#0f1b33}
+.sc-head strong{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-head button{background:none;border:0;color:#9fb3d9;cursor:pointer;font-size:15px}
+#sc-body{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column}
+.sc-pad{padding:16px;display:flex;flex-direction:column;gap:10px}
+.sc-muted{color:#9fb3d9;margin:0}
+.sc-msg{color:#ffb4b4;margin:0;min-height:1em}
+.sc-field,#sc-input{background:#07101f;border:1px solid #1f3050;color:#e8eefc;border-radius:10px;padding:11px 12px;font:inherit}
+.sc-btn,#sc-form button{background:#2dd4a7;color:#06121f;border:0;border-radius:10px;padding:11px 14px;font:700 15px system-ui,sans-serif;cursor:pointer}
+.sc-btn.sc-alt{background:transparent;color:#2dd4a7;border:1px solid #2dd4a7}
+.sc-btn:disabled,#sc-form button:disabled{opacity:.6;cursor:default}
+.sc-list{display:flex;flex-direction:column;gap:8px}
+.sc-item{text-align:left;background:#0f1b33;border:1px solid #1f3050;color:#e8eefc;border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px;font:inherit}
+.sc-item small{color:#9fb3d9}
+.sc-msgs{flex:1;min-height:0;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.sc-bubble{max-width:80%;padding:9px 12px;border-radius:14px;white-space:pre-wrap;word-break:break-word}
+.sc-me{align-self:flex-end;background:#2dd4a7;color:#06121f}
+.sc-other{align-self:flex-start;background:#16264a}
+#sc-err{color:#ffb4b4;padding:0 14px 6px;font-size:13px}
+#sc-form{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #1f3050}
+#sc-input{flex:1;min-width:0}
+`;
+
+  var html = `
+<button id="sc-fab" type="button">💬 Messagerie</button>
+<div id="sc-panel">
+  <div class="sc-head">
+    <button id="sc-back" type="button" title="Retour" hidden>←</button>
+    <strong id="sc-title">Messagerie Stromtech</strong>
+    <button id="sc-logout" type="button" hidden>Déconnexion</button>
+    <button id="sc-close" type="button" title="Fermer">✕</button>
+  </div>
+  <div id="sc-body"></div>
+  <div id="sc-err"></div>
+  <form id="sc-form" hidden>
+    <input id="sc-input" maxlength="2000" placeholder="Écris ton message…" autocomplete="off">
+    <button type="submit">Envoyer</button>
+  </form>
+</div>
+`;
+
+  function mount() {
+    var style = document.createElement("style");
+    style.textContent = css;
+    document.head.appendChild(style);
+
+    var wrap = document.createElement("div");
+    wrap.innerHTML = html;
+    while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
+
+    var s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+    s.onload = init;
+    document.head.appendChild(s);
+  }
+
+  function init() {
+    var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    var panel = document.getElementById("sc-panel");
+    var body = document.getElementById("sc-body");
+    var form = document.getElementById("sc-form");
+    var input = document.getElementById("sc-input");
+    var sendBtn = form.querySelector("button");
+    var title = document.getElementById("sc-title");
+    var backBtn = document.getElementById("sc-back");
+    var logoutBtn = document.getElementById("sc-logout");
+    var errBox = document.getElementById("sc-err");
+
+    var session = null, conv = null, timer = null, box = null, stick = true;
+
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
+    }
+
+    async function call(payload) {
+      var res = await sb.functions.invoke("chat", { body: payload });
+      if (res.error) {
+        var msg = res.error.message;
+        try {
+          var j = await res.error.context.json();
+          if (j && j.error) msg = j.error;
+        } catch (_) {}
+        throw new Error(msg);
+      }
+      return res.data;
+    }
+
+    function stopPolling() { clearInterval(timer); timer = null; }
+    function setError(t) { errBox.textContent = t || ""; }
+
+    function renderAuth() {
+      stopPolling(); setError("");
+      title.textContent = "Connexion";
+      backBtn.hidden = true; form.hidden = true;
+      body.replaceChildren();
+      var wrap = el("div", "sc-pad");
+      var email = el("input", "sc-field");
+      email.type = "email"; email.placeholder = "Email"; email.autocomplete = "email";
+      var pass = el("input", "sc-field");
+      pass.type = "password"; pass.placeholder = "Mot de passe (6 caractères min.)"; pass.autocomplete = "current-password";
+      var msg = el("p", "sc-msg");
+      var login = el("button", "sc-btn", "Se connecter");
+      var signup = el("button", "sc-btn sc-alt", "Créer un compte");
+      login.type = "button"; signup.type = "button";
+      login.onclick = async function () {
+        msg.textContent = "…";
+        var r = await sb.auth.signInWithPassword({ email: email.value.trim(), password: pass.value });
+        msg.textContent = r.error ? r.error.message : "";
+      };
+      signup.onclick = async function () {
+        msg.textContent = "…";
+        var r = await sb.auth.signUp({ email: email.value.trim(), password: pass.value });
+        if (r.error) msg.textContent = r.error.message;
+        else if (!r.data.session) msg.textContent = "Compte créé. Vérifie ta boîte mail pour confirmer, puis connecte-toi.";
+      };
+      wrap.append(el("p", "sc-muted", "Connecte-toi pour écrire à Stromtech."), email, pass, login, signup, msg);
+      body.append(wrap);
+    }
+
+    async function renderList() {
+      stopPolling(); setError(""); conv = null;
+      title.textContent = "Mes conversations";
+      backBtn.hidden = true; form.hidden = true;
+      body.replaceChildren();
+      var wrap = el("div", "sc-pad");
+      var newBtn = el("button", "sc-btn", "+ Nouvelle conversation");
+      newBtn.type = "button";
+      newBtn.onclick = function () { conv = null; openChat(); };
+      var list = el("div", "sc-list");
+      wrap.append(newBtn, list);
+      body.append(wrap);
+      list.append(el("p", "sc-muted", "Chargement…"));
+      try {
+        var data = await call({ action: "list" });
+        var conversations = data.conversations;
+        list.replaceChildren();
+        if (!conversations.length) list.append(el("p", "sc-muted", "Aucune conversation pour le moment."));
+        conversations.forEach(function (c) {
+          var b = el("button", "sc-item");
+          b.type = "button";
+          var date = new Date(c.updated_at).toLocaleString("fr-FR");
+          b.append(el("strong", null, c.subject), el("small", null, date + (c.status === "open" ? "" : " · fermée")));
+          b.onclick = function () { conv = c; openChat(); };
+          list.append(b);
+        });
+      } catch (e) {
+        list.replaceChildren(el("p", "sc-msg", e.message));
+      }
+    }
+
+    function openChat() {
+      stopPolling(); setError(""); stick = true;
+      title.textContent = conv ? conv.subject : "Nouvelle conversation";
+      backBtn.hidden = false; form.hidden = false;
+      box = el("div", "sc-msgs");
+      body.replaceChildren(box);
+      if (conv) {
+        loadMessages();
+        timer = setInterval(loadMessages, 8000);
+      } else {
+        box.append(el("p", "sc-muted", "Écris ton premier message ci-dessous."));
+      }
+      input.focus();
+    }
+
+    async function loadMessages() {
+      if (!conv || !session || document.hidden || !panel.classList.contains("open")) return;
+      try {
+        var data = await call({ action: "list", conversation_id: conv.id });
+        var atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+        box.replaceChildren();
+        data.messages.forEach(function (m) {
+          var mine = m.sender_id === session.user.id;
+          box.append(el("div", "sc-bubble " + (mine ? "sc-me" : "sc-other"), m.body));
+        });
+        if (stick || atBottom) { box.scrollTop = box.scrollHeight; stick = false; }
+      } catch (_) { /* silencieux */ }
+    }
+
+    form.addEventListener("submit", async function (ev) {
+      ev.preventDefault();
+      var text = input.value.trim();
+      if (!text) return;
+      setError(""); sendBtn.disabled = true;
+      try {
+        var payload = { action: "send", body: text };
+        if (conv) payload.conversation_id = conv.id;
+        else payload.subject = "Demande de " + session.user.email;
+        var data = await call(payload);
+        input.value = "";
+        if (!conv) {
+          conv = { id: data.message.conversation_id, subject: payload.subject, status: "open" };
+          title.textContent = conv.subject;
+          timer = setInterval(loadMessages, 8000);
+        }
+        stick = true;
+        await loadMessages();
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
+
+    backBtn.onclick = function () { renderList(); };
+    logoutBtn.onclick = function () { sb.auth.signOut(); };
+    document.getElementById("sc-close").onclick = function () { panel.classList.remove("open"); };
+    document.getElementById("sc-fab").onclick = function () {
+      panel.classList.toggle("open");
+      if (panel.classList.contains("open") && conv) loadMessages();
+    };
+
+    sb.auth.onAuthStateChange(function (_evt, s) {
+      var wasLoggedIn = !!session;
+      session = s;
+      logoutBtn.hidden = !s;
+      if (!s) setTimeout(renderAuth, 0);
+      else if (!wasLoggedIn) setTimeout(renderList, 0);
+    });
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
+  else mount();
+})();
+</script>
+</body></html>
