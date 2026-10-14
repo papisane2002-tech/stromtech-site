@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact | Stromtech</title>
+<meta name="description" content="Contacte Stromtech : ton message arrive directement dans ta messagerie et nous te répondons là-bas.">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header id="top"><div class="container"><nav>
+<a class="logo" href="index.html">strom<span>tech</span>.</a>
+<div class="links" id="links"><a href="index.html">Accueil</a><a href="services.html">Services</a><a href="contact.html" aria-current="page">Contact</a></div>
+<button class="menu-btn" id="menu-btn" type="button" aria-label="Menu" aria-expanded="false">☰</button>
+<a class="btn primary cta" href="services.html">Commander</a>
+</nav></div></header>
+<main>
+<section class="page-hero"><div class="container"><div class="crumbs"><a href="index.html">Accueil</a> › Contact</div>
+<span class="tag">Contact</span><h1>Écris-<span>nous</span></h1>
+<p class="lead">Une question, un autre besoin, un projet particulier ? Envoie-nous un message : la réponse t’attend dans ta messagerie Stromtech.</p></div></section>
+
+<section style="padding-top:10px"><div class="container form-wrap">
+<aside>
+<div class="panel reveal"><h3>Comment ça marche</h3>
+<ul class="check"><li>Tu écris ton message ici</li><li>Tu te connectes ou tu crées ton compte</li><li>Nous te répondons dans l’onglet <b>Messages</b> de ton espace client</li></ul>
+<p style="margin-top:12px">Tu retrouves ainsi tous vos échanges au même endroit.</p></div>
+<div style="margin-top:18px" class="reveal"><h3 style="margin-bottom:10px">Questions fréquentes</h3>
+<details><summary>Comment passer une commande ?</summary><p>Choisis un service puis envoie une demande de réalisation depuis sa page. Nous confirmons le prix et le délai avec toi dans ta messagerie avant de démarrer.</p></details>
+<details><summary>Quelle différence entre devis et réalisation ?</summary><p>Le devis te donne une estimation du prix et des conditions. La réalisation lance ton projet, après confirmation avec toi.</p></details>
+<details><summary>Puis-je joindre des fichiers ?</summary><p>Oui, jusqu’à 3 fichiers PDF de 5 Mo chacun, depuis le formulaire de demande d’une page de service.</p></details>
+<details><summary>Où trouver les réponses de Stromtech ?</summary><p>Dans l’onglet Messages de ton espace client, accessible avec le bouton « Mon espace » en haut du site.</p></details></div>
+</aside>
+<form class="form-card reveal" id="contact-form"><h3>Envoyer un message</h3>
+<label for="c-name">Ton nom *</label><input id="c-name" data-draft required autocomplete="name" placeholder="Nom et prénom">
+<label for="c-subject">Sujet</label><select id="c-subject" data-draft><option>Question générale</option><option>Autre service</option><option>Suivi d’une demande</option><option>Partenariat</option><option>Autre</option></select>
+<label for="c-details">Ton message *</label><textarea id="c-details" data-draft required maxlength="1200" placeholder="Écris ton message…"></textarea>
+<button class="btn primary" type="submit" id="contact-submit">Envoyer le message ↗</button>
+<div id="contact-status" role="status"></div></form>
+</div></section>
+</main>
+<footer><div class="container"><div class="foot">
+<div><a class="logo" href="index.html" style="display:inline-block;color:var(--txt);padding:0">strom<span>tech</span>.</a><p style="margin-top:8px">Création digitale : sites Web, applications, affiches et CV professionnels.</p></div>
+<div><h4>Navigation</h4><a href="index.html">Accueil</a><a href="services.html">Services</a><a href="contact.html">Contact</a></div>
+<div><h4>Services</h4><a href="site-web.html">Sites Web</a><a href="applications.html">Applications</a><a href="affiches.html">Affiches</a><a href="cv.html">CV</a></div>
+</div><div class="copy">© <span id="year"></span> Stromtech — Tous droits réservés.</div></div></footer>
+<script src="assets/site.js"></script><script src="assets/contact.js"></script><script src="assets/espace.js"></script>
+</body></html>

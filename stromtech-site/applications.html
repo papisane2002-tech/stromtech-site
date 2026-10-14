@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Applications | Stromtech</title>
+<meta name="description" content="Des outils numériques pratiques pour les entreprises et les particuliers.">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="assets/style.css">
+</head><body data-service="Application Web ou mobile">
+<header id="top"><div class="container"><nav>
+<a class="logo" href="index.html">strom<span>tech</span>.</a>
+<div class="links" id="links"><a href="index.html">Accueil</a><a href="services.html" aria-current="page">Services</a><a href="contact.html">Contact</a></div>
+<button class="menu-btn" id="menu-btn" type="button" aria-label="Menu" aria-expanded="false">☰</button>
+<a class="btn primary cta" href="services.html">Commander</a>
+</nav></div></header>
+<main>
+<section class="page-hero"><div class="container"><div class="crumbs"><a href="index.html">Accueil</a> › <a href="services.html">Services</a> › Applications</div>
+<span class="tag">📱 Application Web ou mobile</span><h1>Applications <span>sur mesure</span></h1>
+<p class="lead">Des outils numériques pratiques pour les entreprises et les particuliers.</p>
+<ul class="check" style="max-width:640px"><li>Gestion de stock et de produits</li><li>Prise de rendez-vous et réservations</li><li>Suivi des clients</li><li>Commande en ligne</li></ul>
+<div class="actions"><a class="btn primary" href="#demande">Faire une demande</a><a class="btn secondary" href="#modeles">Voir les modèles</a></div></div></section>
+
+<section style="padding-top:20px"><div class="container"><div class="section-head reveal"><span class="tag">Idéal pour</span><h2>À qui s’adresse ce service ?</h2></div>
+<div class="cards four"><div class="card reveal"><span class="ico">📦</span><h3>Commerçants</h3><p>qui suivent leur stock au quotidien.</p></div><div class="card reveal"><span class="ico">💇</span><h3>Salons et cabinets</h3><p>qui prennent des rendez-vous.</p></div><div class="card reveal"><span class="ico">👥</span><h3>Entreprises</h3><p>qui gèrent leurs clients.</p></div><div class="card reveal"><span class="ico">🍔</span><h3>Restaurants et boutiques</h3><p>qui prennent des commandes.</p></div></div></div></section>
+
+<section id="modeles"><div class="container"><div class="section-head reveal"><span class="tag">Modèles</span><h2>Choisis ton modèle</h2>
+<p>Sélectionne un modèle comme point de départ : nous l’adaptons à ton activité, tes couleurs et ton contenu.</p></div>
+<div class="models"><article class="model reveal" data-name="Gestion de stock">
+<button type="button" class="shot" data-zoom="modeles/gestion-de-stock.jpg" aria-label="Agrandir le modèle Gestion de stock"><img src="modeles/gestion-de-stock.jpg" alt="Exemple de modèle : Gestion de stock" loading="lazy" width="1200" height="900"></button>
+<h3>Gestion de stock</h3><p>Suis tes produits, entrées et sorties.</p><button type="button" class="btn primary" data-choose="Gestion de stock">Choisir ce modèle</button></article><article class="model reveal" data-name="Rendez-vous &amp; réservations">
+<button type="button" class="shot" data-zoom="modeles/rendez-vous-reservations.jpg" aria-label="Agrandir le modèle Rendez-vous &amp; réservations"><img src="modeles/rendez-vous-reservations.jpg" alt="Exemple de modèle : Rendez-vous &amp; réservations" loading="lazy" width="1200" height="900"></button>
+<h3>Rendez-vous &amp; réservations</h3><p>Un planning simple pour tes clients.</p><button type="button" class="btn primary" data-choose="Rendez-vous &amp; réservations">Choisir ce modèle</button></article><article class="model reveal" data-name="Suivi des clients">
+<button type="button" class="shot" data-zoom="modeles/suivi-des-clients.jpg" aria-label="Agrandir le modèle Suivi des clients"><img src="modeles/suivi-des-clients.jpg" alt="Exemple de modèle : Suivi des clients" loading="lazy" width="1200" height="900"></button>
+<h3>Suivi des clients</h3><p>Fiches clients, historique et relances.</p><button type="button" class="btn primary" data-choose="Suivi des clients">Choisir ce modèle</button></article><article class="model reveal" data-name="Commande en ligne">
+<button type="button" class="shot" data-zoom="modeles/commande-en-ligne.jpg" aria-label="Agrandir le modèle Commande en ligne"><img src="modeles/commande-en-ligne.jpg" alt="Exemple de modèle : Commande en ligne" loading="lazy" width="1200" height="900"></button>
+<h3>Commande en ligne</h3><p>Catalogue, panier et suivi des commandes.</p><button type="button" class="btn primary" data-choose="Commande en ligne">Choisir ce modèle</button></article></div>
+<p class="note">Ces images sont des exemples de présentation. Chaque projet est adapté à ton activité, tes couleurs et ton contenu.</p></div></section>
+
+<section id="demande"><div class="container"><span class="tag">Ta demande</span><h2>Parle-nous de ton projet</h2>
+<p>Ta demande arrive directement dans ta messagerie Stromtech et nous te répondons là-bas. Il faut un compte : tu pourras te connecter ou en créer un au moment de l’envoi.</p>
+<form class="form-card" id="quote">
+<div class="tabs" id="type-tabs"><button type="button" data-type="devis" class="on">📋 Demande de devis</button><button type="button" data-type="realisation">🛠️ Demande de réalisation</button></div>
+<p class="hint" id="type-hint"></p>
+<div class="two"><div><label for="name">Ton nom *</label><input id="name" data-draft required autocomplete="name" placeholder="Nom et prénom"></div>
+<div><label for="phone">Téléphone (optionnel)</label><input id="phone" data-draft type="tel" autocomplete="tel" placeholder="Numéro de contact"></div></div>
+<label for="model">Modèle choisi</label><div class="model-field"><input id="model" data-draft readonly placeholder="Aucun modèle choisi (optionnel)"><button type="button" class="btn secondary" id="model-clear">Effacer</button></div>
+<div class="two"><div><label for="budget">Budget estimé</label><select id="budget" data-draft><option>À discuter</option><option>Moins de 10 000 FCFA</option><option>10 000 à 25 000 FCFA</option><option>25 000 à 50 000 FCFA</option><option>Plus de 50 000 FCFA</option></select></div>
+<div><label for="deadline">Délai souhaité</label><select id="deadline" data-draft><option>À discuter</option><option>Urgent</option><option>Dans la semaine</option><option>Dans le mois</option></select></div></div>
+<label for="details">Décris ton projet *</label><textarea id="details" data-draft required maxlength="1200" placeholder="Explique ce que tu souhaites réaliser…"></textarea>
+<label for="files">Joindre des fichiers PDF (optionnel)</label><input id="files" type="file" accept="application/pdf,.pdf" multiple>
+<p class="hint">PDF uniquement · 3 fichiers maximum · 5 Mo chacun.</p>
+<button class="btn primary" type="submit" id="quote-submit">Envoyer ma demande ↗</button>
+<div id="quote-status" role="status"></div></form></div></section>
+
+<section><div class="container"><div class="section-head"><h2>Découvre aussi</h2></div><div class="actions"><a class="btn secondary" href="site-web.html">🌐 Sites Web</a><a class="btn secondary" href="affiches.html">🎨 Affiches</a><a class="btn secondary" href="cv.html">📄 CV</a><a class="btn secondary" href="contact.html">💡 Autre besoin</a></div></div></section>
+
+<div class="lb" id="lb"><img id="lb-img" alt=""><strong id="lb-name"></strong><div><button class="btn primary" id="lb-pick" type="button">Choisir ce modèle</button><button class="btn secondary" id="lb-close" type="button">Fermer</button></div></div>
+</main>
+<footer><div class="container"><div class="foot">
+<div><a class="logo" href="index.html" style="display:inline-block;color:var(--txt);padding:0">strom<span>tech</span>.</a><p style="margin-top:8px">Création digitale : sites Web, applications, affiches et CV professionnels.</p></div>
+<div><h4>Navigation</h4><a href="index.html">Accueil</a><a href="services.html">Services</a><a href="contact.html">Contact</a></div>
+<div><h4>Services</h4><a href="site-web.html">Sites Web</a><a href="applications.html">Applications</a><a href="affiches.html">Affiches</a><a href="cv.html">CV</a></div>
+</div><div class="copy">© <span id="year"></span> Stromtech — Tous droits réservés.</div></div></footer>
+<script src="assets/site.js"></script><script src="assets/service.js"></script><script src="assets/espace.js"></script>
+</body></html>

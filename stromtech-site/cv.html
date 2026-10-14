@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CV | Stromtech</title>
+<meta name="description" content="Des CV clairs et soignés pour valoriser ton parcours et tes compétences.">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="assets/style.css">
+</head><body data-service="CV professionnel">
+<header id="top"><div class="container"><nav>
+<a class="logo" href="index.html">strom<span>tech</span>.</a>
+<div class="links" id="links"><a href="index.html">Accueil</a><a href="services.html" aria-current="page">Services</a><a href="contact.html">Contact</a></div>
+<button class="menu-btn" id="menu-btn" type="button" aria-label="Menu" aria-expanded="false">☰</button>
+<a class="btn primary cta" href="services.html">Commander</a>
+</nav></div></header>
+<main>
+<section class="page-hero"><div class="container"><div class="crumbs"><a href="index.html">Accueil</a> › <a href="services.html">Services</a> › CV</div>
+<span class="tag">📄 CV professionnel</span><h1>CV <span>sur mesure</span></h1>
+<p class="lead">Des CV clairs et soignés pour valoriser ton parcours et tes compétences.</p>
+<ul class="check" style="max-width:640px"><li>CV classique, sobre et lisible</li><li>CV moderne en deux colonnes</li><li>CV créatif pour les profils originaux</li><li>CV minimaliste centré sur l’essentiel</li></ul>
+<div class="actions"><a class="btn primary" href="#demande">Faire une demande</a><a class="btn secondary" href="#modeles">Voir les modèles</a></div></div></section>
+
+<section style="padding-top:20px"><div class="container"><div class="section-head reveal"><span class="tag">Idéal pour</span><h2>À qui s’adresse ce service ?</h2></div>
+<div class="cards four"><div class="card reveal"><span class="ico">🎓</span><h3>Étudiants</h3><p>et jeunes diplômés.</p></div><div class="card reveal"><span class="ico">💼</span><h3>Professionnels</h3><p>en recherche d’emploi.</p></div><div class="card reveal"><span class="ico">🔄</span><h3>Reconversion</h3><p>pour présenter un nouveau projet.</p></div><div class="card reveal"><span class="ico">🖌️</span><h3>Profils créatifs</h3><p>qui veulent se démarquer.</p></div></div></div></section>
+
+<section id="modeles"><div class="container"><div class="section-head reveal"><span class="tag">Modèles</span><h2>Choisis ton modèle</h2>
+<p>Sélectionne un modèle comme point de départ : nous l’adaptons à ton activité, tes couleurs et ton contenu.</p></div>
+<div class="models"><article class="model reveal" data-name="Classique">
+<button type="button" class="shot" data-zoom="modeles/classique.jpg" aria-label="Agrandir le modèle Classique"><img src="modeles/classique.jpg" alt="Exemple de modèle : Classique" loading="lazy" width="1200" height="900"></button>
+<h3>Classique</h3><p>Sobre et lisible, pour tous les secteurs.</p><button type="button" class="btn primary" data-choose="Classique">Choisir ce modèle</button></article><article class="model reveal" data-name="Moderne 2 colonnes">
+<button type="button" class="shot" data-zoom="modeles/moderne-2-colonnes.jpg" aria-label="Agrandir le modèle Moderne 2 colonnes"><img src="modeles/moderne-2-colonnes.jpg" alt="Exemple de modèle : Moderne 2 colonnes" loading="lazy" width="1200" height="900"></button>
+<h3>Moderne 2 colonnes</h3><p>Colonne latérale pour contact et compétences.</p><button type="button" class="btn primary" data-choose="Moderne 2 colonnes">Choisir ce modèle</button></article><article class="model reveal" data-name="Créatif">
+<button type="button" class="shot" data-zoom="modeles/creatif.jpg" aria-label="Agrandir le modèle Créatif"><img src="modeles/creatif.jpg" alt="Exemple de modèle : Créatif" loading="lazy" width="1200" height="900"></button>
+<h3>Créatif</h3><p>Un bandeau coloré pour un profil original.</p><button type="button" class="btn primary" data-choose="Créatif">Choisir ce modèle</button></article><article class="model reveal" data-name="Minimaliste">
+<button type="button" class="shot" data-zoom="modeles/minimaliste.jpg" aria-label="Agrandir le modèle Minimaliste"><img src="modeles/minimaliste.jpg" alt="Exemple de modèle : Minimaliste" loading="lazy" width="1200" height="900"></button>
+<h3>Minimaliste</h3><p>Épuré : l’essentiel est mis en valeur.</p><button type="button" class="btn primary" data-choose="Minimaliste">Choisir ce modèle</button></article></div>
+<p class="note">Ces images sont des exemples de présentation. Chaque projet est adapté à ton activité, tes couleurs et ton contenu.</p></div></section>
+
+<section id="demande"><div class="container"><span class="tag">Ta demande</span><h2>Parle-nous de ton projet</h2>
+<p>Ta demande arrive directement dans ta messagerie Stromtech et nous te répondons là-bas. Il faut un compte : tu pourras te connecter ou en créer un au moment de l’envoi.</p>
+<form class="form-card" id="quote">
+<div class="tabs" id="type-tabs"><button type="button" data-type="devis" class="on">📋 Demande de devis</button><button type="button" data-type="realisation">🛠️ Demande de réalisation</button></div>
+<p class="hint" id="type-hint"></p>
+<div class="two"><div><label for="name">Ton nom *</label><input id="name" data-draft required autocomplete="name" placeholder="Nom et prénom"></div>
+<div><label for="phone">Téléphone (optionnel)</label><input id="phone" data-draft type="tel" autocomplete="tel" placeholder="Numéro de contact"></div></div>
+<label for="model">Modèle choisi</label><div class="model-field"><input id="model" data-draft readonly placeholder="Aucun modèle choisi (optionnel)"><button type="button" class="btn secondary" id="model-clear">Effacer</button></div>
+<div class="two"><div><label for="budget">Budget estimé</label><select id="budget" data-draft><option>À discuter</option><option>Moins de 10 000 FCFA</option><option>10 000 à 25 000 FCFA</option><option>25 000 à 50 000 FCFA</option><option>Plus de 50 000 FCFA</option></select></div>
+<div><label for="deadline">Délai souhaité</label><select id="deadline" data-draft><option>À discuter</option><option>Urgent</option><option>Dans la semaine</option><option>Dans le mois</option></select></div></div>
+<label for="details">Décris ton projet *</label><textarea id="details" data-draft required maxlength="1200" placeholder="Explique ce que tu souhaites réaliser…"></textarea>
+<label for="files">Joindre des fichiers PDF (optionnel)</label><input id="files" type="file" accept="application/pdf,.pdf" multiple>
+<p class="hint">PDF uniquement · 3 fichiers maximum · 5 Mo chacun.</p>
+<button class="btn primary" type="submit" id="quote-submit">Envoyer ma demande ↗</button>
+<div id="quote-status" role="status"></div></form></div></section>
+
+<section><div class="container"><div class="section-head"><h2>Découvre aussi</h2></div><div class="actions"><a class="btn secondary" href="site-web.html">🌐 Sites Web</a><a class="btn secondary" href="applications.html">📱 Applications</a><a class="btn secondary" href="affiches.html">🎨 Affiches</a><a class="btn secondary" href="contact.html">💡 Autre besoin</a></div></div></section>
+
+<div class="lb" id="lb"><img id="lb-img" alt=""><strong id="lb-name"></strong><div><button class="btn primary" id="lb-pick" type="button">Choisir ce modèle</button><button class="btn secondary" id="lb-close" type="button">Fermer</button></div></div>
+</main>
+<footer><div class="container"><div class="foot">
+<div><a class="logo" href="index.html" style="display:inline-block;color:var(--txt);padding:0">strom<span>tech</span>.</a><p style="margin-top:8px">Création digitale : sites Web, applications, affiches et CV professionnels.</p></div>
+<div><h4>Navigation</h4><a href="index.html">Accueil</a><a href="services.html">Services</a><a href="contact.html">Contact</a></div>
+<div><h4>Services</h4><a href="site-web.html">Sites Web</a><a href="applications.html">Applications</a><a href="affiches.html">Affiches</a><a href="cv.html">CV</a></div>
+</div><div class="copy">© <span id="year"></span> Stromtech — Tous droits réservés.</div></div></footer>
+<script src="assets/site.js"></script><script src="assets/service.js"></script><script src="assets/espace.js"></script>
+</body></html>
