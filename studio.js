@@ -27,7 +27,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, imageData: {}, imageWidths: {} };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, imageData: {}, imageWidths: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -35,6 +35,10 @@
     if (TPL[d.type][o.template]) { d.template = o.template; d.sections = TPL[d.type][o.template].sections.slice(); }
     if (typeof o.name === "string") d.name = o.name.slice(0, 60);
     if (o.brandMode === "logo" && typeof o.brandLogo === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.brandLogo) && o.brandLogo.length < 250000) { d.brandMode = "logo"; d.brandLogo = o.brandLogo; }
+    if (typeof o.brandLogoWidth === "number" && isFinite(o.brandLogoWidth)) d.brandLogoWidth = Math.max(60, Math.min(260, o.brandLogoWidth));
+    if (typeof o.brandLogoBorder === "boolean") d.brandLogoBorder = o.brandLogoBorder;
+    if (/^#[0-9a-f]{6}$/i.test(o.brandLogoBorderColor)) d.brandLogoBorderColor = o.brandLogoBorderColor;
+    if (typeof o.brandLogoBorderWidth === "number" && isFinite(o.brandLogoBorderWidth)) d.brandLogoBorderWidth = Math.max(1, Math.min(8, o.brandLogoBorderWidth));
     if (typeof o.slogan === "string") d.slogan = o.slogan.slice(0, 120);
     if (typeof o.notes === "string") d.notes = o.notes.slice(0, 1000);
     if (/^#[0-9a-f]{6}$/i.test(o.color)) d.color = o.color;
@@ -107,11 +111,18 @@
     root.appendChild(wrap);
   }
 
+  function styleBrandLogo(img) {
+    img.style.width = state.brandLogoWidth + "px"; img.style.maxWidth = "100%";
+    if (state.brandLogoBorder) { img.style.border = state.brandLogoBorderWidth + "px solid " + state.brandLogoBorderColor; img.style.padding = "5px"; img.style.borderRadius = "10px"; }
+    else { img.style.border = "0"; img.style.padding = "0"; img.style.borderRadius = "0"; }
+    return img;
+  }
+
   /* ---------- Aperçu : site ---------- */
   function previewSite(root) {
     var tpl = TPL.site[state.template], nm = state.name || "Ton entreprise", sl = state.slogan || "Ton slogan s’affiche ici";
     var nav = el("div", "pv-nav");
-    if (state.brandMode === "logo" && state.brandLogo) { var brandImg = el("img", "pv-brand-logo"); brandImg.src = state.brandLogo; brandImg.alt = nm; nav.appendChild(brandImg); }
+    if (state.brandMode === "logo" && state.brandLogo) { var brandImg = styleBrandLogo(el("img", "pv-brand-logo")); brandImg.src = state.brandLogo; brandImg.alt = nm; nav.appendChild(brandImg); }
     else nav.appendChild(editText("b", "", nm, "brandName", "Nom de l’entreprise"));
     var links = el("span", "pv-links"); state.sections.slice(0, 4).forEach(function (k) { links.appendChild(el("span", "", SEC.site[k])); }); nav.appendChild(links);
     nav.appendChild(el("i", "pv-btn", "Contact")); root.appendChild(nav);
@@ -139,7 +150,7 @@
     var nm = state.name || "Ton appli", sl = state.slogan || "Ton slogan s’affiche ici";
     if (state.sections.indexOf(appTab) < 0) appTab = state.sections[0];
     var ph = el("div", "phone");
-    if (state.brandMode === "logo" && state.brandLogo) { var appLogo = el("img", "pv-brand-logo pv-app-logo"); appLogo.src = state.brandLogo; appLogo.alt = nm; ph.appendChild(appLogo); }
+    if (state.brandMode === "logo" && state.brandLogo) { var appLogo = styleBrandLogo(el("img", "pv-brand-logo pv-app-logo")); appLogo.src = state.brandLogo; appLogo.alt = nm; ph.appendChild(appLogo); }
     else ph.appendChild(editText("div", "pv-appbar", nm, "appName", "Nom de l’application"));
     var scr = el("div", "pv-screen");
     var S = {
@@ -206,6 +217,9 @@
     $("brandLogoMode").setAttribute("aria-pressed", String(state.brandMode === "logo"));
     $("brandLogoStatus").textContent = state.brandLogo ? "Logo ajouté à l’aperçu." : "PNG, JPG ou WebP · 5 Mo maximum";
     $("removeBrandLogo").hidden = !state.brandLogo;
+    $("brandLogoWidth").value = state.brandLogoWidth; $("brandLogoWidthValue").textContent = state.brandLogoWidth + " px";
+    $("brandLogoBorder").checked = state.brandLogoBorder; $("brandLogoBorderOptions").hidden = !state.brandLogoBorder;
+    $("brandLogoBorderColor").value = state.brandLogoBorderColor; $("brandLogoBorderWidth").value = state.brandLogoBorderWidth; $("brandLogoBorderWidthValue").textContent = state.brandLogoBorderWidth + " px";
     $("secLegend").textContent = state.type === "site" ? "Sections de ta page" : "Écrans de ton application (5 maximum)";
     var sl = $("secList"); sl.textContent = ""; var max = state.type === "app" ? 5 : 7, full = state.sections.length >= max;
     Object.keys(SEC[state.type]).forEach(function (k) {
@@ -245,6 +259,10 @@
     $("chooseBrandLogo").addEventListener("click", function () { $("brandLogoUpload").click(); });
     $("brandLogoUpload").addEventListener("change", function () { if (this.files && this.files[0]) addBrandLogo(this.files[0]); this.value = ""; });
     $("removeBrandLogo").addEventListener("click", function () { state.brandLogo = ""; state.brandMode = "name"; change(true); });
+    $("brandLogoWidth").addEventListener("input", function () { state.brandLogoWidth = Number(this.value); $("brandLogoWidthValue").textContent = this.value + " px"; render(); saveDraft(); });
+    $("brandLogoBorder").addEventListener("change", function () { state.brandLogoBorder = this.checked; $("brandLogoBorderOptions").hidden = !this.checked; render(); saveDraft(); });
+    $("brandLogoBorderColor").addEventListener("input", function () { state.brandLogoBorderColor = this.value; render(); saveDraft(); });
+    $("brandLogoBorderWidth").addEventListener("input", function () { state.brandLogoBorderWidth = Number(this.value); $("brandLogoBorderWidthValue").textContent = this.value + " px"; render(); saveDraft(); });
     $("imageUpload").addEventListener("change", function () { if (this.files && this.files[0]) addImage(this.files[0]); this.value = ""; });
     $("imageWidth").addEventListener("input", function () {
       if (!selectedKey) return;
