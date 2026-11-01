@@ -46,6 +46,7 @@
    <div class="grp"><h3>Ce que tu veux créer</h3><div class="seg" id="typeSeg"></div></div>
    <div class="grp page-manager"><h3>Pages du projet</h3><div id="pageList" class="page-list" aria-label="Pages du projet"></div><div class="page-actions"><button type="button" id="addPage">+ Nouvelle page</button><button type="button" id="renamePage">Renommer</button><button type="button" id="duplicatePage">Dupliquer</button><button type="button" id="deletePage" class="danger-action">Supprimer</button></div><p class="identity-help" id="pageStatus" aria-live="polite">1 page · chaque page garde son contenu.</p></div><div class="grp"><h3 id="studioTemplateHeading">Modèles de départ</h3><p class="studio-template-help" id="studioTemplateHelp">Choisis une base de création pour commencer.</p><div class="opts" id="tplList"></div></div>
    <div class="grp"><h3 id="secLegend">Sections</h3><div id="secList"></div><p class="identity-help">Pour Galerie et Produits, active la section puis ajoute tes propres images.</p></div>
+   <div class="grp studio-layers-panel"><h3>Calques et éléments</h3><p class="identity-help">Sélectionne, duplique et réorganise les éléments de ta composition.</p><div id="studioLayers" class="studio-layers" aria-live="polite"></div></div>
   </aside>
 
   <section class="studio-stage" aria-label="Zone centrale de création et aperçu">
@@ -60,6 +61,7 @@
      <button type="button" id="addTextBlock">+ Texte</button>
      <button type="button" id="addButtonBlock">+ Bouton</button>
      <button type="button" id="addImageBlock">+ Image / logo</button>
+     <button type="button" id="addShapeBlock">+ Forme</button>
      <input id="imageUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
     </div>
    </div>
