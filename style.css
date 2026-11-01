@@ -429,3 +429,170 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-s
  .studio-panel{box-shadow:0 6px 18px rgba(28,42,82,.05)}
  #brandLogoField{padding:10px}
 }
+
+
+/* ===== STROMTECH STUDIO — NEON FUSION ===== */
+/* Palette réservée au Studio : le reste du site conserve son identité actuelle. */
+body:has(.studio-main){
+  --sf-bg:#080D19;
+  --sf-panel:#10192B;
+  --sf-panel-2:#142139;
+  --sf-line:#263650;
+  --sf-text:#F4F6FC;
+  --sf-muted:#A6B4CA;
+  --sf-blue:#007BFF;
+  --sf-violet:#8B5CF6;
+  --sf-cyan:#00D9FF;
+  --sf-gold:#D6A84F;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(0,123,255,.16),transparent 34rem),
+    radial-gradient(ellipse at 88% 12%,rgba(139,92,246,.13),transparent 32rem),
+    var(--sf-bg);
+  color:var(--sf-text);
+}
+body:has(.studio-main) .site-header{
+  background:rgba(8,13,25,.88);
+  border-bottom:1px solid var(--sf-line);
+  backdrop-filter:blur(18px);
+}
+body:has(.studio-main) .site-header .logo,
+body:has(.studio-main) .site-header .links a{color:var(--sf-text)}
+body:has(.studio-main) .site-header .logo b{color:var(--sf-cyan)}
+body:has(.studio-main) .site-header .links a:hover{color:var(--sf-cyan)}
+body:has(.studio-main) .site-header .btn-line{
+  color:var(--sf-text);background:var(--sf-panel);border:1px solid var(--sf-line)
+}
+body:has(.studio-main) .studio-head .block-title{color:var(--sf-text)}
+body:has(.studio-main) .studio-head .block-intro{color:var(--sf-muted)}
+body:has(.studio-main) .studio-kicker{
+  color:var(--sf-cyan);background:rgba(0,217,255,.08);
+  border-color:rgba(0,217,255,.25)
+}
+body:has(.studio-main) .studio-kicker:before{
+  background:var(--sf-cyan);box-shadow:0 0 0 4px rgba(0,217,255,.13)
+}
+body:has(.studio-main) .studio-panel{
+  color:var(--sf-text);background:linear-gradient(155deg,rgba(20,33,57,.97),rgba(13,23,40,.98));
+  border:1px solid var(--sf-line);box-shadow:0 16px 42px rgba(0,0,0,.24)
+}
+body:has(.studio-main) .panel-heading{border-bottom-color:var(--sf-line)}
+body:has(.studio-main) .panel-heading b,
+body:has(.studio-main) .studio-panel .grp h3{color:var(--sf-text)}
+body:has(.studio-main) .panel-heading small,
+body:has(.studio-main) .studio-panel .identity-help,
+body:has(.studio-main) .studio-panel .field-label{color:var(--sf-muted)}
+body:has(.studio-main) .panel-index{
+  color:var(--sf-cyan);
+  background:linear-gradient(135deg,rgba(0,123,255,.2),rgba(139,92,246,.2));
+  border:1px solid rgba(0,217,255,.2)
+}
+body:has(.studio-main) .studio-panel .grp{border-bottom-color:var(--sf-line)}
+body:has(.studio-main) .studio-panel input[type=text],
+body:has(.studio-main) .studio-panel select,
+body:has(.studio-main) .studio-panel textarea,
+body:has(.studio-main) .element-inspector textarea{
+  color:var(--sf-text);background:#0B1424;border-color:#30415E
+}
+body:has(.studio-main) .studio-panel input::placeholder,
+body:has(.studio-main) .studio-panel textarea::placeholder{color:#8292AB}
+body:has(.studio-main) .studio-panel input:focus,
+body:has(.studio-main) .studio-panel select:focus,
+body:has(.studio-main) .studio-panel textarea:focus{
+  border-color:var(--sf-cyan);box-shadow:0 0 0 4px rgba(0,217,255,.12)
+}
+body:has(.studio-main) .studio-panel .seg button,
+body:has(.studio-main) .studio-panel .tpl{
+  color:var(--sf-muted);background:#111D31;border-color:#30415E
+}
+body:has(.studio-main) .studio-panel .seg button:hover,
+body:has(.studio-main) .studio-panel .tpl:hover{
+  color:var(--sf-cyan);border-color:var(--sf-cyan)
+}
+body:has(.studio-main) .studio-panel .seg button[aria-pressed=true],
+body:has(.studio-main) .studio-panel .tpl[aria-pressed=true]{
+  color:#fff;border-color:var(--sf-blue);
+  background:linear-gradient(110deg,rgba(0,123,255,.25),rgba(139,92,246,.22));
+  box-shadow:inset 0 0 0 1px rgba(0,217,255,.12),0 0 18px rgba(0,123,255,.1)
+}
+body:has(.studio-main) .studio-stage{
+  color:var(--sf-text);
+  background:linear-gradient(145deg,#111D31,#0D1728);
+  border:1px solid #2A3C5A;box-shadow:inset 0 1px rgba(255,255,255,.04),0 18px 50px rgba(0,0,0,.2)
+}
+body:has(.studio-main) .stage-heading b{color:var(--sf-text)}
+body:has(.studio-main) .stage-heading small,
+body:has(.studio-main) .stage-hint{color:var(--sf-muted)}
+body:has(.studio-main) .viewport-switch{background:#091323;border:1px solid #2A3C5A}
+body:has(.studio-main) .viewport-switch button{color:#A6B4CA}
+body:has(.studio-main) .viewport-switch button[aria-pressed=true]{
+  color:#fff;background:linear-gradient(110deg,var(--sf-blue),var(--sf-violet));
+  border-color:transparent;box-shadow:0 4px 16px rgba(0,123,255,.25)
+}
+body:has(.studio-main) .studio-stage .frame{
+  border:1px solid #40516C;box-shadow:0 18px 48px rgba(0,0,0,.38)
+}
+/* L'aperçu reste clair : il représente le futur site du client, pas l'interface Studio. */
+body:has(.studio-main) .studio-stage .pv{color:initial}
+body:has(.studio-main) .stage-hint{
+  background:#0B1628;border:1px solid #263A58
+}
+body:has(.studio-main) .stage-hint span{color:var(--sf-gold)}
+body:has(.studio-main) .block-toolbar button,
+body:has(.studio-main) .block-actions button{
+  color:#DCE7F8;background:#14233B;border-color:#304665
+}
+body:has(.studio-main) .block-toolbar button:hover,
+body:has(.studio-main) .block-actions button:hover{
+  color:var(--sf-cyan);border-color:var(--sf-cyan);box-shadow:0 5px 16px rgba(0,217,255,.1)
+}
+body:has(.studio-main) .block-toolbar #addImageBlock{
+  color:#fff;background:linear-gradient(110deg,rgba(0,123,255,.3),rgba(139,92,246,.28));
+  border-color:rgba(0,217,255,.35)
+}
+body:has(.studio-main) .element-inspector{
+  background:linear-gradient(145deg,#14233B,#101B30);border-color:#344B70
+}
+body:has(.studio-main) .element-inspector .inspector-name{color:var(--sf-cyan)}
+body:has(.studio-main) .element-inspector .inspector-empty{color:var(--sf-muted)}
+body:has(.studio-main) .element-inspector input[type=color],
+body:has(.studio-main) #brandLogoBorderColor{
+  background:#0B1424;border-color:#30415E
+}
+body:has(.studio-main) #brandLogoField{
+  background:#0C1729;border-color:#2B3D5B
+}
+body:has(.studio-main) .logo-border-options{
+  background:#101D32;border-color:#30415E
+}
+body:has(.studio-main) .logo-border-options output,
+body:has(.studio-main) #brandLogoWidthValue{color:var(--sf-cyan)}
+body:has(.studio-main) #brandLogoWidth,
+body:has(.studio-main) #brandLogoBorderWidth{accent-color:var(--sf-cyan)}
+body:has(.studio-main) .text-action{color:var(--sf-cyan)}
+body:has(.studio-main) .studio-submit{border-top-color:var(--sf-line)}
+body:has(.studio-main) .studio-submit .btn-blue{
+  color:#fff;background:linear-gradient(110deg,#007BFF 0%,#5755F5 58%,#8B5CF6 100%);
+  box-shadow:0 8px 22px rgba(0,123,255,.25)
+}
+body:has(.studio-main) .studio-submit .btn-blue:hover{
+  background:linear-gradient(110deg,#1688FF,#986BFF);
+  box-shadow:0 10px 26px rgba(0,123,255,.34)
+}
+body:has(.studio-main) .studio-submit .btn-line{
+  color:#DCE7F8;background:#14233B;border:1px solid #3A4D6D
+}
+body:has(.studio-main) .studio-submit .small{color:var(--sf-muted)}
+body:has(.studio-main) .studio-submit .msg.err{
+  color:#FFD9DE;background:#351B2A;border-color:#713448
+}
+body:has(.studio-main) .shared{
+  color:#DCE7F8;background:#13233B;border:1px solid #2E4568
+}
+@media(max-width:940px){
+  body:has(.studio-main) .studio-panel{box-shadow:0 10px 28px rgba(0,0,0,.2)}
+}
+@media(prefers-reduced-motion:no-preference){
+  body:has(.studio-main) .studio-panel,
+  body:has(.studio-main) .studio-stage{transition:border-color .2s,box-shadow .2s}
+  body:has(.studio-main) .studio-panel:hover{border-color:#3A5278}
+}
