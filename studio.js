@@ -87,7 +87,7 @@
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
     if (o.blockSizes && typeof o.blockSizes === "object") Object.keys(o.blockSizes).slice(0, 30).forEach(function (k) { var z = o.blockSizes[k]; if (/^block_[0-9]{1,16}$/.test(k) && z && typeof z.w === "number" && typeof z.h === "number" && isFinite(z.w) && isFinite(z.h)) d.blockSizes[k] = { w: Math.max(48, Math.min(1200, z.w)), h: Math.max(40, Math.min(900, z.h)) }; });
-    if (o.blockStyles && typeof o.blockStyles === "object") Object.keys(o.blockStyles).slice(0, 30).forEach(function (k) { var s = o.blockStyles[k]; if (!/^block_[0-9]{1,16}$/.test(k) || !s || typeof s !== "object") return; var cleanStyle = {}; if (typeof s.fontSize === "number" && isFinite(s.fontSize)) cleanStyle.fontSize = Math.max(12, Math.min(48, s.fontSize)); if (["left", "center", "right"].indexOf(s.textAlign) >= 0) cleanStyle.textAlign = s.textAlign; if (["normal", "600", "700"].indexOf(String(s.fontWeight)) >= 0) cleanStyle.fontWeight = String(s.fontWeight); if (/^#[0-9a-f]{6}$/i.test(s.backgroundColor)) cleanStyle.backgroundColor = s.backgroundColor; if (typeof s.radius === "number" && isFinite(s.radius)) cleanStyle.radius = Math.max(0, Math.min(32, s.radius)); d.blockStyles[k] = cleanStyle; });
+    if (o.blockStyles && typeof o.blockStyles === "object") Object.keys(o.blockStyles).slice(0, 30).forEach(function (k) { var s = o.blockStyles[k]; if (!/^block_[0-9]{1,16}$/.test(k) || !s || typeof s !== "object") return; var cleanStyle = {}; if (typeof s.fontSize === "number" && isFinite(s.fontSize)) cleanStyle.fontSize = Math.max(12, Math.min(48, s.fontSize)); if (["left", "center", "right"].indexOf(s.textAlign) >= 0) cleanStyle.textAlign = s.textAlign; if (["normal", "600", "700"].indexOf(String(s.fontWeight)) >= 0) cleanStyle.fontWeight = String(s.fontWeight); if (typeof s.italic === "boolean") cleanStyle.italic = s.italic; if (typeof s.underline === "boolean") cleanStyle.underline = s.underline; if (typeof s.letterSpacing === "number" && isFinite(s.letterSpacing)) cleanStyle.letterSpacing = Math.max(-1, Math.min(8, s.letterSpacing)); if (typeof s.lineHeight === "number" && isFinite(s.lineHeight)) cleanStyle.lineHeight = Math.max(1, Math.min(2.2, s.lineHeight)); if (typeof s.fontFamily === "string" && ["Arial, sans-serif","Georgia, serif","'Trebuchet MS', sans-serif","'Courier New', monospace","system-ui, sans-serif"].indexOf(s.fontFamily) >= 0) cleanStyle.fontFamily = s.fontFamily; if (/^#[0-9a-f]{6}$/i.test(s.backgroundColor)) cleanStyle.backgroundColor = s.backgroundColor; if (typeof s.radius === "number" && isFinite(s.radius)) cleanStyle.radius = Math.max(0, Math.min(32, s.radius)); d.blockStyles[k] = cleanStyle; });
     return d;
   }
   var pages = [], activePageId = null;
@@ -239,6 +239,9 @@
       $("blockFontWeight").value = style.fontWeight || "normal";
       $("blockFontFamily").value = style.fontFamily || "Arial, sans-serif";
       $("blockItalic").checked = !!style.italic;
+      $("blockUnderline").checked = !!style.underline;
+      $("blockLetterSpacing").value = style.letterSpacing || 0;
+      $("blockLetterSpacingValue").textContent = (style.letterSpacing || 0) + " px";
       $("blockLineHeight").value = style.lineHeight || 1.4;
       $("blockLineHeightValue").textContent = Number($("blockLineHeight").value).toFixed(1);
       $("blockBackground").value = style.backgroundColor || "#2340ff";
@@ -289,6 +292,8 @@
         if (blockStyle.fontWeight) node.style.fontWeight = blockStyle.fontWeight;
         if (blockStyle.fontFamily) node.style.fontFamily = blockStyle.fontFamily;
         if (blockStyle.italic) node.style.fontStyle = "italic";
+        if (blockStyle.underline) node.style.textDecoration = "underline";
+        if (blockStyle.letterSpacing != null) node.style.letterSpacing = blockStyle.letterSpacing + "px";
         if (blockStyle.lineHeight) node.style.lineHeight = blockStyle.lineHeight;
         if (blockStyle.backgroundColor) node.style.backgroundColor = blockStyle.backgroundColor;
         if (blockStyle.radius != null) node.style.borderRadius = blockStyle.radius + "px";
@@ -786,6 +791,8 @@
     $("blockFontWeight").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "fontWeight", this.value); });
     $("blockFontFamily").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "fontFamily", this.value); });
     $("blockItalic").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "italic", this.checked); });
+    $("blockUnderline").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "underline", this.checked); });
+    $("blockLetterSpacing").addEventListener("input", function () { $("blockLetterSpacingValue").textContent = this.value + " px"; updateSelectedBlockStyle(selectedKey, "letterSpacing", Number(this.value)); });
     $("blockLineHeight").addEventListener("input", function () { $("blockLineHeightValue").textContent = Number(this.value).toFixed(1); updateSelectedBlockStyle(selectedKey, "lineHeight", Number(this.value)); });
     $("blockBackground").addEventListener("input", function () { updateSelectedBlockStyle(selectedKey, "backgroundColor", this.value); });
     $("blockRadius").addEventListener("input", function () { $("blockRadiusValue").textContent = this.value + " px"; updateSelectedBlockStyle(selectedKey, "radius", Number(this.value)); });
