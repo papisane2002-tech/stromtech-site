@@ -175,8 +175,16 @@
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
   function dec(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return JSON.parse(decodeURIComponent(escape(atob(s)))); }
-  function saveDraft() { try { localStorage.setItem(KEY, JSON.stringify(exportState())); } catch (e) {} }
-  function loadDraft() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
+  function draftKey(type) { return KEY + "_" + type; }
+  function saveDraft() { try { localStorage.setItem(draftKey(state.type), JSON.stringify(exportState())); } catch (e) {} }
+  function loadDraft(type) {
+    try {
+      var saved = JSON.parse(localStorage.getItem(draftKey(type)));
+      if (saved) return saved;
+      var legacy = JSON.parse(localStorage.getItem(KEY));
+      return legacy && legacy.type === type ? legacy : null;
+    } catch (e) { return null; }
+  }
 
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function lines(n) { var f = document.createDocumentFragment(); for (var i = 0; i < n; i++) { var l = el("div", "pv-line"); l.style.width = (100 - i * 14) + "%"; f.appendChild(l); } return f; }
@@ -623,21 +631,10 @@
 
   function openStudioService(type) {
     if (["site","app","cv","poster"].indexOf(type) < 0) return;
-    var previous = state || defaults(type);
-    if (previous.type !== type) {
-      state = defaults(type);
-      state.name = previous.name || "";
-      state.brandMode = previous.brandMode || "name";
-      state.brandLogo = previous.brandLogo || "";
-      state.brandLogoWidth = previous.brandLogoWidth || 150;
-      state.brandLogoBorder = !!previous.brandLogoBorder;
-      state.brandLogoBorderColor = previous.brandLogoBorderColor || "#dce3f5";
-      state.brandLogoBorderWidth = previous.brandLogoBorderWidth || 1;
-      state.color = previous.color || "#087f6b";
-      state.font = previous.font || "moderne";
-      state.radius = previous.radius || "1";
-      state.theme = previous.theme || "light";
-    }
+    var saved = loadDraft(type);
+    state = clean(saved || defaults(type));
+    pages = []; activePageId = null; selectedKey = null;
+    initPages(saved);
     $("studioServiceHub").hidden = true;
     $("controls").hidden = false;
     $("studioBackHub").hidden = false;
@@ -1023,8 +1020,8 @@
 
   var d = new URLSearchParams(location.search).get("d"), shared = false, raw = null;
   if (d) { try { raw = dec(d); state = clean(raw); shared = true; } catch (e) { state = null; raw = null; } }
-  if (!state) { raw = loadDraft(); state = clean(raw); }
-  initPages(raw);
+  if (!state) { raw = null; state = defaults("site"); }
+  if (shared) initPages(raw); else { pages = []; activePageId = null; }
   if (shared) { $("sharedNote").hidden = false; }
 
   bind();
