@@ -5,6 +5,8 @@
   var FONTS = { moderne: ["Moderne", "Figtree,system-ui,sans-serif"], elegante: ["Élégante", "Georgia,'Times New Roman',serif"], affirmee: ["Affirmée", "'Bricolage Grotesque',Figtree,sans-serif"] };
   var RADII = { "0": ["Carrés", "0px"], "1": ["Arrondis", "12px"], "2": ["Très arrondis", "24px"] };
   var SEC = {
+    cv: { profil: "Profil", experience: "Expériences", formation: "Formation", competences: "Compétences", contact: "Contact" },
+    poster: { evenement: "Événement", accroche: "Accroche", infos: "Informations", contact: "Contact" },
     site: { about: "À propos", services: "Services", produits: "Produits", galerie: "Galerie", tarifs: "Tarifs", temoignages: "Témoignages", contact: "Contact" },
     app: { accueil: "Accueil", catalogue: "Catalogue", commande: "Panier", rdv: "Rendez-vous", messages: "Messages", profil: "Profil" }
   };
@@ -15,6 +17,16 @@
       boutique: { label: "Boutique", desc: "Vendre des produits avec un catalogue.", hero: "banner", tag: "Vente en ligne", sections: ["produits", "temoignages", "contact"] },
       landing: { label: "Page de conversion", desc: "Présenter une offre et guider les visiteurs vers une action.", hero: "left", tag: "Offre & contact", sections: ["about", "services", "tarifs", "contact"] },
       evenement: { label: "Événement", desc: "Promouvoir une cérémonie, une activité ou un événement.", hero: "banner", tag: "Promotion", sections: ["about", "galerie", "tarifs", "contact"] }
+    },
+    cv: {
+      classique: { label: "Classique", desc: "CV sobre et professionnel.", sections: ["profil", "experience", "formation", "competences", "contact"] },
+      moderne: { label: "Moderne", desc: "CV contemporain avec colonne latérale.", sections: ["profil", "competences", "experience", "formation", "contact"] },
+      minimal: { label: "Minimaliste", desc: "Une présentation épurée et lisible.", sections: ["profil", "experience", "competences", "formation"] }
+    },
+    poster: {
+      evenement: { label: "Événement", desc: "Affiche pour fête, cérémonie ou événement.", sections: ["evenement", "infos", "contact"] },
+      promotion: { label: "Promotion", desc: "Mettre en avant une offre ou un produit.", sections: ["accroche", "infos", "contact"] },
+      elegant: { label: "Élégante", desc: "Composition simple et raffinée.", sections: ["evenement", "accroche", "contact"] }
     },
     app: {
       commandes: { label: "Commandes", desc: "Catalogue, panier et suivi des commandes.", sections: ["accueil", "catalogue", "commande", "messages", "profil"] },
@@ -30,13 +42,13 @@
   var selectedKey = null;
 
   function defaults(type, tpl) {
-    type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
+    type = type || "site"; tpl = tpl || ({site:"vitrine",app:"commandes",cv:"classique",poster:"evenement"}[type] || "vitrine");
     return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
   }
   function clean(o) {
-    var d = defaults(o && o.type === "app" ? "app" : "site");
+    var safeType = o && ["site","app","cv","poster"].indexOf(o.type) >= 0 ? o.type : "site";\n    var d = defaults(safeType);
     if (!o || typeof o !== "object") return d;
-    if (TPL[d.type][o.template]) { d.template = o.template; d.sections = TPL[d.type][o.template].sections.slice(); }
+    if (TPL[d.type] && TPL[d.type][o.template]) { d.template = o.template; d.sections = TPL[d.type][o.template].sections.slice(); }
     if (typeof o.name === "string") d.name = o.name.slice(0, 60);
     if (o.brandMode === "logo" && typeof o.brandLogo === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.brandLogo) && o.brandLogo.length < 250000) { d.brandMode = "logo"; d.brandLogo = o.brandLogo; }
     if (typeof o.brandLogoWidth === "number" && isFinite(o.brandLogoWidth)) d.brandLogoWidth = Math.max(60, Math.min(260, o.brandLogoWidth));
@@ -307,6 +319,44 @@
     root.appendChild(editText("div", "pv-foot", "© " + nm, "footerText", "Pied de page"));
   }
 
+
+  function previewCV(root) {
+    var cv = el("article", "pv-document pv-cv pv-cv-" + state.template);
+    var head = el("header", "cv-header");
+    head.appendChild(editText("h2", "", state.name || "Prénom NOM", "cvName", "Nom complet"));
+    head.appendChild(editText("p", "", state.slogan || "Intitulé du poste recherché", "cvTitle", "Titre professionnel"));
+    cv.appendChild(head);
+    var body = el("div", "cv-body");
+    var side = el("aside", "cv-side");
+    side.appendChild(el("h3", "", "CONTACT"));
+    side.appendChild(editText("p", "", "Téléphone · E-mail · Ville", "cvContact", "Coordonnées"));
+    side.appendChild(el("h3", "", "COMPÉTENCES"));
+    side.appendChild(editText("p", "", "Communication\nOrganisation\nInformatique", "cvSkills", "Compétences"));
+    side.appendChild(el("h3", "", "LANGUES"));
+    side.appendChild(editText("p", "", "Français · Anglais", "cvLanguages", "Langues"));
+    var main = el("div", "cv-main");
+    [["PROFIL","cvProfile","Présente-toi en quelques lignes et précise tes points forts."],["EXPÉRIENCES","cvExperience","Poste occupé · Entreprise · Dates\nDécris tes principales missions et réalisations."],["FORMATION","cvEducation","Diplôme · Établissement · Année"],["PROJETS","cvProjects","Ajoute ici tes projets ou certifications."]].forEach(function(x){main.appendChild(el("h3","",x[0]));main.appendChild(editText("p","",x[2],x[1],x[0]));});
+    body.appendChild(side); body.appendChild(main); cv.appendChild(body); root.appendChild(cv);
+  }
+  function previewPoster(root) {
+    var poster = el("article", "pv-document pv-poster pv-poster-" + state.template);
+    var top = el("div", "poster-top");
+    top.appendChild(editText("p", "poster-brand", state.name || "NOM DE LA MARQUE", "posterBrand", "Nom de la marque"));
+    top.appendChild(editText("h2", "poster-title", state.slogan || "TON ÉVÉNEMENT", "posterTitle", "Titre principal de l’affiche"));
+    top.appendChild(editText("p", "poster-subtitle", "Une phrase courte pour attirer l’attention", "posterSubtitle", "Sous-titre"));
+    poster.appendChild(top);
+    var visual = el("div", "poster-visual");
+    var imageBlock = state.blocks.find(function(b){return b.type==="image";});
+    if (imageBlock && state.imageData[imageBlock.id]) { var im=el("img","poster-image"); im.src=state.imageData[imageBlock.id]; visual.appendChild(im); }
+    else visual.appendChild(el("span","poster-placeholder","Ajoute une image avec « Image / logo »"));
+    poster.appendChild(visual);
+    var info = el("div", "poster-info");
+    info.appendChild(editText("h3", "", "DATE · HEURE · LIEU", "posterDetails", "Date, heure et lieu"));
+    info.appendChild(editText("p", "", "Informations complémentaires, tarif ou offre spéciale", "posterExtra", "Informations complémentaires"));
+    info.appendChild(editText("b", "", "CONTACT · TÉLÉPHONE · RÉSEAUX", "posterContact", "Coordonnées"));
+    poster.appendChild(info); root.appendChild(poster);
+  }
+
   /* ---------- Aperçu : application ---------- */
   var appTab = null;
   function previewApp(root) {
@@ -338,18 +388,18 @@
     root.style.setProperty("--ptx", dark ? "#f2f4ff" : "#14161f");
     root.style.setProperty("--ppn", dark ? "#1e2230" : "#f4f6fb");
     root.style.setProperty("--pr", RADII[state.radius][1]);
-    root.style.setProperty("--pf", FONTS[state.font][1]);
+    root.style.setProperty("--pf", FONTS[state.font][1]);\n    root.style.setProperty("--poster-accent", state.color);
     $("frame").className = "frame is-" + state.type;
     $("frame").dataset.viewport = viewport;
     document.querySelectorAll("[data-viewport]").forEach(function (b) {
       b.setAttribute("aria-pressed", String(b.getAttribute("data-viewport") === viewport));
     });
     var label = $("viewLabel");
-    if (label) label.textContent = state.type === "app" ? "Aperçu de l’application · mobile" : "Aperçu du site · " + (viewport === "desktop" ? "ordinateur" : viewport === "tablet" ? "tablette" : "mobile");
+    if (label) label.textContent = ({app:"Aperçu de l’application · mobile",cv:"Création de CV · aperçu A4",poster:"Création d’affiche · aperçu portrait",site:"Aperçu du site · " + (viewport === "desktop" ? "ordinateur" : viewport === "tablet" ? "tablette" : "mobile")})[state.type];
     document.querySelectorAll(".viewport-switch button").forEach(function (b) {
-      b.hidden = state.type === "app" && b.getAttribute("data-viewport") !== "mobile";
+      b.hidden = state.type !== "site" && b.getAttribute("data-viewport") !== "mobile";
     });
-    if (state.type === "site") previewSite(root); else previewApp(root);
+    if (state.type === "site") previewSite(root); else if (state.type === "app") previewApp(root); else if (state.type === "cv") previewCV(root); else previewPoster(root);
     if (selectedKey) { var selected = root.querySelector('[data-editable="' + selectedKey + '"]'); if (selected) selected.classList.add("is-selected"); }
     updateInspector();
   }
@@ -360,14 +410,14 @@
     items.forEach(function (it) { var b = el("button", "", it[1]); b.type = "button"; b.setAttribute("aria-pressed", String(it[0] === current)); b.addEventListener("click", function () { onPick(it[0]); }); host.appendChild(b); });
   }
   function buildControls() {
-    seg($("typeSeg"), [["site", "Site Web"], ["app", "Application mobile"]], state.type, function (v) { if (v !== state.type) { state = Object.assign(defaults(v), { name: state.name, brandMode: state.brandMode, brandLogo: state.brandLogo, brandLogoWidth: state.brandLogoWidth, brandLogoBorder: state.brandLogoBorder, brandLogoBorderColor: state.brandLogoBorderColor, brandLogoBorderWidth: state.brandLogoBorderWidth, slogan: state.slogan, color: state.color, font: state.font, radius: state.radius, theme: state.theme, notes: state.notes }); change(true); } });
+    seg($("typeSeg"), [["site", "Site Web"], ["app", "Application mobile"], ["cv", "CV professionnel"], ["poster", "Affiche"]], state.type, function (v) { if (v !== state.type) { state = Object.assign(defaults(v), { name: state.name, brandMode: state.brandMode, brandLogo: state.brandLogo, brandLogoWidth: state.brandLogoWidth, brandLogoBorder: state.brandLogoBorder, brandLogoBorderColor: state.brandLogoBorderColor, brandLogoBorderWidth: state.brandLogoBorderWidth, slogan: state.slogan, color: state.color, font: state.font, radius: state.radius, theme: state.theme, notes: state.notes }); change(true); } });
     var tl = $("tplList"); tl.textContent = "";
     Object.keys(TPL[state.type]).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
       var visual = el("span", "tpl-preview tpl-preview-" + k);
       visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
       b.appendChild(visual);
-      b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || (state.type === "site" ? "Site Web" : "Application")));
+      b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || ({site:"Site Web",app:"Application",cv:"CV",poster:"Affiche"}[state.type])));
       b.appendChild(el("span", "", t.desc));
       b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); change(true); }); tl.appendChild(b);
     });
@@ -388,7 +438,7 @@
     $("brandLogoBorder").checked = state.brandLogoBorder; $("brandLogoBorderOptions").hidden = !state.brandLogoBorder;
     $("brandLogoBorderColor").value = state.brandLogoBorderColor; $("brandLogoBorderWidth").value = state.brandLogoBorderWidth; $("brandLogoBorderWidthValue").textContent = state.brandLogoBorderWidth + " px";
     renderPages();
-    $("secLegend").textContent = state.type === "site" ? "Sections de ta page" : "Écrans de ton application (5 maximum)";
+    $("secLegend").textContent = state.type === "site" ? "Sections de ta page" : state.type === "app" ? "Écrans de ton application (5 maximum)" : state.type === "cv" ? "Rubriques du CV" : "Éléments de l’affiche";\n    var sectionGroup = $("secLegend").parentElement; sectionGroup.hidden = state.type === "cv" || state.type === "poster";\n    var pageGroup = document.querySelector(".page-manager"); if (pageGroup) pageGroup.hidden = state.type === "cv" || state.type === "poster";
     var sl = $("secList"); sl.textContent = ""; var max = state.type === "app" ? 5 : 7, full = state.sections.length >= max;
     Object.keys(SEC[state.type]).forEach(function (k) {
       var on = state.sections.indexOf(k) >= 0, lab = el("label", "chk"), cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = on;
@@ -819,10 +869,10 @@
     if (!s) { saveDraft(); location.href = "connexion.html?next=studio.html"; return; }
     var user = s.user; btn.disabled = true;
     var meta = user.user_metadata || {}, who = state.name || meta.name || user.email;
-    var kind = state.type === "site" ? "site Web" : "application";
+    var kind = ({site:"site Web",app:"application",cv:"CV professionnel",poster:"affiche"})[state.type];
     var link = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + "studio.html?d=" + enc(exportState());
     var secs = state.sections.map(function (k) { return SEC[state.type][k]; }).join(", ");
-    var body = ["Maquette " + kind + " créée dans le studio de design", "", "Modèle : " + TPL[state.type][state.template].label, "Nom : " + (state.name || "—"), "Slogan : " + (state.slogan || "—"), "Couleur : " + state.color, "Thème : " + (state.theme === "dark" ? "sombre" : "clair"), "Police : " + FONTS[state.font][0], "Coins : " + RADII[state.radius][0], (state.type === "site" ? "Sections : " : "Écrans : ") + secs, state.notes ? "Remarques : " + state.notes : null, meta.phone ? "Téléphone : " + meta.phone : null, "", "Voir la maquette : " + link].filter(function (x) { return x !== null; }).join("\n");
+    var body = ["Maquette " + kind + " créée dans le studio de design", "", "Modèle : " + TPL[state.type][state.template].label, "Nom : " + (state.name || "—"), "Slogan : " + (state.slogan || "—"), "Couleur : " + state.color, "Thème : " + (state.theme === "dark" ? "sombre" : "clair"), "Police : " + FONTS[state.font][0], "Coins : " + RADII[state.radius][0], (({site:"Sections : ",app:"Écrans : ",cv:"Rubriques : ",poster:"Composition : "})[state.type]) + secs, state.notes ? "Remarques : " + state.notes : null, meta.phone ? "Téléphone : " + meta.phone : null, "", "Voir la maquette : " + link].filter(function (x) { return x !== null; }).join("\n");
     var c = await sb.from("conversations").insert({ customer_id: user.id, subject: "Maquette " + kind + " · " + who }).select("id").single();
     if (c.error) { btn.disabled = false; return showMsg(warn, "Maquette non envoyée : " + c.error.message, true); }
     var m = await sb.from("messages").insert({ conversation_id: c.data.id, sender_id: user.id, body: body });
