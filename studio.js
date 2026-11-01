@@ -27,7 +27,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {} };
+    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, imageData: {}, imageWidths: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -43,7 +43,9 @@
     if (Array.isArray(o.sections)) { var ok = o.sections.filter(function (k) { return SEC[d.type][k]; }); if (ok.length) d.sections = ok.slice(0, d.type === "app" ? 5 : 7); }
     if (o.content && typeof o.content === "object") Object.keys(o.content).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && typeof o.content[k] === "string") d.content[k] = o.content[k].slice(0, 200); });
     if (o.elementColors && typeof o.elementColors === "object") Object.keys(o.elementColors).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && /^#[0-9a-f]{6}$/i.test(o.elementColors[k])) d.elementColors[k] = o.elementColors[k]; });
-    if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button"); }).map(function (b) { return { id: b.id, type: b.type }; });
+    if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button" || b.type === "image") && (b.type !== "image" || (o.imageData && typeof o.imageData[b.id] === "string" && o.imageData[b.id].indexOf("data:image/webp;base64,") === 0 && o.imageData[b.id].length < 500000)); }).map(function (b) { return { id: b.id, type: b.type }; });
+    if (o.imageData && typeof o.imageData === "object") Object.keys(o.imageData).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageData[k] === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.imageData[k]) && o.imageData[k].length < 500000) d.imageData[k] = o.imageData[k]; });
+    if (o.imageWidths && typeof o.imageWidths === "object") Object.keys(o.imageWidths).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageWidths[k] === "number" && isFinite(o.imageWidths[k])) d.imageWidths[k] = Math.max(15, Math.min(100, o.imageWidths[k])); });
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
     return d;
@@ -70,8 +72,13 @@
     $("selectedElementName").textContent = node.dataset.editLabel || "Élément";
     $("elementText").value = state.content[selectedKey] != null ? state.content[selectedKey] : node.textContent;
     $("elementColor").value = state.elementColors[selectedKey] || "#14161f";
-    var block = state.blocks.some(function (b) { return b.id === selectedKey; });
-    $("blockActions").hidden = !block;
+    var selectedBlock = state.blocks.find(function (b) { return b.id === selectedKey; });
+    var isImage = selectedBlock && selectedBlock.type === "image";
+    $("elementTextLabel").hidden = !!isImage; $("elementText").hidden = !!isImage;
+    $("elementColorLabel").hidden = !!isImage; $("elementColor").hidden = !!isImage;
+    $("imageSizeGroup").hidden = !isImage;
+    if (isImage) $("imageWidth").value = state.imageWidths[selectedKey] || 60;
+    $("blockActions").hidden = !selectedBlock;
   }
 
   function renderCustomBlocks(root) {
@@ -79,7 +86,16 @@
     var wrap = el("section", "pv-custom-blocks");
     state.blocks.forEach(function (block) {
       var key = block.id;
-      var node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
+      var node;
+      if (block.type === "image") {
+        node = el("img", "pv-custom-image");
+        node.src = state.imageData[key] || "";
+        node.alt = state.content[key] || "Image ajoutée";
+        node.style.width = (state.imageWidths[key] || 60) + "%";
+        node.dataset.editable = key; node.dataset.editLabel = "Image / logo";
+      } else {
+        node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
+      }
       node.dataset.blockId = block.id;
       var pos = state.blockPositions[block.id] || { x: 0, y: 0 };
       var offset = state.blockOffsets[block.id] || 0;
@@ -212,6 +228,15 @@
     $("clearSelection").addEventListener("click", function () { selectedKey = null; render(); });
     $("addTextBlock").addEventListener("click", function () { addBlock("text"); });
     $("addButtonBlock").addEventListener("click", function () { addBlock("button"); });
+    $("addImageBlock").addEventListener("click", function () { $("imageUpload").click(); });
+    $("imageUpload").addEventListener("change", function () { if (this.files && this.files[0]) addImage(this.files[0]); this.value = ""; });
+    $("imageWidth").addEventListener("input", function () {
+      if (!selectedKey) return;
+      state.imageWidths[selectedKey] = Number(this.value);
+      var img = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
+      if (img) img.style.width = this.value + "%";
+      saveDraft();
+    });
     $("deleteBlock").addEventListener("click", deleteSelectedBlock);
     document.querySelectorAll("[data-viewport]").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -235,6 +260,32 @@
     state.content[id] = type === "button" ? "Nouveau bouton" : "Ton nouveau texte";
     selectedKey = id; render(); saveDraft();
   }
+  function addImage(file) {
+    if (!/^image\\/(png|jpeg|webp)$/.test(file.type)) { showMsg($("warn"), "Choisis une image PNG, JPG ou WebP.", true); return; }
+    if (file.size > 5 * 1024 * 1024) { showMsg($("warn"), "Image trop volumineuse : 5 Mo maximum avant optimisation.", true); return; }
+    var used = Object.keys(state.imageData).reduce(function (n, k) { return n + state.imageData[k].length; }, 0);
+    if (Object.keys(state.imageData).length >= 3 || used >= 450000) { showMsg($("warn"), "Limite atteinte : 3 images maximum et 450 Ko au total après optimisation.", true); return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var image = new Image();
+      image.onload = function () {
+        var scale = Math.min(1, 1000 / Math.max(image.width, image.height));
+        var canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale));
+        var ctx = canvas.getContext("2d"); ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        var data = canvas.toDataURL("image/webp", 0.72);
+        var total = Object.keys(state.imageData).reduce(function (n, k) { return n + state.imageData[k].length; }, 0) + data.length;
+        if (data.length > 300000 || total > 450000) { showMsg($("warn"), "Cette image reste trop volumineuse après optimisation. Essaie une image plus légère.", true); return; }
+        var id = "block_" + Date.now();
+        state.blocks.push({ id: id, type: "image" }); state.imageData[id] = data; state.imageWidths[id] = 60; state.content[id] = file.name.slice(0, 80);
+        selectedKey = id; showMsg($("warn"), "Image ajoutée et optimisée.", false); render(); saveDraft();
+      };
+      image.onerror = function () { showMsg($("warn"), "Impossible de lire cette image.", true); };
+      image.src = reader.result;
+    };
+    reader.onerror = function () { showMsg($("warn"), "La lecture du fichier a échoué.", true); };
+    reader.readAsDataURL(file);
+  }
+
   function bindBlockDragging() {
     var drag = null, host = $("pv");
     host.addEventListener("pointerdown", function (event) {
@@ -275,7 +326,7 @@
   function deleteSelectedBlock() {
     var i = selectedBlockIndex(); if (i < 0) return;
     var key = state.blocks[i].id;
-    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key];
+    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key]; delete state.imageData[key]; delete state.imageWidths[key];
     selectedKey = null; render(); saveDraft();
   }
 
