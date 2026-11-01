@@ -175,9 +175,11 @@
     button.setAttribute("aria-pressed",String(dark));
     button.textContent=dark?"☀ Thème clair":"☾ Thème sombre";
   }
-  var saved="light";
-  try{saved=localStorage.getItem(key)||"light";}catch(e){}
-  apply(saved);
+  var saved=null;
+  try{saved=localStorage.getItem(key);}catch(e){}
+  var systemDark=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;
+  apply(saved||(systemDark?"dark":"light"));
+  if(window.matchMedia){window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(event){var preference=null;try{preference=localStorage.getItem(key);}catch(e){}if(!preference)apply(event.matches?"dark":"light");});}
   button.addEventListener("click",function(){
     var next=document.body.classList.contains("studio-dark")?"light":"dark";
     apply(next);
