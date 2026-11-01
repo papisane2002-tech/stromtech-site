@@ -593,3 +593,13 @@ body.studio-dark:has(.studio-main) #imageSizeGroup select{background:#111a2a;col
 .block-position-group output{float:right;color:var(--blue,#2340ff);font-weight:700}
 body.studio-dark:has(.studio-main) .block-position-group{background:#172238;border-color:#34435d}
 body.studio-dark:has(.studio-main) .block-position-group output{color:#aab8ff}
+
+.block-align-group{display:grid;gap:8px;margin:12px 0;padding:12px;border:1px solid #e5e9f3;border-radius:12px;background:#f7f8fc}
+.block-align-group[hidden]{display:none}
+.block-align-group h4{margin:0;font-size:13px}
+.block-align-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.block-align-actions button{min-height:36px;padding:6px 4px;border:1px solid #dce2ee;border-radius:9px;background:#fff;color:#17203a;font-size:12px;cursor:pointer}
+.block-align-actions button:hover,.block-align-actions button:focus-visible{border-color:var(--blue,#2340ff);outline:2px solid #2340ff33}
+body.studio-dark:has(.studio-main) .block-align-group{background:#172238;border-color:#34435d}
+body.studio-dark:has(.studio-main) .block-align-actions button{background:#111a2a;color:#f2f5ff;border-color:#3a4861}
+@media(max-width:560px){.block-align-actions button{font-size:11px}}
