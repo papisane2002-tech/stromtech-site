@@ -31,7 +31,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] } };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } } };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -56,6 +56,7 @@
     if (o.imageData && typeof o.imageData === "object") Object.keys(o.imageData).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageData[k] === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.imageData[k]) && o.imageData[k].length < 500000) d.imageData[k] = o.imageData[k]; });
     if (o.imageWidths && typeof o.imageWidths === "object") Object.keys(o.imageWidths).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageWidths[k] === "number" && isFinite(o.imageWidths[k])) d.imageWidths[k] = Math.max(15, Math.min(100, o.imageWidths[k])); });
     if (o.sectionImages && typeof o.sectionImages === "object") ["galerie","produits"].forEach(function (k) { if (Array.isArray(o.sectionImages[k])) d.sectionImages[k] = o.sectionImages[k].slice(0, 8).filter(function (v) { return typeof v === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(v) && v.length < 180000; }); });
+    if (o.sectionImageSettings && typeof o.sectionImageSettings === "object") ["galerie","produits"].forEach(function (k) { var v=o.sectionImageSettings[k]; if (!v || typeof v !== "object") return; d.sectionImageSettings[k].fit = ["cover","contain"].indexOf(v.fit)>=0 ? v.fit : d.sectionImageSettings[k].fit; if (typeof v.height==="number" && isFinite(v.height)) d.sectionImageSettings[k].height=Math.max(80,Math.min(260,v.height)); });
     if (o.imageStyles && typeof o.imageStyles === "object") Object.keys(o.imageStyles).slice(0, 3).forEach(function (k) { var v=o.imageStyles[k]; if (!/^block_[0-9]{1,16}$/.test(k) || !v || typeof v !== "object") return; var z={}; if (["contain","cover","fill"].indexOf(v.fit)>=0) z.fit=v.fit; if (typeof v.radius==="number" && isFinite(v.radius)) z.radius=Math.max(0,Math.min(40,v.radius)); if (typeof v.border==="boolean") z.border=v.border; if (/^#[0-9a-f]{6}$/i.test(v.borderColor)) z.borderColor=v.borderColor; d.imageStyles[k]=z; });
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
@@ -64,7 +65,7 @@
     return d;
   }
   var pages = [], activePageId = null;
-  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageStyles", "imageData", "imageWidths", "sectionImages"];
+  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageStyles", "imageData", "imageWidths", "sectionImages", "sectionImageSettings"];
   function pageSnapshot(source) {
     var snap = {};
     PAGE_FIELDS.forEach(function (k) { snap[k] = source[k] instanceof Array ? source[k].slice() : (source[k] && typeof source[k] === "object" ? JSON.parse(JSON.stringify(source[k])) : source[k]); });
@@ -291,8 +292,8 @@
     var builders = {
       about: function (b) { b.appendChild(lines(3)); },
       services: function (b) { var g = el("div", "pv-grid3"); [1, 2, 3].forEach(function (i) { var c = el("div", "pv-card"); c.appendChild(el("b", "", "Service " + i)); c.appendChild(lines(2)); g.appendChild(c); }); b.appendChild(g); },
-      produits: function (b) { var g = el("div", "pv-grid4 pv-user-images"); var imgs = state.sectionImages.produits || []; for (var i = 0; i < Math.max(4, imgs.length); i++) { var c = el("div", "pv-card"); if (imgs[i]) { var im = el("img", "pv-section-image"); im.src = imgs[i]; im.alt = "Produit " + (i + 1); c.appendChild(im); } else c.appendChild(el("div", "pv-sq")); c.appendChild(el("b", "", "Produit " + (i + 1))); c.appendChild(el("span", "pv-price", (i * 5 + 5) + " 000 FCFA")); g.appendChild(c); } b.appendChild(g); },
-      galerie: function (b) { var g = el("div", "pv-grid3 pv-user-images"); var imgs = state.sectionImages.galerie || []; for (var i = 0; i < Math.max(6, imgs.length); i++) { if (imgs[i]) { var im = el("img", "pv-section-image pv-gallery-image"); im.src = imgs[i]; im.alt = "Image de galerie " + (i + 1); g.appendChild(im); } else g.appendChild(el("div", "pv-sq")); } b.appendChild(g); },
+      produits: function (b) { var g = el("div", "pv-grid4 pv-user-images"); var imgs = state.sectionImages.produits || []; for (var i = 0; i < Math.max(4, imgs.length); i++) { var c = el("div", "pv-card"); if (imgs[i]) { var im = el("img", "pv-section-image pv-product-image"); im.src = imgs[i]; im.alt = "Produit " + (i + 1); im.style.height = state.sectionImageSettings.produits.height + "px"; im.style.objectFit = state.sectionImageSettings.produits.fit; c.appendChild(im); } else c.appendChild(el("div", "pv-sq")); c.appendChild(el("b", "", "Produit " + (i + 1))); c.appendChild(el("span", "pv-price", (i * 5 + 5) + " 000 FCFA")); g.appendChild(c); } b.appendChild(g); },
+      galerie: function (b) { var g = el("div", "pv-grid3 pv-user-images"); var imgs = state.sectionImages.galerie || []; for (var i = 0; i < Math.max(6, imgs.length); i++) { if (imgs[i]) { var im = el("img", "pv-section-image pv-gallery-image"); im.src = imgs[i]; im.alt = "Image de galerie " + (i + 1); im.style.height = state.sectionImageSettings.galerie.height + "px"; im.style.objectFit = state.sectionImageSettings.galerie.fit; g.appendChild(im); } else g.appendChild(el("div", "pv-sq")); } b.appendChild(g); },
       tarifs: function (b) { var g = el("div", "pv-grid3"); ["Basique", "Standard", "Premium"].forEach(function (n) { var c = el("div", "pv-card"); c.appendChild(el("b", "", n)); c.appendChild(el("span", "pv-price", "— FCFA")); c.appendChild(lines(2)); g.appendChild(c); }); b.appendChild(g); },
       temoignages: function (b) { var g = el("div", "pv-grid2"); [1, 2].forEach(function () { var c = el("div", "pv-card"); c.appendChild(el("p", "", "“Un travail soigné, livré dans les temps.”")); c.appendChild(el("b", "", "Prénom Nom")); g.appendChild(c); }); b.appendChild(g); },
       contact: function (b) { var c = el("div", "pv-card"); c.appendChild(el("div", "pv-input", "Ton nom")); c.appendChild(el("div", "pv-input", "Ton message")); c.appendChild(el("i", "pv-btn", "Envoyer")); b.appendChild(c); }
@@ -391,6 +392,15 @@
       lab.appendChild(cb); lab.appendChild(document.createTextNode(" " + SEC[state.type][k])); sl.appendChild(lab);
       if (state.type === "site" && (k === "galerie" || k === "produits") && on) {
         var tools = el("div", "section-image-tools");
+        var settings = state.sectionImageSettings[k];
+        var fitLabel = el("label", "section-image-setting-label", "Affichage");
+        var fitSelect = document.createElement("select"); fitSelect.className = "section-image-fit";
+        [["cover","Remplir le cadre"],["contain","Afficher toute l’image"]].forEach(function (opt) { var option=document.createElement("option"); option.value=opt[0]; option.textContent=opt[1]; fitSelect.appendChild(option); });
+        fitSelect.value=settings.fit; fitSelect.addEventListener("change", function () { settings.fit=this.value; render(); saveDraft(); });
+        var heightLabel=el("label","section-image-setting-label","Hauteur : "); var heightValue=el("b","section-image-height-value",settings.height+" px"); heightLabel.appendChild(heightValue);
+        var heightRange=document.createElement("input"); heightRange.type="range"; heightRange.min="80"; heightRange.max="260"; heightRange.step="5"; heightRange.value=settings.height; heightRange.className="section-image-height";
+        heightRange.addEventListener("input",function(){settings.height=Number(this.value);heightValue.textContent=settings.height+" px";applySectionImageSizing(k);saveDraft();});
+        tools.appendChild(fitLabel); tools.appendChild(fitSelect); tools.appendChild(heightLabel); tools.appendChild(heightRange);
         var count = (state.sectionImages[k] || []).length;
         var choose = el("button", "section-image-pick", k === "galerie" ? "＋ Ajouter des photos" : "＋ Ajouter des images de produits"); choose.type = "button"; choose.disabled = count >= 8;
         var input = document.createElement("input"); input.type = "file"; input.accept = "image/png,image/jpeg,image/webp"; input.multiple = true; input.hidden = true;
@@ -557,6 +567,12 @@
     };
     reader.onerror = function () { showMsg($("warn"), "La lecture du fichier a échoué.", true); };
     reader.readAsDataURL(file);
+  }
+
+  function applySectionImageSizing(section) {
+    var settings=state.sectionImageSettings[section];
+    var selector=section==="galerie" ? ".pv-gallery-image" : ".pv-product-image";
+    $("pv").querySelectorAll(selector).forEach(function(img){img.style.height=settings.height+"px";img.style.objectFit=settings.fit;});
   }
 
   function addSectionImages(section, files) {
