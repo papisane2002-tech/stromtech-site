@@ -681,3 +681,131 @@ body.studio-dark:has(.studio-main) .studio-submit .btn-blue{background:#087f6b;c
  body:not(.studio-dark) .studio-stage{background:linear-gradient(145deg,#1a263a,#141e30)}
  body:not(.studio-dark) .studio-submit .btn-blue{background:#087f6b;color:#fff}
 }
+
+
+/* ===== Harmonisation stricte du thème sombre avec le site Stromtech =====
+   Référence : assets/style.css (accueil et pages publiques). */
+body.studio-dark:has(.studio-main){
+  --ink:#f6f7ff;--muted:#b8c2d9;--blue:#38d6b0;--blue-dark:#20b894;
+  --mist:#1b2940;--line:#ffffff20;
+  background:radial-gradient(circle at 90% 0,#253363,transparent 30%),#0b1020!important;
+  color:#f6f7ff!important;
+}
+body.studio-dark:has(.studio-main) .site-header{
+  background:#0b1020ef!important;border-bottom:1px solid #ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .site-header .logo,
+body.studio-dark:has(.studio-main) .site-header .links a{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .site-header .logo b,
+body.studio-dark:has(.studio-main) .site-header .links a:hover,
+body.studio-dark:has(.studio-main) .site-header .links a[aria-current=page]{color:#38d6b0!important}
+body.studio-dark:has(.studio-main) .site-header .btn-line{
+  color:#f6f7ff!important;background:#141d32!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .studio-head .block-title{color:#f6f7ff!important}
+body.studio-dark:has(.studio-main) .studio-head .block-intro{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .studio-kicker{
+  color:#38d6b0!important;background:#38d6b014!important;border-color:#38d6b055!important;
+}
+body.studio-dark:has(.studio-main) .studio-kicker:before{
+  background:#38d6b0!important;box-shadow:0 0 0 4px #38d6b022!important;
+}
+body.studio-dark:has(.studio-main) .studio-panel{
+  color:#f6f7ff!important;background:#141d32!important;border-color:#ffffff20!important;
+  box-shadow:0 12px 34px #0004!important;
+}
+body.studio-dark:has(.studio-main) .panel-heading{border-bottom-color:#ffffff20!important}
+body.studio-dark:has(.studio-main) .panel-heading b,
+body.studio-dark:has(.studio-main) .studio-panel .grp h3{color:#f6f7ff!important}
+body.studio-dark:has(.studio-main) .panel-heading small,
+body.studio-dark:has(.studio-main) .studio-panel .identity-help,
+body.studio-dark:has(.studio-main) .studio-panel .field-label{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .panel-index{
+  color:#38d6b0!important;background:#38d6b014!important;border-color:#38d6b055!important;
+}
+body.studio-dark:has(.studio-main) .studio-panel .grp{border-bottom-color:#ffffff20!important}
+body.studio-dark:has(.studio-main) .studio-panel input[type=text],
+body.studio-dark:has(.studio-main) .studio-panel select,
+body.studio-dark:has(.studio-main) .studio-panel textarea,
+body.studio-dark:has(.studio-main) .element-inspector textarea{
+  color:#f6f7ff!important;background:#0b1224!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .studio-panel input::placeholder,
+body.studio-dark:has(.studio-main) .studio-panel textarea::placeholder{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .studio-panel input:focus,
+body.studio-dark:has(.studio-main) .studio-panel select:focus,
+body.studio-dark:has(.studio-main) .studio-panel textarea:focus{
+  border-color:#38d6b0!important;box-shadow:0 0 0 3px #38d6b022!important;
+}
+body.studio-dark:has(.studio-main) .studio-panel .seg button,
+body.studio-dark:has(.studio-main) .studio-panel .tpl{
+  color:#b8c2d9!important;background:#0b1224!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .studio-panel .seg button[aria-pressed=true],
+body.studio-dark:has(.studio-main) .studio-panel .tpl[aria-pressed=true]{
+  color:#07131a!important;background:#38d6b0!important;border-color:#38d6b0!important;
+}
+body.studio-dark:has(.studio-main) .studio-stage{
+  color:#f6f7ff!important;background:linear-gradient(140deg,#141d32,#0b1020)!important;
+  border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .stage-heading b{color:#f6f7ff!important}
+body.studio-dark:has(.studio-main) .stage-heading small,
+body.studio-dark:has(.studio-main) .stage-hint{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .viewport-switch{background:#0b1224!important;border-color:#ffffff20!important}
+body.studio-dark:has(.studio-main) .viewport-switch button{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .viewport-switch button[aria-pressed=true]{
+  color:#07131a!important;background:#38d6b0!important;border-color:#38d6b0!important;
+}
+body.studio-dark:has(.studio-main) .stage-hint{background:#141d32!important;border-color:#ffffff20!important}
+body.studio-dark:has(.studio-main) .stage-hint span{color:#38d6b0!important}
+body.studio-dark:has(.studio-main) .block-toolbar button,
+body.studio-dark:has(.studio-main) .block-actions button{
+  color:#f6f7ff!important;background:#0b1224!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .block-toolbar button:hover,
+body.studio-dark:has(.studio-main) .block-actions button:hover{
+  color:#38d6b0!important;border-color:#38d6b0!important;
+}
+body.studio-dark:has(.studio-main) .block-toolbar #addImageBlock{
+  color:#07131a!important;background:#38d6b0!important;border-color:#38d6b0!important;
+}
+body.studio-dark:has(.studio-main) .element-inspector,
+body.studio-dark:has(.studio-main) .block-style-group,
+body.studio-dark:has(.studio-main) .block-position-group,
+body.studio-dark:has(.studio-main) .block-align-group,
+body.studio-dark:has(.studio-main) .custom-cards-editor{
+  color:#f6f7ff!important;background:#0b1224!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .element-inspector .inspector-name,
+body.studio-dark:has(.studio-main) .block-style-group output,
+body.studio-dark:has(.studio-main) .block-position-group output{color:#38d6b0!important}
+body.studio-dark:has(.studio-main) .studio-submit{border-top-color:#ffffff20!important}
+body.studio-dark:has(.studio-main) .studio-submit .btn-blue{
+  color:#07131a!important;background:#38d6b0!important;box-shadow:0 8px 22px #38d6b040!important;
+}
+body.studio-dark:has(.studio-main) .studio-submit .btn-line{
+  color:#f6f7ff!important;background:#0b1224!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .studio-submit .small{color:#b8c2d9!important}
+body.studio-dark:has(.studio-main) .shared{
+  color:#f6f7ff!important;background:#141d32!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .studio-panel:hover{border-color:#38d6b066!important}
+body.studio-dark:has(.studio-main) .section-image-tools,
+body.studio-dark:has(.studio-main) .product-detail-fields,
+body.studio-dark:has(.studio-main) .custom-card-fields,
+body.studio-dark:has(.studio-main) .section-image-row,
+body.studio-dark:has(.studio-main) .logo-border-options{
+  color:#f6f7ff!important;background:#0b1224!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .section-image-tools button,
+body.studio-dark:has(.studio-main) .custom-card-add,
+body.studio-dark:has(.studio-main) .custom-card-remove,
+body.studio-dark:has(.studio-main) .block-align-actions button{
+  color:#f6f7ff!important;background:#141d32!important;border-color:#ffffff20!important;
+}
+body.studio-dark:has(.studio-main) .tpl-preview{background:#0b1224!important;border-color:#ffffff20!important}
+body.studio-dark:has(.studio-main) .tpl-preview i{background:#42516b!important}
+body.studio-dark:has(.studio-main) .tpl-preview .tpl-preview-hero{background:linear-gradient(100deg,#087f6b,#38d6b0)!important}
+body.studio-dark:has(.studio-main) .tpl .tpl-tag{color:#38d6b0!important}
