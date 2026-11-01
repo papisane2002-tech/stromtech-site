@@ -86,6 +86,13 @@
       <label for="imageWidth" class="field-label">Largeur de l’image</label>
       <input id="imageWidth" type="range" min="15" max="100" step="1" value="60">
       <p class="drag-hint">Tu peux aussi redimensionner l’image avec le curseur.</p>
+      <label for="imageFit" class="field-label">Ajustement de l’image</label>
+      <select id="imageFit"><option value="contain">Afficher toute l’image</option><option value="cover">Remplir le cadre</option><option value="fill">Étirer au cadre</option></select>
+      <label for="imageRadius" class="field-label">Arrondi des coins <output id="imageRadiusValue">0 px</output></label>
+      <input id="imageRadius" type="range" min="0" max="40" step="1" value="0">
+      <label class="image-border-option"><input id="imageBorder" type="checkbox"> Ajouter une bordure</label>
+      <label for="imageBorderColor" class="field-label">Couleur de la bordure</label>
+      <input id="imageBorderColor" type="color" value="#dce2ee">
      </div>
      <div class="block-actions" id="blockActions" hidden>
       <p class="drag-hint">Fais glisser le bloc directement dans l’aperçu pour le déplacer.</p>
