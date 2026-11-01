@@ -562,7 +562,7 @@
   function deleteSelectedBlock() {
     var i = selectedBlockIndex(); if (i < 0) return;
     var key = state.blocks[i].id;
-    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key]; delete state.blockSizes[key]; delete state.imageData[key]; delete state.imageWidths[key];
+    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key]; delete state.blockSizes[key]; delete state.blockStyles[key]; delete state.imageData[key]; delete state.imageWidths[key];
     selectedKey = null; render(); saveDraft();
   }
 
