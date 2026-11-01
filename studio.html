@@ -46,6 +46,8 @@
     <div class="block-toolbar" role="group" aria-label="Ajouter un bloc">
      <button type="button" id="addTextBlock">+ Texte</button>
      <button type="button" id="addButtonBlock">+ Bouton</button>
+     <button type="button" id="addImageBlock">+ Image / logo</button>
+     <input id="imageUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
     </div>
    </div>
    <div class="preview-wrap" aria-label="Aperçu en direct">
@@ -64,10 +66,15 @@
     <p class="inspector-empty" id="inspectorEmpty">Clique sur un texte ou un titre dans l’aperçu pour le modifier.</p>
     <div id="inspectorFields" hidden>
      <p class="inspector-name" id="selectedElementName"></p>
-     <label for="elementText" class="field-label">Texte</label>
+     <label for="elementText" class="field-label" id="elementTextLabel">Texte</label>
      <textarea id="elementText" rows="3" maxlength="200"></textarea>
-     <label for="elementColor" class="field-label">Couleur du texte</label>
+     <label for="elementColor" class="field-label" id="elementColorLabel">Couleur du texte</label>
      <input id="elementColor" type="color" value="#14161f">
+     <div id="imageSizeGroup" hidden>
+      <label for="imageWidth" class="field-label">Largeur de l’image</label>
+      <input id="imageWidth" type="range" min="15" max="100" step="1" value="60">
+      <p class="drag-hint">Tu peux aussi redimensionner l’image avec le curseur.</p>
+     </div>
      <div class="block-actions" id="blockActions" hidden>
       <p class="drag-hint">Fais glisser le bloc directement dans l’aperçu pour le déplacer.</p>
       <button type="button" id="deleteBlock" class="danger-action">Supprimer le bloc</button>
