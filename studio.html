@@ -25,6 +25,7 @@
   <h1 class="block-title">Studio de design</h1>
   <p class="block-intro" style="margin-bottom:0">Crée un site Web, une application, un CV professionnel ou une affiche. Personnalise ta composition, visualise le résultat et envoie ton projet à Stromtech.</p>
   <button class="studio-back-hub" id="studioBackHub" type="button" hidden>← Tous les ateliers</button>
+  <section class="studio-workspace-banner" id="studioWorkspace" hidden aria-live="polite"><div><span class="studio-workspace-eyebrow" id="studioWorkspaceEyebrow">ATELIER STROMTECH</span><h2 id="studioWorkspaceTitle">Atelier de création</h2><p id="studioWorkspaceDescription">Choisis un modèle puis personnalise chaque élément.</p></div><span class="studio-workspace-step">1. Modèle <i>→</i> 2. Personnalisation <i>→</i> 3. Aperçu</span></section>
   <p class="shared" id="sharedNote" hidden>Tu regardes une maquette partagée dans une conversation. Tu peux la modifier ici, sans effet sur l’original.</p>
  </div>
 
@@ -43,7 +44,7 @@
   <aside class="studio-panel studio-tools" aria-label="Outils et structure du projet">
    <div class="panel-heading"><span class="panel-index">01</span><div><b>Structure</b><small>Choisis ton projet</small></div></div>
    <div class="grp"><h3>Ce que tu veux créer</h3><div class="seg" id="typeSeg"></div></div>
-   <div class="grp page-manager"><h3>Pages du projet</h3><div id="pageList" class="page-list" aria-label="Pages du projet"></div><div class="page-actions"><button type="button" id="addPage">+ Nouvelle page</button><button type="button" id="renamePage">Renommer</button><button type="button" id="duplicatePage">Dupliquer</button><button type="button" id="deletePage" class="danger-action">Supprimer</button></div><p class="identity-help" id="pageStatus" aria-live="polite">1 page · chaque page garde son contenu.</p></div><div class="grp"><h3>Modèle de départ</h3><div class="opts" id="tplList"></div></div>
+   <div class="grp page-manager"><h3>Pages du projet</h3><div id="pageList" class="page-list" aria-label="Pages du projet"></div><div class="page-actions"><button type="button" id="addPage">+ Nouvelle page</button><button type="button" id="renamePage">Renommer</button><button type="button" id="duplicatePage">Dupliquer</button><button type="button" id="deletePage" class="danger-action">Supprimer</button></div><p class="identity-help" id="pageStatus" aria-live="polite">1 page · chaque page garde son contenu.</p></div><div class="grp"><h3 id="studioTemplateHeading">Modèles de départ</h3><p class="studio-template-help" id="studioTemplateHelp">Choisis une base de création pour commencer.</p><div class="opts" id="tplList"></div></div>
    <div class="grp"><h3 id="secLegend">Sections</h3><div id="secList"></div><p class="identity-help">Pour Galerie et Produits, active la section puis ajoute tes propres images.</p></div>
   </aside>
 
