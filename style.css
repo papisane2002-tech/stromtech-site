@@ -332,3 +332,9 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-s
 .pv [data-block-id]{max-width:100%}
 @media(max-width:940px){.block-toolbar{width:100%}.block-toolbar button{flex:1}}
 @media(max-width:560px){.pv-custom-blocks{padding:14px}}
+
+
+/* Déplacement horizontal des blocs personnalisés */
+.block-actions button{touch-action:manipulation}
+.pv [data-block-id]{transition:transform .18s ease,outline-color .12s,background-color .12s}
+@media(max-width:560px){.block-actions button{flex:1;min-width:42%}}
