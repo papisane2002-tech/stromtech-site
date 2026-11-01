@@ -27,7 +27,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, imageData: {}, imageWidths: {} };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, imageData: {}, imageWidths: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -53,6 +53,7 @@
     if (o.imageWidths && typeof o.imageWidths === "object") Object.keys(o.imageWidths).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageWidths[k] === "number" && isFinite(o.imageWidths[k])) d.imageWidths[k] = Math.max(15, Math.min(100, o.imageWidths[k])); });
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
+    if (o.blockSizes && typeof o.blockSizes === "object") Object.keys(o.blockSizes).slice(0, 30).forEach(function (k) { var z = o.blockSizes[k]; if (/^block_[0-9]{1,16}$/.test(k) && z && typeof z.w === "number" && typeof z.h === "number" && isFinite(z.w) && isFinite(z.h)) d.blockSizes[k] = { w: Math.max(48, Math.min(1200, z.w)), h: Math.max(40, Math.min(900, z.h)) }; });
     return d;
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
@@ -91,6 +92,8 @@
     var wrap = el("section", "pv-custom-blocks");
     state.blocks.forEach(function (block) {
       var key = block.id;
+      var item = el("div", "pv-custom-item");
+      item.dataset.blockId = block.id;
       var node;
       if (block.type === "image") {
         node = el("img", "pv-custom-image");
@@ -101,12 +104,17 @@
       } else {
         node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
       }
-      node.dataset.blockId = block.id;
       var pos = state.blockPositions[block.id] || { x: 0, y: 0 };
       var offset = state.blockOffsets[block.id] || 0;
-      node.style.transform = "translate3d(" + (pos.x + offset / 100 * 100) + "px," + pos.y + "px,0)";
+      item.style.transform = "translate3d(" + (pos.x + offset / 100 * 100) + "px," + pos.y + "px,0)";
+      var size = state.blockSizes[block.id];
+      if (size) { item.style.width = size.w + "px"; item.style.height = size.h + "px"; }
+      if (block.type === "image") { node.style.width = "100%"; if (size) node.style.height = "100%"; }
       if (block.type === "button") node.type = "button";
-      wrap.appendChild(node);
+      item.appendChild(node);
+      var handle = el("button", "pv-resize-handle"); handle.type = "button"; handle.setAttribute("aria-label", "Redimensionner cet élément"); handle.title = "Redimensionner";
+      item.appendChild(handle);
+      wrap.appendChild(item);
     });
     root.appendChild(wrap);
   }
@@ -268,7 +276,8 @@
       if (!selectedKey) return;
       state.imageWidths[selectedKey] = Number(this.value);
       var img = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
-      if (img) img.style.width = this.value + "%";
+      if (img) { img.style.width = this.value + "%"; img.style.height = ""; }
+      delete state.blockSizes[selectedKey];
       saveDraft();
     });
     $("deleteBlock").addEventListener("click", deleteSelectedBlock);
@@ -345,8 +354,21 @@
   }
 
   function bindBlockDragging() {
-    var drag = null, host = $("pv");
+    var drag = null, resize = null, host = $("pv");
     host.addEventListener("pointerdown", function (event) {
+      var handle = event.target.closest(".pv-resize-handle");
+      if (handle && event.button === 0) {
+        var item = handle.closest("[data-block-id]");
+        if (!item) return;
+        event.preventDefault(); event.stopPropagation();
+        selectedKey = item.dataset.blockId;
+        var rect = item.getBoundingClientRect();
+        resize = { id: selectedKey, item: item, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, w: rect.width, h: rect.height, moved: false };
+        item.classList.add("is-resizing");
+        if (handle.setPointerCapture) handle.setPointerCapture(event.pointerId);
+        updateInspector();
+        return;
+      }
       var node = event.target.closest("[data-block-id]");
       if (!node || event.button !== 0) return;
       selectedKey = node.dataset.blockId;
@@ -358,6 +380,15 @@
       event.preventDefault();
     });
     host.addEventListener("pointermove", function (event) {
+      if (resize && event.pointerId === resize.pointerId) {
+        var rw = Math.max(48, Math.min(1200, resize.w + event.clientX - resize.startX));
+        var rh = Math.max(40, Math.min(900, resize.h + event.clientY - resize.startY));
+        if (Math.abs(rw - resize.w) + Math.abs(rh - resize.h) > 2) resize.moved = true;
+        resize.item.style.width = rw + "px"; resize.item.style.height = rh + "px";
+        var inner = resize.item.querySelector("[data-editable]");
+        if (inner && inner.tagName === "IMG") { inner.style.width = "100%"; inner.style.height = "100%"; }
+        return;
+      }
       if (!drag || event.pointerId !== drag.pointerId) return;
       var dx = event.clientX - drag.startX, dy = event.clientY - drag.startY;
       if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
@@ -367,6 +398,11 @@
       drag.node.style.transform = "translate3d(" + x + "px," + y + "px,0)";
     });
     function finish(event) {
+      if (resize && (!event || event.pointerId === resize.pointerId)) {
+        var item = resize.item;
+        if (resize.moved) state.blockSizes[resize.id] = { w: Math.round(item.getBoundingClientRect().width), h: Math.round(item.getBoundingClientRect().height) };
+        item.classList.remove("is-resizing"); resize = null; saveDraft(); updateInspector(); return;
+      }
       if (!drag || (event && event.pointerId !== drag.pointerId)) return;
       if (drag.moved) {
         var dx = event.clientX - drag.startX, dy = event.clientY - drag.startY;
@@ -384,7 +420,7 @@
   function deleteSelectedBlock() {
     var i = selectedBlockIndex(); if (i < 0) return;
     var key = state.blocks[i].id;
-    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key]; delete state.imageData[key]; delete state.imageWidths[key];
+    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key]; delete state.blockSizes[key]; delete state.imageData[key]; delete state.imageWidths[key];
     selectedKey = null; render(); saveDraft();
   }
 
