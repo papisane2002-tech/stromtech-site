@@ -738,6 +738,7 @@
   }
 
   async function exportPoster(format) {
+    if (state.type === "poster") { $("exportStatus").textContent = "Le téléchargement des affiches est réservé aux commandes Stromtech."; return; }
     var poster = $("pv").querySelector(state.type === "cv" ? ".pv-cv" : ".pv-poster");
     var status = $("exportStatus"), pngBtn = $("exportPosterPng"), pdfBtn = $("exportPosterPdf");
     if (!poster) { status.textContent = "Sélectionne d’abord le type Affiche."; return; }
