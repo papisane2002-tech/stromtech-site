@@ -31,7 +31,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [] };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [] };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -59,6 +59,7 @@
     if (Array.isArray(o.productDetails)) d.productDetails = o.productDetails.slice(0,8).map(function(p){p=p&&typeof p==="object"?p:{};return {name:typeof p.name==="string"?p.name.slice(0,60):"",price:typeof p.price==="string"?p.price.slice(0,30):"",description:typeof p.description==="string"?p.description.slice(0,140):""};});
     if (Array.isArray(o.serviceDetails)) d.serviceDetails = o.serviceDetails.slice(0,6).map(function(p){p=p&&typeof p==="object"?p:{};return {name:typeof p.name==="string"?p.name.slice(0,60):"",description:typeof p.description==="string"?p.description.slice(0,140):""};});
     if (Array.isArray(o.pricingDetails)) d.pricingDetails = o.pricingDetails.slice(0,6).map(function(p){p=p&&typeof p==="object"?p:{};return {name:typeof p.name==="string"?p.name.slice(0,60):"",price:typeof p.price==="string"?p.price.slice(0,30):"",description:typeof p.description==="string"?p.description.slice(0,140):""};});
+    if (Array.isArray(o.testimonialDetails)) d.testimonialDetails = o.testimonialDetails.slice(0,6).map(function(p){p=p&&typeof p==="object"?p:{};return {quote:typeof p.quote==="string"?p.quote.slice(0,240):"",author:typeof p.author==="string"?p.author.slice(0,60):""};});
     if (o.sectionImageSettings && typeof o.sectionImageSettings === "object") ["galerie","produits"].forEach(function (k) { var v=o.sectionImageSettings[k]; if (!v || typeof v !== "object") return; d.sectionImageSettings[k].fit = ["cover","contain"].indexOf(v.fit)>=0 ? v.fit : d.sectionImageSettings[k].fit; if (typeof v.height==="number" && isFinite(v.height)) d.sectionImageSettings[k].height=Math.max(80,Math.min(260,v.height)); });
     if (o.imageStyles && typeof o.imageStyles === "object") Object.keys(o.imageStyles).slice(0, 3).forEach(function (k) { var v=o.imageStyles[k]; if (!/^block_[0-9]{1,16}$/.test(k) || !v || typeof v !== "object") return; var z={}; if (["contain","cover","fill"].indexOf(v.fit)>=0) z.fit=v.fit; if (typeof v.radius==="number" && isFinite(v.radius)) z.radius=Math.max(0,Math.min(40,v.radius)); if (typeof v.border==="boolean") z.border=v.border; if (/^#[0-9a-f]{6}$/i.test(v.borderColor)) z.borderColor=v.borderColor; d.imageStyles[k]=z; });
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
@@ -68,7 +69,7 @@
     return d;
   }
   var pages = [], activePageId = null;
-  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageStyles", "imageData", "imageWidths", "sectionImages", "sectionImageSettings", "productDetails", "serviceDetails", "pricingDetails"];
+  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageStyles", "imageData", "imageWidths", "sectionImages", "sectionImageSettings", "productDetails", "serviceDetails", "pricingDetails", "testimonialDetails"];
   function pageSnapshot(source) {
     var snap = {};
     PAGE_FIELDS.forEach(function (k) { snap[k] = source[k] instanceof Array ? source[k].slice() : (source[k] && typeof source[k] === "object" ? JSON.parse(JSON.stringify(source[k])) : source[k]); });
@@ -293,12 +294,12 @@
     root.appendChild(hero);
     renderCustomBlocks(root);
     var builders = {
-      about: function (b) { b.appendChild(lines(3)); },
+      about: function (b) { b.appendChild(editText("p", "pv-about-description", "Présente ton activité, ton expérience et ce qui te rend unique.", "aboutDescription", "Présentation de ton activité")); },
       services: function (b) { var g = el("div", "pv-grid3"); for (var i=0;i<Math.max(3,state.serviceDetails.length);i++) { var detail=state.serviceDetails[i]||{}; var c=el("div","pv-card"); c.appendChild(el("b","",detail.name||"Service "+(i+1))); if(detail.description)c.appendChild(el("p","pv-product-description",detail.description)); else c.appendChild(lines(2)); g.appendChild(c); } b.appendChild(g); },
       produits: function (b) { var g = el("div", "pv-grid4 pv-user-images"); var imgs = state.sectionImages.produits || []; for (var i = 0; i < Math.max(4, imgs.length); i++) { var c = el("div", "pv-card"); var detail=state.productDetails[i]||{}; if (imgs[i]) { var im = el("img", "pv-section-image pv-product-image"); im.src = imgs[i]; im.alt = detail.name || "Produit " + (i + 1); im.style.height = state.sectionImageSettings.produits.height + "px"; im.style.objectFit = state.sectionImageSettings.produits.fit; c.appendChild(im); } else c.appendChild(el("div", "pv-sq")); c.appendChild(el("b", "", detail.name || "Produit " + (i + 1))); if(detail.description)c.appendChild(el("p","pv-product-description",detail.description)); c.appendChild(el("span", "pv-price", detail.price || ((i * 5 + 5) + " 000 FCFA"))); g.appendChild(c); } b.appendChild(g); },
       galerie: function (b) { var g = el("div", "pv-grid3 pv-user-images"); var imgs = state.sectionImages.galerie || []; for (var i = 0; i < Math.max(6, imgs.length); i++) { if (imgs[i]) { var im = el("img", "pv-section-image pv-gallery-image"); im.src = imgs[i]; im.alt = "Image de galerie " + (i + 1); im.style.height = state.sectionImageSettings.galerie.height + "px"; im.style.objectFit = state.sectionImageSettings.galerie.fit; g.appendChild(im); } else g.appendChild(el("div", "pv-sq")); } b.appendChild(g); },
       tarifs: function (b) { var g = el("div", "pv-grid3"); for(var i=0;i<Math.max(3,state.pricingDetails.length);i++){var detail=state.pricingDetails[i]||{};var c=el("div","pv-card");c.appendChild(el("b","",detail.name||["Basique","Standard","Premium"][i]||"Offre "+(i+1)));c.appendChild(el("span","pv-price",detail.price||"— FCFA"));if(detail.description)c.appendChild(el("p","pv-product-description",detail.description));else c.appendChild(lines(2));g.appendChild(c);} b.appendChild(g); },
-      temoignages: function (b) { var g = el("div", "pv-grid2"); [1, 2].forEach(function () { var c = el("div", "pv-card"); c.appendChild(el("p", "", "“Un travail soigné, livré dans les temps.”")); c.appendChild(el("b", "", "Prénom Nom")); g.appendChild(c); }); b.appendChild(g); },
+      temoignages: function (b) { var g = el("div", "pv-grid2"); for(var i=0;i<Math.max(2,state.testimonialDetails.length);i++){var detail=state.testimonialDetails[i]||{};var c=el("div","pv-card");c.appendChild(el("p","","“"+(detail.quote||"Un travail soigné, livré dans les temps.")+"”"));c.appendChild(el("b","",detail.author||"Prénom Nom"));g.appendChild(c);} b.appendChild(g); },
       contact: function (b) { var c = el("div", "pv-card"); c.appendChild(el("div", "pv-input", "Ton nom")); c.appendChild(el("div", "pv-input", "Ton message")); c.appendChild(el("i", "pv-btn", "Envoyer")); b.appendChild(c); }
     };
     state.sections.forEach(function (k) { var s = el("section", "pv-sec"); s.appendChild(editText("h5", "", SEC.site[k], "section_" + k, "Titre : " + SEC.site[k])); builders[k](s); root.appendChild(s); });
@@ -433,6 +434,28 @@
           var clear = el("button", "section-image-clear", "Tout retirer"); clear.type = "button"; clear.addEventListener("click", function () { state.sectionImages[k] = []; change(true); }); tools.appendChild(clear);
         }
         tools.appendChild(input); sl.appendChild(tools);
+      }
+      if (state.type === "site" && k === "temoignages" && on) {
+        var testimonialEditor = el("div", "custom-cards-editor");
+        testimonialEditor.appendChild(el("h4", "", "Personnaliser les témoignages"));
+        for (var ti=0;ti<Math.max(2,state.testimonialDetails.length);ti++) {
+          (function(index) {
+            var detail=state.testimonialDetails[index]||{}, card=el("div","custom-card-fields");
+            card.appendChild(el("b","","Témoignage "+(index+1)));
+            [["quote","Avis du client",240],["author","Nom du client",60]].forEach(function(field) {
+              var inputField=document.createElement("input");inputField.type="text";inputField.maxLength=field[2];inputField.placeholder=field[1];inputField.value=detail[field[0]]||"";
+              inputField.setAttribute("aria-label",field[1]+" "+(index+1));
+              inputField.addEventListener("input",function(){if(!state.testimonialDetails[index])state.testimonialDetails[index]={quote:"",author:""};state.testimonialDetails[index][field[0]]=this.value;render();saveDraft();});
+              card.appendChild(inputField);
+            });
+            testimonialEditor.appendChild(card);
+          })(ti);
+        }
+        var addTestimonial=el("button","custom-card-add","＋ Ajouter un témoignage");addTestimonial.type="button";addTestimonial.disabled=state.testimonialDetails.length>=6;
+        addTestimonial.addEventListener("click",function(){if(state.testimonialDetails.length<6){state.testimonialDetails.push({quote:"",author:""});change(true);}});
+        testimonialEditor.appendChild(addTestimonial);
+        if(state.testimonialDetails.length>2){var removeTestimonial=el("button","custom-card-remove","Retirer le dernier témoignage");removeTestimonial.type="button";removeTestimonial.addEventListener("click",function(){state.testimonialDetails.pop();change(true);});testimonialEditor.appendChild(removeTestimonial);}
+        sl.appendChild(testimonialEditor);
       }
       if (state.type === "site" && (k === "services" || k === "tarifs") && on) {
         var isServices = k === "services", collection = isServices ? state.serviceDetails : state.pricingDetails;
