@@ -357,10 +357,23 @@
     var tl = $("tplList"); tl.textContent = "";
     Object.keys(TPL[state.type]).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
-      var visual = el("span", "tpl-preview tpl-preview-" + k);
-      visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
-      b.appendChild(visual); b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || (state.type === "site" ? "Site Web" : "Application")));
+      var imageName = ({ landing: "page-conversion", evenement: "evenement", livraison: "livraison", education: "education" })[k];
+      if (imageName) {
+        var image = el("img", "tpl-real-image"); image.src = "assets/templates/" + imageName + ".webp"; image.alt = "Aperçu du modèle " + t.label; image.loading = "lazy"; image.onerror = function () { this.hidden = true; };
+        b.appendChild(image);
+      } else {
+        var visual = el("span", "tpl-preview tpl-preview-" + k);
+        visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
+        b.appendChild(visual);
+      }
+      b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || (state.type === "site" ? "Site Web" : "Application")));
       b.appendChild(el("span", "", t.desc));
+      if (imageName) {
+        var actions = el("span", "tpl-card-actions");
+        var preview = el("button", "tpl-preview-action", "Aperçu"); preview.type = "button";
+        preview.addEventListener("click", function (event) { event.stopPropagation(); openTemplatePreview(k); });
+        actions.appendChild(preview); b.appendChild(actions);
+      }
       b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); change(true); }); tl.appendChild(b);
     });
     var sw = $("swatches"); sw.textContent = "";
@@ -389,10 +402,31 @@
       lab.appendChild(cb); lab.appendChild(document.createTextNode(" " + SEC[state.type][k])); sl.appendChild(lab);
     });
   }
+
+  function openTemplatePreview(key) {
+    var template = TPL[state.type][key];
+    if (!template) return;
+    var imageName = ({ landing: "page-conversion", evenement: "evenement", livraison: "livraison", education: "education" })[key];
+    if (!imageName) return;
+    $("templatePreviewImage").src = "assets/templates/" + imageName + ".webp";
+    $("templatePreviewImage").alt = "Aperçu du modèle " + template.label;
+    $("templatePreviewTitle").textContent = template.label;
+    $("templatePreviewDescription").textContent = template.desc;
+    $("templatePreviewUse").onclick = function () {
+      state.template = key; state.sections = template.sections.slice();
+      $("templatePreviewDialog").hidden = true; change(true);
+    };
+    $("templatePreviewDialog").hidden = false;
+    $("templatePreviewClose").focus();
+  }
+
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
   function bind() {
     bindBlockDragging();
+    $("templatePreviewClose").addEventListener("click", function () { $("templatePreviewDialog").hidden = true; });
+    $("templatePreviewDialog").addEventListener("click", function (event) { if (event.target === $("templatePreviewDialog")) $("templatePreviewDialog").hidden = true; });
+    document.addEventListener("keydown", function (event) { if (event.key === "Escape" && !$("templatePreviewDialog").hidden) $("templatePreviewDialog").hidden = true; });
     $("addPage").addEventListener("click", function () { createPage(false); });
     $("renamePage").addEventListener("click", renameCurrentPage);
     $("duplicatePage").addEventListener("click", function () { createPage(true); });
