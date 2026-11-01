@@ -534,3 +534,16 @@ body.studio-dark:has(.studio-main) .shared{color:#E1E8F5;background:#1c2a42;bord
 body.studio-dark:has(.studio-main) .studio-panel:hover{border-color:#52658a}
 .theme-toggle{white-space:nowrap}
 @media(max-width:560px){.theme-toggle{padding:9px 12px;font-size:.85rem}}
+
+
+/* Redimensionnement libre des blocs ajoutés */
+.pv-custom-item{position:relative;display:inline-block;max-width:100%;min-width:48px;min-height:40px;box-sizing:border-box;vertical-align:top}
+.pv-custom-item>[data-editable]{box-sizing:border-box;max-width:100%}
+.pv-custom-item>.pv-custom-text,.pv-custom-item>.pv-custom-button{width:100%;height:100%;overflow-wrap:anywhere}
+.pv-custom-item>.pv-custom-image{display:block;width:100%;height:100%;object-fit:contain;max-width:100%}
+.pv-resize-handle{display:none;position:absolute;right:-9px;bottom:-9px;width:24px;height:24px;padding:0;border:2px solid #fff;border-radius:50%;background:var(--pc,#2340ff);box-shadow:0 1px 5px #0004;cursor:nwse-resize;touch-action:none;z-index:8}
+.pv-resize-handle:after{content:"";position:absolute;right:5px;bottom:5px;width:7px;height:7px;border-right:2px solid #fff;border-bottom:2px solid #fff}
+.pv-custom-item:has([data-editable].is-selected)>.pv-resize-handle,.pv-custom-item.is-resizing>.pv-resize-handle{display:block}
+.pv-custom-item.is-resizing{outline:1px dashed var(--pc);outline-offset:3px}
+.pv-custom-item.is-resizing>[data-editable]{outline:0!important}
+@media(max-width:560px){.pv-resize-handle{width:28px;height:28px;right:-10px;bottom:-10px}}
