@@ -957,3 +957,7 @@ body.studio-dark:has(.studio-main) .tpl .tpl-tag{color:#38d6b0!important}
 .poster-options input[type=range]{width:100%;accent-color:var(--blue)}
 body.studio-dark:has(.studio-main) .poster-options select{background:#0b1224;color:#f6f7ff;border-color:#ffffff20}
 .poster-options .identity-help{margin-top:10px}
+
+.poster-export-note{padding:16px 0;border-bottom:1px solid var(--line)}
+.poster-export-note h3{font-size:1.02rem;margin:0 0 7px;color:var(--ink)}
+.poster-export-note p{font-size:13px;line-height:1.55;margin:0;color:var(--muted)}
