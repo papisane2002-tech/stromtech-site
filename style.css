@@ -585,3 +585,11 @@ body.studio-dark:has(.studio-main) .block-style-group output{color:#aab8ff}
 #imageSizeGroup select{width:100%;min-height:38px;border:1px solid #dce2ee;border-radius:9px;padding:7px;background:#fff;color:#17203a}
 #imageSizeGroup input[type=color]{width:100%;height:34px;border:1px solid #dce2ee;border-radius:8px;background:#fff;padding:3px}
 body.studio-dark:has(.studio-main) #imageSizeGroup select{background:#111a2a;color:#f2f5ff;border-color:#3a4861}
+
+.block-position-group{display:grid;gap:7px;margin:12px 0;padding:12px;border:1px solid #e5e9f3;border-radius:12px;background:#f7f8fc}
+.block-position-group[hidden]{display:none}
+.block-position-group h4{margin:0 0 3px;font-size:13px}
+.block-position-group input[type=range]{width:100%;accent-color:var(--blue,#2340ff)}
+.block-position-group output{float:right;color:var(--blue,#2340ff);font-weight:700}
+body.studio-dark:has(.studio-main) .block-position-group{background:#172238;border-color:#34435d}
+body.studio-dark:has(.studio-main) .block-position-group output{color:#aab8ff}
