@@ -31,7 +31,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, imageData: {}, imageWidths: {} };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageData: {}, imageWidths: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -58,10 +58,11 @@
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
     if (o.blockSizes && typeof o.blockSizes === "object") Object.keys(o.blockSizes).slice(0, 30).forEach(function (k) { var z = o.blockSizes[k]; if (/^block_[0-9]{1,16}$/.test(k) && z && typeof z.w === "number" && typeof z.h === "number" && isFinite(z.w) && isFinite(z.h)) d.blockSizes[k] = { w: Math.max(48, Math.min(1200, z.w)), h: Math.max(40, Math.min(900, z.h)) }; });
+    if (o.blockStyles && typeof o.blockStyles === "object") Object.keys(o.blockStyles).slice(0, 30).forEach(function (k) { var s = o.blockStyles[k]; if (!/^block_[0-9]{1,16}$/.test(k) || !s || typeof s !== "object") return; var cleanStyle = {}; if (typeof s.fontSize === "number" && isFinite(s.fontSize)) cleanStyle.fontSize = Math.max(12, Math.min(48, s.fontSize)); if (["left", "center", "right"].indexOf(s.textAlign) >= 0) cleanStyle.textAlign = s.textAlign; if (["normal", "600", "700"].indexOf(String(s.fontWeight)) >= 0) cleanStyle.fontWeight = String(s.fontWeight); if (/^#[0-9a-f]{6}$/i.test(s.backgroundColor)) cleanStyle.backgroundColor = s.backgroundColor; if (typeof s.radius === "number" && isFinite(s.radius)) cleanStyle.radius = Math.max(0, Math.min(32, s.radius)); d.blockStyles[k] = cleanStyle; });
     return d;
   }
   var pages = [], activePageId = null;
-  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "imageData", "imageWidths"];
+  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageData", "imageWidths"];
   function pageSnapshot(source) {
     var snap = {};
     PAGE_FIELDS.forEach(function (k) { snap[k] = source[k] instanceof Array ? source[k].slice() : (source[k] && typeof source[k] === "object" ? JSON.parse(JSON.stringify(source[k])) : source[k]); });
@@ -172,6 +173,18 @@
     $("imageSizeGroup").hidden = !isImage;
     if (isImage) $("imageWidth").value = state.imageWidths[selectedKey] || 60;
     $("blockActions").hidden = !selectedBlock;
+    var styleGroup = $("blockStyleGroup");
+    if (styleGroup) {
+      styleGroup.hidden = !selectedBlock || isImage;
+      var style = state.blockStyles[selectedKey] || {};
+      $("blockFontSize").value = style.fontSize || 16;
+      $("blockFontSizeValue").textContent = (style.fontSize || 16) + " px";
+      $("blockTextAlign").value = style.textAlign || "left";
+      $("blockFontWeight").value = style.fontWeight || "normal";
+      $("blockBackground").value = style.backgroundColor || "#2340ff";
+      $("blockRadius").value = style.radius == null ? 12 : style.radius;
+      $("blockRadiusValue").textContent = $("blockRadius").value + " px";
+    }
   }
 
   function renderCustomBlocks(root) {
@@ -198,6 +211,14 @@
       if (size) { item.style.width = size.w + "px"; item.style.height = size.h + "px"; }
       if (block.type === "image") { if (!size) item.style.width = (state.imageWidths[key] || 60) + "%"; node.style.width = "100%"; if (size) node.style.height = "100%"; }
       if (block.type === "button") node.type = "button";
+      if (block.type !== "image") {
+        var blockStyle = state.blockStyles[key] || {};
+        if (blockStyle.fontSize) node.style.fontSize = blockStyle.fontSize + "px";
+        if (blockStyle.textAlign) node.style.textAlign = blockStyle.textAlign;
+        if (blockStyle.fontWeight) node.style.fontWeight = blockStyle.fontWeight;
+        if (blockStyle.backgroundColor) node.style.backgroundColor = blockStyle.backgroundColor;
+        if (blockStyle.radius != null) node.style.borderRadius = blockStyle.radius + "px";
+      }
       item.appendChild(node);
       var handle = el("button", "pv-resize-handle"); handle.type = "button"; handle.setAttribute("aria-label", "Redimensionner cet élément avec les flèches du clavier"); handle.title = "Redimensionner · flèches du clavier";
       handle.addEventListener("keydown", function (event) {
@@ -362,6 +383,17 @@
       state.content[selectedKey] = $("elementText").value.slice(0, 200);
       render(); saveDraft();
     });
+    function updateSelectedBlockStyle(key, property, value) {
+      if (!key || !state.blocks.some(function (b) { return b.id === key; })) return;
+      state.blockStyles[key] = state.blockStyles[key] || {};
+      state.blockStyles[key][property] = value;
+      render(); saveDraft();
+    }
+    $("blockFontSize").addEventListener("input", function () { $("blockFontSizeValue").textContent = this.value + " px"; updateSelectedBlockStyle(selectedKey, "fontSize", Number(this.value)); });
+    $("blockTextAlign").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "textAlign", this.value); });
+    $("blockFontWeight").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "fontWeight", this.value); });
+    $("blockBackground").addEventListener("input", function () { updateSelectedBlockStyle(selectedKey, "backgroundColor", this.value); });
+    $("blockRadius").addEventListener("input", function () { $("blockRadiusValue").textContent = this.value + " px"; updateSelectedBlockStyle(selectedKey, "radius", Number(this.value)); });
     $("elementColor").addEventListener("input", function () {
       if (!selectedKey) return;
       state.elementColors[selectedKey] = $("elementColor").value;
@@ -387,6 +419,7 @@
       var img = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
       if (img) { img.style.width = this.value + "%"; img.style.height = ""; var innerImage = img.querySelector("img"); if (innerImage) { innerImage.style.width = "100%"; innerImage.style.height = "auto"; } }
       delete state.blockSizes[selectedKey];
+    delete state.blockStyles[selectedKey];
       saveDraft();
     });
     $("deleteBlock").addEventListener("click", deleteSelectedBlock);
