@@ -112,7 +112,21 @@
       if (block.type === "image") { if (!size) item.style.width = (state.imageWidths[key] || 60) + "%"; node.style.width = "100%"; if (size) node.style.height = "100%"; }
       if (block.type === "button") node.type = "button";
       item.appendChild(node);
-      var handle = el("button", "pv-resize-handle"); handle.type = "button"; handle.setAttribute("aria-label", "Redimensionner cet élément"); handle.title = "Redimensionner";
+      var handle = el("button", "pv-resize-handle"); handle.type = "button"; handle.setAttribute("aria-label", "Redimensionner cet élément avec les flèches du clavier"); handle.title = "Redimensionner · flèches du clavier";
+      handle.addEventListener("keydown", function (event) {
+        var steps = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
+        var step = steps[event.key];
+        if (!step) return;
+        event.preventDefault();
+        var current = state.blockSizes[key] || { w: Math.round(item.getBoundingClientRect().width), h: Math.round(item.getBoundingClientRect().height) };
+        var amount = event.shiftKey ? 30 : 10;
+        current.w = Math.max(48, Math.min(1200, current.w + step[0] * amount));
+        current.h = Math.max(40, Math.min(900, current.h + step[1] * amount));
+        state.blockSizes[key] = current;
+        item.style.width = current.w + "px"; item.style.height = current.h + "px";
+        if (block.type === "image") { node.style.width = "100%"; node.style.height = "100%"; }
+        saveDraft();
+      });
       item.appendChild(handle);
       wrap.appendChild(item);
     });
