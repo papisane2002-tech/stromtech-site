@@ -27,7 +27,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {} };
+    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [] };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -43,6 +43,7 @@
     if (Array.isArray(o.sections)) { var ok = o.sections.filter(function (k) { return SEC[d.type][k]; }); if (ok.length) d.sections = ok.slice(0, d.type === "app" ? 5 : 7); }
     if (o.content && typeof o.content === "object") Object.keys(o.content).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && typeof o.content[k] === "string") d.content[k] = o.content[k].slice(0, 200); });
     if (o.elementColors && typeof o.elementColors === "object") Object.keys(o.elementColors).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && /^#[0-9a-f]{6}$/i.test(o.elementColors[k])) d.elementColors[k] = o.elementColors[k]; });
+    if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button"); }).map(function (b) { return { id: b.id, type: b.type }; });
     return d;
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
@@ -67,6 +68,21 @@
     $("selectedElementName").textContent = node.dataset.editLabel || "Élément";
     $("elementText").value = state.content[selectedKey] != null ? state.content[selectedKey] : node.textContent;
     $("elementColor").value = state.elementColors[selectedKey] || "#14161f";
+    var block = state.blocks.some(function (b) { return b.id === selectedKey; });
+    $("blockActions").hidden = !block;
+  }
+
+  function renderCustomBlocks(root) {
+    if (!state.blocks.length) return;
+    var wrap = el("section", "pv-custom-blocks");
+    state.blocks.forEach(function (block) {
+      var key = block.id;
+      var node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
+      node.dataset.blockId = block.id;
+      if (block.type === "button") node.type = "button";
+      wrap.appendChild(node);
+    });
+    root.appendChild(wrap);
   }
 
   /* ---------- Aperçu : site ---------- */
@@ -79,6 +95,7 @@
     var box = el("div", "pv-herotxt"); box.appendChild(editText("h4", "pv-h", sl, "heroTitle", "Titre principal")); box.appendChild(editText("p", "", "Une phrase courte pour expliquer ce que tu proposes à tes clients.", "heroDescription", "Description principale")); box.appendChild(editText("i", "pv-btn", tpl.hero === "banner" ? "Voir les nouveautés" : "Nous contacter", "heroButton", "Bouton principal")); hero.appendChild(box);
     if (tpl.hero === "left") hero.appendChild(el("div", "pv-avatar"));
     root.appendChild(hero);
+    renderCustomBlocks(root);
     var builders = {
       about: function (b) { b.appendChild(lines(3)); },
       services: function (b) { var g = el("div", "pv-grid3"); [1, 2, 3].forEach(function (i) { var c = el("div", "pv-card"); c.appendChild(el("b", "", "Service " + i)); c.appendChild(lines(2)); g.appendChild(c); }); b.appendChild(g); },
@@ -107,7 +124,7 @@
       messages: function () { scr.appendChild(el("div", "pv-bub", "Bonjour, comment puis-je t’aider ?")); scr.appendChild(el("div", "pv-bub me", "Je voudrais plus d’informations.")); scr.appendChild(el("div", "pv-input", "Écris ton message")); },
       profil: function () { scr.appendChild(el("div", "pv-avatar pv-center")); scr.appendChild(el("h4", "pv-h pv-ctr", "Ton profil")); ["Mes informations", "Mes commandes", "Aide"].forEach(function (t) { scr.appendChild(el("div", "pv-row", t)); }); }
     };
-    S[appTab](); ph.appendChild(scr);
+    S[appTab](); renderCustomBlocks(scr); ph.appendChild(scr);
     var bar = el("div", "pv-tabs");
     state.sections.forEach(function (k) { var b = el("button", k === appTab ? "on" : "", SEC.app[k]); b.type = "button"; b.addEventListener("click", function () { appTab = k; render(); }); bar.appendChild(b); });
     ph.appendChild(bar); root.appendChild(ph);
@@ -187,6 +204,11 @@
       render(); saveDraft();
     });
     $("clearSelection").addEventListener("click", function () { selectedKey = null; render(); });
+    $("addTextBlock").addEventListener("click", function () { addBlock("text"); });
+    $("addButtonBlock").addEventListener("click", function () { addBlock("button"); });
+    $("moveBlockUp").addEventListener("click", function () { moveSelectedBlock(-1); });
+    $("moveBlockDown").addEventListener("click", function () { moveSelectedBlock(1); });
+    $("deleteBlock").addEventListener("click", deleteSelectedBlock);
     document.querySelectorAll("[data-viewport]").forEach(function (b) {
       b.addEventListener("click", function () {
         viewport = b.getAttribute("data-viewport");
@@ -199,6 +221,28 @@
     ["name", "slogan", "notes"].forEach(function (id) { $(id).addEventListener("input", function () { state[id] = $(id).value; change(false); }); });
     $("reset").addEventListener("click", function () { state = defaults(); try { localStorage.removeItem(KEY); } catch (e) {} change(true); showMsg($("warn"), ""); });
     $("sendBtn").addEventListener("click", send);
+  }
+
+  function addBlock(type) {
+    if (state.blocks.length >= 30) { showMsg($("warn"), "Tu peux ajouter jusqu’à 30 blocs dans cette maquette.", true); return; }
+    var id = "block_" + Date.now();
+    while (state.blocks.some(function (b) { return b.id === id; })) id = "block_" + (Number(id.slice(6)) + 1);
+    state.blocks.push({ id: id, type: type });
+    state.content[id] = type === "button" ? "Nouveau bouton" : "Ton nouveau texte";
+    selectedKey = id; render(); saveDraft();
+  }
+  function selectedBlockIndex() { return state.blocks.findIndex(function (b) { return b.id === selectedKey; }); }
+  function moveSelectedBlock(delta) {
+    var i = selectedBlockIndex(), j = i + delta;
+    if (i < 0 || j < 0 || j >= state.blocks.length) return;
+    var item = state.blocks.splice(i, 1)[0]; state.blocks.splice(j, 0, item);
+    render(); saveDraft();
+  }
+  function deleteSelectedBlock() {
+    var i = selectedBlockIndex(); if (i < 0) return;
+    var key = state.blocks[i].id;
+    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key];
+    selectedKey = null; render(); saveDraft();
   }
 
   async function send() {
