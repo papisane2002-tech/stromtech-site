@@ -34,7 +34,7 @@
     if (!o || typeof o !== "object") return d;
     if (TPL[d.type][o.template]) { d.template = o.template; d.sections = TPL[d.type][o.template].sections.slice(); }
     if (typeof o.name === "string") d.name = o.name.slice(0, 60);
-    if (o.brandMode === "logo" && typeof o.brandLogo === "string" && /^data:image\\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.brandLogo) && o.brandLogo.length < 250000) { d.brandMode = "logo"; d.brandLogo = o.brandLogo; }
+    if (o.brandMode === "logo" && typeof o.brandLogo === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.brandLogo) && o.brandLogo.length < 250000) { d.brandMode = "logo"; d.brandLogo = o.brandLogo; }
     if (typeof o.slogan === "string") d.slogan = o.slogan.slice(0, 120);
     if (typeof o.notes === "string") d.notes = o.notes.slice(0, 1000);
     if (/^#[0-9a-f]{6}$/i.test(o.color)) d.color = o.color;
@@ -303,7 +303,7 @@
   }
 
   function addBrandLogo(file) {
-    if (!/^image\\/(png|jpeg|webp)$/.test(file.type)) { showMsg($("warn"), "Choisis un logo PNG, JPG ou WebP.", true); return; }
+    if (!/^image\/(png|jpeg|webp)$/.test(file.type)) { showMsg($("warn"), "Choisis un logo PNG, JPG ou WebP.", true); return; }
     if (file.size > 5 * 1024 * 1024) { showMsg($("warn"), "Logo trop volumineux : 5 Mo maximum.", true); return; }
     var reader = new FileReader();
     reader.onload = function () {
