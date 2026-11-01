@@ -323,6 +323,8 @@
   function previewCV(root) {
     var cv = el("article", "pv-document pv-cv pv-cv-" + state.template);
     var head = el("header", "cv-header");
+    var cvPhotoBlock = state.blocks.find(function(b){return b.type==="image" && state.imageData[b.id];});
+    if (cvPhotoBlock) { var photo=el("img","cv-photo"); photo.src=state.imageData[cvPhotoBlock.id]; photo.alt="Photo du CV"; head.appendChild(photo); }
     head.appendChild(editText("h2", "", state.name || "Prénom NOM", "cvName", "Nom complet"));
     head.appendChild(editText("p", "", state.slogan || "Intitulé du poste recherché", "cvTitle", "Titre professionnel"));
     cv.appendChild(head);
