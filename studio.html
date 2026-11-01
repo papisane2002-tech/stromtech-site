@@ -89,7 +89,19 @@
      <button type="button" id="brandLogoMode" aria-pressed="false">Utiliser un logo</button>
     </div>
     <div id="brandNameField"><label for="name" class="sr" style="position:absolute;left:-9999px">Nom</label><input id="name" type="text" maxlength="60" placeholder="Nom de ton entreprise" autocomplete="off"></div>
-    <div id="brandLogoField" hidden><button type="button" class="btn btn-line" id="chooseBrandLogo">Choisir mon logo</button><input id="brandLogoUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden><p class="identity-help" id="brandLogoStatus">PNG, JPG ou WebP · 5 Mo maximum</p><button type="button" class="text-action" id="removeBrandLogo" hidden>Retirer le logo</button></div>
+    <div id="brandLogoField" hidden>
+     <button type="button" class="btn btn-line" id="chooseBrandLogo">Choisir mon logo</button>
+     <input id="brandLogoUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+     <p class="identity-help" id="brandLogoStatus">PNG, JPG ou WebP · 5 Mo maximum</p>
+     <label for="brandLogoWidth" class="field-label">Largeur du logo <output id="brandLogoWidthValue">150 px</output></label>
+     <input id="brandLogoWidth" type="range" min="60" max="260" step="5" value="150">
+     <label class="chk logo-border-toggle"><input id="brandLogoBorder" type="checkbox"> Ajouter une bordure</label>
+     <div class="logo-border-options" id="brandLogoBorderOptions" hidden>
+      <label for="brandLogoBorderColor" class="field-label">Couleur de la bordure</label><input id="brandLogoBorderColor" type="color" value="#dce3f5">
+      <label for="brandLogoBorderWidth" class="field-label">Épaisseur de la bordure <output id="brandLogoBorderWidthValue">1 px</output></label><input id="brandLogoBorderWidth" type="range" min="1" max="8" step="1" value="1">
+     </div>
+     <button type="button" class="text-action" id="removeBrandLogo" hidden>Retirer le logo</button>
+    </div>
     <label for="slogan" class="sr" style="position:absolute;left:-9999px">Slogan</label><input id="slogan" type="text" maxlength="120" placeholder="Ton slogan" autocomplete="off">
    </div>
    <div class="grp"><h3>Couleur principale</h3><div class="sws" id="swatches"></div><div class="sws custom-color"><label for="color">Couleur personnalisée</label><input id="color" type="color" value="#2340ff"></div></div>
