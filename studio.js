@@ -183,6 +183,8 @@
       $("imageBorderColor").disabled = !imageStyle.border;
     }
     $("blockActions").hidden = !selectedBlock;
+    var alignGroup = $("blockAlignGroup");
+    if (alignGroup) alignGroup.hidden = !selectedBlock;
     var positionGroup = $("blockPositionGroup");
     if (positionGroup) {
       positionGroup.hidden = !selectedBlock;
@@ -429,6 +431,24 @@
       $("blockPosition" + axis.toUpperCase() + "Value").textContent = position[axis] + " px";
       saveDraft();
     }
+    function alignSelectedBlock(alignment) {
+      if (!selectedKey || !state.blocks.some(function (b) { return b.id === selectedKey; })) return;
+      var item = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
+      var wrap = item && item.parentElement;
+      if (!item || !wrap) return;
+      var itemWidth = item.getBoundingClientRect().width;
+      var available = Math.max(0, wrap.clientWidth - 44);
+      var x = alignment === "center" ? Math.round((available - itemWidth) / 2) : alignment === "right" ? Math.round(available - itemWidth) : 0;
+      state.blockPositions[selectedKey] = { x: x, y: (state.blockPositions[selectedKey] || { y: 0 }).y };
+      var y = state.blockPositions[selectedKey].y;
+      item.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+      $("blockPositionX").value = Math.max(-500, Math.min(500, x));
+      $("blockPositionXValue").textContent = x + " px";
+      saveDraft();
+    }
+    $("alignBlockLeft").addEventListener("click", function () { alignSelectedBlock("left"); });
+    $("alignBlockCenter").addEventListener("click", function () { alignSelectedBlock("center"); });
+    $("alignBlockRight").addEventListener("click", function () { alignSelectedBlock("right"); });
     $("blockPositionX").addEventListener("input", function () { updateSelectedBlockPosition("x", this.value); });
     $("blockPositionY").addEventListener("input", function () { updateSelectedBlockPosition("y", this.value); });
     $("resetBlockPosition").addEventListener("click", function () {
