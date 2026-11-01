@@ -48,7 +48,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || ({site:"vitrine",app:"commandes",cv:"classique",poster:"evenement"}[type] || "vitrine");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
+    return { type: type, template: tpl, posterFormat: "portrait", posterVisualHeight: 310, posterImageFit: "cover", name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
   }
   function clean(o) {
     var safeType = o && ["site","app","cv","poster"].indexOf(o.type) >= 0 ? o.type : "site";
@@ -62,6 +62,9 @@
     if (/^#[0-9a-f]{6}$/i.test(o.brandLogoBorderColor)) d.brandLogoBorderColor = o.brandLogoBorderColor;
     if (typeof o.brandLogoBorderWidth === "number" && isFinite(o.brandLogoBorderWidth)) d.brandLogoBorderWidth = Math.max(1, Math.min(8, o.brandLogoBorderWidth));
     if (typeof o.slogan === "string") d.slogan = o.slogan.slice(0, 120);
+    if (["portrait","square","story","landscape","a4"].indexOf(o.posterFormat) >= 0) d.posterFormat = o.posterFormat;
+    if (typeof o.posterVisualHeight === "number" && isFinite(o.posterVisualHeight)) d.posterVisualHeight = Math.max(120, Math.min(460, o.posterVisualHeight));
+    if (o.posterImageFit === "contain" || o.posterImageFit === "cover") d.posterImageFit = o.posterImageFit;
     if (typeof o.notes === "string") d.notes = o.notes.slice(0, 1000);
     if (/^#[0-9a-f]{6}$/i.test(o.color)) d.color = o.color;
     if (FONTS[o.font]) d.font = o.font;
@@ -349,9 +352,11 @@
   function previewPoster(root) {
     var poster = el("article", "pv-document pv-poster pv-poster-" + state.template);
     var visual = el("div", "poster-visual");
+    visual.style.height = state.posterVisualHeight + "px";
+    visual.style.minHeight = state.posterVisualHeight + "px";
     var imageBlock = state.blocks.find(function(b){return b.type==="image" && state.imageData[b.id];});
     if (imageBlock) {
-      var im = el("img", "poster-image"); im.src = state.imageData[imageBlock.id]; im.alt = "Visuel principal de l’affiche"; visual.appendChild(im);
+      var im = el("img", "poster-image"); im.src = state.imageData[imageBlock.id]; im.alt = "Visuel principal de l’affiche"; im.style.objectFit = state.posterImageFit; visual.appendChild(im);
     } else {
       visual.appendChild(el("span", "poster-placeholder", "Ajoute une photo ou une illustration avec « Image / logo »"));
     }
@@ -396,11 +401,12 @@
 
   function render() {
     var root = $("pv");
-    $("posterExport").hidden = state.type !== "poster" && state.type !== "cv";
+    $("posterExport").hidden = state.type !== "cv";
+    $("posterOptions").hidden = state.type !== "poster";
     if (state.type === "cv" || state.type === "poster") {
-      $("designExportTitle").textContent = state.type === "cv" ? "Exporter ton CV" : "Exporter ton affiche";
-      $("designExportHelp").textContent = state.type === "cv" ? "Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé." : "Télécharge une image haute résolution ou un PDF à imprimer, sans les outils de l’éditeur.";
-      $("exportPosterPng").hidden = state.type === "cv";
+      $("designExportTitle").textContent = "Exporter ton CV";
+      $("designExportHelp").textContent = "Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé.";
+      $("exportPosterPng").hidden = true;
     }
     root.textContent = "";
     var dark = state.theme === "dark";
@@ -417,11 +423,21 @@
       b.setAttribute("aria-pressed", String(b.getAttribute("data-viewport") === viewport));
     });
     var label = $("viewLabel");
-    if (label) label.textContent = ({app:"Aperçu de l’application · mobile",cv:"Création de CV · aperçu A4",poster:"Création d’affiche · aperçu portrait",site:"Aperçu du site · " + (viewport === "desktop" ? "ordinateur" : viewport === "tablet" ? "tablette" : "mobile")})[state.type];
+    if (label) label.textContent = ({app:"Aperçu de l’application · mobile",cv:"Création de CV · aperçu A4",poster:"Création d’affiche · " + ({portrait:"portrait",square:"carré",story:"story",landscape:"paysage",a4:"A4"}[state.posterFormat] || "portrait"),site:"Aperçu du site · " + (viewport === "desktop" ? "ordinateur" : viewport === "tablet" ? "tablette" : "mobile")})[state.type];
     document.querySelectorAll(".viewport-switch button").forEach(function (b) {
       b.hidden = state.type !== "site" && b.getAttribute("data-viewport") !== "mobile";
     });
     if (state.type === "site") previewSite(root); else if (state.type === "app") previewApp(root); else if (state.type === "cv") previewCV(root); else previewPoster(root);
+    if (state.type === "poster") {
+      var posterNode = root.querySelector(".pv-poster");
+      if (posterNode) {
+        var formats = { portrait: { width: 560, height: 700 }, square: { width: 560, height: 560 }, story: { width: 420, height: 746 }, landscape: { width: 760, height: 428 }, a4: { width: 560, height: 792 } };
+        var posterSize = formats[state.posterFormat] || formats.portrait;
+        posterNode.style.width = "min(100%, " + posterSize.width + "px)";
+        posterNode.style.minHeight = posterSize.height + "px";
+        posterNode.style.height = posterSize.height + "px";
+      }
+    }
     if (selectedKey) { var selected = root.querySelector('[data-editable="' + selectedKey + '"]'); if (selected) selected.classList.add("is-selected"); }
     updateInspector();
   }
@@ -449,6 +465,11 @@
     seg($("themeSeg"), [["light", "Clair"], ["dark", "Sombre"]], state.theme, function (v) { state.theme = v; change(true); });
     seg($("radiusSeg"), Object.keys(RADII).map(function (k) { return [k, RADII[k][0]]; }), state.radius, function (v) { state.radius = v; change(true); });
     $("font").value = state.font;
+    $("posterOptions").hidden = state.type !== "poster";
+    $("posterFormat").value = state.posterFormat;
+    $("posterVisualHeight").value = state.posterVisualHeight;
+    $("posterVisualHeightValue").textContent = state.posterVisualHeight + " px";
+    $("posterImageFit").value = state.posterImageFit;
     $("name").value = state.name; $("slogan").value = state.slogan; $("notes").value = state.notes;
     $("brandNameField").hidden = state.brandMode === "logo";
     $("brandLogoField").hidden = state.brandMode !== "logo";
@@ -704,6 +725,9 @@
       });
     });
     $("font").addEventListener("change", function () { state.font = $("font").value; change(false); });
+    $("posterFormat").addEventListener("change", function () { state.posterFormat = this.value; render(); saveDraft(); });
+    $("posterVisualHeight").addEventListener("input", function () { state.posterVisualHeight = Number(this.value); $("posterVisualHeightValue").textContent = this.value + " px"; render(); saveDraft(); });
+    $("posterImageFit").addEventListener("change", function () { state.posterImageFit = this.value; render(); saveDraft(); });
     $("color").addEventListener("input", function () { state.color = $("color").value; change(false); });
     $("color").addEventListener("change", function () { buildControls(); });
     ["name", "slogan", "notes"].forEach(function (id) { $(id).addEventListener("input", function () { state[id] = $(id).value; change(false); }); });
