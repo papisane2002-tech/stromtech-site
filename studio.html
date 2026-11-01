@@ -43,6 +43,10 @@
      <button type="button" data-viewport="tablet" aria-pressed="false"><span aria-hidden="true">▤</span> Tablette</button>
      <button type="button" data-viewport="mobile" aria-pressed="false"><span aria-hidden="true">▯</span> Mobile</button>
     </div>
+    <div class="block-toolbar" role="group" aria-label="Ajouter un bloc">
+     <button type="button" id="addTextBlock">+ Texte</button>
+     <button type="button" id="addButtonBlock">+ Bouton</button>
+    </div>
    </div>
    <div class="preview-wrap" aria-label="Aperçu en direct">
     <div class="frame" id="frame">
@@ -64,6 +68,11 @@
      <textarea id="elementText" rows="3" maxlength="200"></textarea>
      <label for="elementColor" class="field-label">Couleur du texte</label>
      <input id="elementColor" type="color" value="#14161f">
+     <div class="block-actions" id="blockActions" hidden>
+      <button type="button" id="moveBlockUp">↑ Monter</button>
+      <button type="button" id="moveBlockDown">↓ Descendre</button>
+      <button type="button" id="deleteBlock" class="danger-action">Supprimer le bloc</button>
+     </div>
      <button class="btn btn-line inspector-clear" id="clearSelection" type="button">Désélectionner</button>
     </div>
    </div>
