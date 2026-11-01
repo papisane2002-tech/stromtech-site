@@ -46,7 +46,8 @@
     return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
   }
   function clean(o) {
-    var safeType = o && ["site","app","cv","poster"].indexOf(o.type) >= 0 ? o.type : "site";\n    var d = defaults(safeType);
+    var safeType = o && ["site","app","cv","poster"].indexOf(o.type) >= 0 ? o.type : "site";
+    var d = defaults(safeType);
     if (!o || typeof o !== "object") return d;
     if (TPL[d.type] && TPL[d.type][o.template]) { d.template = o.template; d.sections = TPL[d.type][o.template].sections.slice(); }
     if (typeof o.name === "string") d.name = o.name.slice(0, 60);
