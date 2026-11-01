@@ -403,6 +403,7 @@
     var root = $("pv");
     $("posterExport").hidden = state.type !== "cv";
     $("posterOptions").hidden = state.type !== "poster";
+    $("posterOrderNote").hidden = state.type !== "poster";
     if (state.type === "cv" || state.type === "poster") {
       $("designExportTitle").textContent = "Exporter ton CV";
       $("designExportHelp").textContent = "Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé.";
