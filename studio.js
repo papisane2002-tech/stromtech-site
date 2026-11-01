@@ -1,7 +1,7 @@
 /* Studio de design : le client compose sa maquette (site Web ou application) */
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var COLORS = [["Bleu", "#2340ff"], ["Vert", "#0f9d6b"], ["Orange", "#f26b1d"], ["Violet", "#7a3cff"], ["Rouge", "#d62839"], ["Noir", "#14161f"]];
+  var COLORS = [["Vert Stromtech", "#087f6b"], ["Bleu", "#2340ff"], ["Vert", "#0f9d6b"], ["Orange", "#f26b1d"], ["Violet", "#7a3cff"], ["Rouge", "#d62839"], ["Noir", "#14161f"]];
   var FONTS = { moderne: ["Moderne", "Figtree,system-ui,sans-serif"], elegante: ["Élégante", "Georgia,'Times New Roman',serif"], affirmee: ["Affirmée", "'Bricolage Grotesque',Figtree,sans-serif"] };
   var RADII = { "0": ["Carrés", "0px"], "1": ["Arrondis", "12px"], "2": ["Très arrondis", "24px"] };
   var SEC = {
@@ -31,7 +31,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
