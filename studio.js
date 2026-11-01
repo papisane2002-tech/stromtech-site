@@ -183,6 +183,13 @@
       $("imageBorderColor").disabled = !imageStyle.border;
     }
     $("blockActions").hidden = !selectedBlock;
+    var positionGroup = $("blockPositionGroup");
+    if (positionGroup) {
+      positionGroup.hidden = !selectedBlock;
+      var position = state.blockPositions[selectedKey] || { x: 0, y: 0 };
+      $("blockPositionX").value = position.x; $("blockPositionY").value = position.y;
+      $("blockPositionXValue").textContent = position.x + " px"; $("blockPositionYValue").textContent = position.y + " px";
+    }
     var styleGroup = $("blockStyleGroup");
     if (styleGroup) {
       styleGroup.hidden = !selectedBlock || isImage;
@@ -412,6 +419,27 @@
       state.imageStyles[selectedKey][property] = value;
       render(); saveDraft();
     }
+    function updateSelectedBlockPosition(axis, value) {
+      if (!selectedKey || !state.blocks.some(function (b) { return b.id === selectedKey; })) return;
+      var position = state.blockPositions[selectedKey] || { x: 0, y: 0 };
+      position[axis] = Math.max(-1200, Math.min(1200, Number(value)));
+      state.blockPositions[selectedKey] = position;
+      var item = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
+      if (item) { var offset = state.blockOffsets[selectedKey] || 0; item.style.transform = "translate3d(" + (position.x + offset) + "px," + position.y + "px,0)"; }
+      $("blockPosition" + axis.toUpperCase() + "Value").textContent = position[axis] + " px";
+      saveDraft();
+    }
+    $("blockPositionX").addEventListener("input", function () { updateSelectedBlockPosition("x", this.value); });
+    $("blockPositionY").addEventListener("input", function () { updateSelectedBlockPosition("y", this.value); });
+    $("resetBlockPosition").addEventListener("click", function () {
+      if (!selectedKey || !state.blocks.some(function (b) { return b.id === selectedKey; })) return;
+      state.blockPositions[selectedKey] = { x: 0, y: 0 };
+      var item = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
+      if (item) item.style.transform = "translate3d(0px,0px,0)";
+      $("blockPositionX").value = 0; $("blockPositionY").value = 0;
+      $("blockPositionXValue").textContent = "0 px"; $("blockPositionYValue").textContent = "0 px";
+      saveDraft();
+    });
     $("imageFit").addEventListener("change", function () { updateSelectedImageStyle("fit", this.value); });
     $("imageRadius").addEventListener("input", function () { $("imageRadiusValue").textContent = this.value + " px"; updateSelectedImageStyle("radius", Number(this.value)); });
     $("imageBorder").addEventListener("change", function () { $("imageBorderColor").disabled = !this.checked; updateSelectedImageStyle("border", this.checked); });
@@ -446,7 +474,6 @@
       var img = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
       if (img) { img.style.width = this.value + "%"; img.style.height = ""; var innerImage = img.querySelector("img"); if (innerImage) { innerImage.style.width = "100%"; innerImage.style.height = "auto"; } }
       delete state.blockSizes[selectedKey];
-    delete state.blockStyles[selectedKey];
       saveDraft();
     });
     $("deleteBlock").addEventListener("click", deleteSelectedBlock);
