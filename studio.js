@@ -207,7 +207,7 @@
     var isImage = selectedBlock && selectedBlock.type === "image";
     var isShape = selectedBlock && selectedBlock.type === "shape";
     $("elementTextLabel").hidden = !!isImage || !!isShape; $("elementText").hidden = !!isImage || !!isShape;
-    $("elementColorLabel").hidden = !!isImage; $("elementColor").hidden = !!isImage;
+    $("elementColorLabel").hidden = !!isImage || !!isShape; $("elementColor").hidden = !!isImage || !!isShape;
     $("imageSizeGroup").hidden = !isImage;
     if (isImage) {
       $("imageWidth").value = state.imageWidths[selectedKey] || 60;
@@ -267,6 +267,7 @@
       item.style.transform = "translate3d(" + (pos.x + offset / 100 * 100) + "px," + pos.y + "px,0)";
       var size = state.blockSizes[block.id];
       if (size) { item.style.width = size.w + "px"; item.style.height = size.h + "px"; }
+      else if (block.type === "shape") { item.style.width = "150px"; item.style.height = "90px"; }
       if (block.type === "image") {
         if (!size) item.style.width = (state.imageWidths[key] || 60) + "%";
         node.style.width = "100%"; if (size) node.style.height = "100%";
@@ -473,8 +474,21 @@
       select.type = "button"; select.addEventListener("click", function () { selectedKey = block.id; render(); }); row.appendChild(select);
       var up = el("button", "studio-layer-move", "↑"); up.type = "button"; up.title = "Avancer le calque"; up.disabled = index === state.blocks.length - 1; up.addEventListener("click", function () { var a = state.blocks[index]; state.blocks[index] = state.blocks[index + 1]; state.blocks[index + 1] = a; render(); saveDraft(); }); row.appendChild(up);
       var down = el("button", "studio-layer-move", "↓"); down.type = "button"; down.title = "Reculer le calque"; down.disabled = index === 0; down.addEventListener("click", function () { var a = state.blocks[index]; state.blocks[index] = state.blocks[index - 1]; state.blocks[index - 1] = a; render(); saveDraft(); }); row.appendChild(down);
+      var duplicate = el("button", "studio-layer-move", "＋"); duplicate.type = "button"; duplicate.title = "Dupliquer cet élément"; duplicate.addEventListener("click", function () { duplicateBlock(block.id); }); row.appendChild(duplicate);
       host.appendChild(row);
     });
+  }
+
+  function duplicateBlock(id) {
+    if (state.blocks.length >= 30) { showMsg($("warn"), "Limite de 30 éléments atteinte.", true); return; }
+    var source = state.blocks.find(function (b) { return b.id === id; }); if (!source) return;
+    var nextId = "block_" + Date.now(); while (state.blocks.some(function (b) { return b.id === nextId; })) nextId = "block_" + (Number(nextId.slice(6)) + 1);
+    var copy = { id: nextId, type: source.type }; state.blocks.splice(state.blocks.indexOf(source) + 1, 0, copy);
+    ["content","elementColors","blockOffsets","blockPositions","blockSizes","blockStyles","imageStyles","imageData","imageWidths"].forEach(function (group) {
+      var value = state[group] && state[group][id]; if (value !== undefined) state[group][nextId] = value && typeof value === "object" ? JSON.parse(JSON.stringify(value)) : value;
+    });
+    if (source.type === "image" && Object.keys(state.imageData).length > 3) { delete state.imageData[nextId]; state.blocks = state.blocks.filter(function (b) { return b.id !== nextId; }); showMsg($("warn"), "La limite de trois images est atteinte.", true); return; }
+    selectedKey = nextId; render(); saveDraft();
   }
 
   /* ---------- Commandes ---------- */
