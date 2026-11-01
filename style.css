@@ -580,3 +580,8 @@ body.studio-dark:has(.studio-main) .studio-panel .tpl .tpl-tag{color:#a9b9ff}
 body.studio-dark:has(.studio-main) .block-style-group{background:#172238;border-color:#34435d}
 body.studio-dark:has(.studio-main) .block-style-group input[type=color]{background:#111a2a;border-color:#3a4861}
 body.studio-dark:has(.studio-main) .block-style-group output{color:#aab8ff}
+
+.image-border-option{display:flex;align-items:center;gap:9px;font-size:13px;margin:5px 0}.image-border-option input{width:17px;height:17px;accent-color:var(--blue,#2340ff)}
+#imageSizeGroup select{width:100%;min-height:38px;border:1px solid #dce2ee;border-radius:9px;padding:7px;background:#fff;color:#17203a}
+#imageSizeGroup input[type=color]{width:100%;height:34px;border:1px solid #dce2ee;border-radius:8px;background:#fff;padding:3px}
+body.studio-dark:has(.studio-main) #imageSizeGroup select{background:#111a2a;color:#f2f5ff;border-color:#3a4861}
