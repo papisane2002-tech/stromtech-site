@@ -739,9 +739,20 @@
         link.download = filename + ".png"; link.href = canvas.toDataURL("image/png"); link.click();
       } else {
         var JsPDF = window.jspdf.jsPDF;
-        var width = 210, height = state.type === "cv" ? 297 : width * canvas.height / canvas.width;
-        var pdf = new JsPDF({ orientation: "portrait", unit: "mm", format: state.type === "cv" ? "a4" : [width, height], compress: true });
-        pdf.addImage(canvas.toDataURL("image/jpeg", 0.96), "JPEG", 0, 0, width, height, undefined, "FAST");
+        var pdf;
+        if (state.type === "cv") {
+          pdf = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
+          var pageWidth = 210, pageHeight = 297, margin = 8;
+          var ratio = Math.min((pageWidth - margin * 2) / canvas.width, (pageHeight - margin * 2) / canvas.height);
+          var imageWidth = canvas.width * ratio, imageHeight = canvas.height * ratio;
+          pdf.addImage(canvas.toDataURL("image/jpeg", 0.96), "JPEG",
+            (pageWidth - imageWidth) / 2, (pageHeight - imageHeight) / 2,
+            imageWidth, imageHeight, undefined, "FAST");
+        } else {
+          var width = 210, height = width * canvas.height / canvas.width;
+          pdf = new JsPDF({ orientation: height > width ? "portrait" : "landscape", unit: "mm", format: [width, height], compress: true });
+          pdf.addImage(canvas.toDataURL("image/jpeg", 0.96), "JPEG", 0, 0, width, height, undefined, "FAST");
+        }
         pdf.save(filename + ".pdf");
       }
       status.textContent = format === "png" ? "Image PNG téléchargée." : "PDF prêt à imprimer téléchargé.";
