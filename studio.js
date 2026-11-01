@@ -23,10 +23,11 @@
   var KEY = "stromtech_studio_draft";
   var state;
   var viewport = "desktop";
+  var selectedKey = null;
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "" };
+    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -40,6 +41,8 @@
     if (RADII[o.radius]) d.radius = o.radius;
     if (o.theme === "dark") d.theme = "dark";
     if (Array.isArray(o.sections)) { var ok = o.sections.filter(function (k) { return SEC[d.type][k]; }); if (ok.length) d.sections = ok.slice(0, d.type === "app" ? 5 : 7); }
+    if (o.content && typeof o.content === "object") Object.keys(o.content).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && typeof o.content[k] === "string") d.content[k] = o.content[k].slice(0, 200); });
+    if (o.elementColors && typeof o.elementColors === "object") Object.keys(o.elementColors).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && /^#[0-9a-f]{6}$/i.test(o.elementColors[k])) d.elementColors[k] = o.elementColors[k]; });
     return d;
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
@@ -49,15 +52,31 @@
 
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function lines(n) { var f = document.createDocumentFragment(); for (var i = 0; i < n; i++) { var l = el("div", "pv-line"); l.style.width = (100 - i * 14) + "%"; f.appendChild(l); } return f; }
+  function editText(tag, cls, value, key, label) {
+    var node = el(tag, cls, state.content[key] != null ? state.content[key] : value);
+    node.dataset.editable = key;
+    node.dataset.editLabel = label;
+    if (state.elementColors[key]) node.style.color = state.elementColors[key];
+    return node;
+  }
+  function updateInspector() {
+    var empty = $("inspectorEmpty"), fields = $("inspectorFields");
+    var node = selectedKey && $("pv").querySelector('[data-editable="' + selectedKey + '"]');
+    if (!node) { selectedKey = null; empty.hidden = false; fields.hidden = true; return; }
+    empty.hidden = true; fields.hidden = false;
+    $("selectedElementName").textContent = node.dataset.editLabel || "Élément";
+    $("elementText").value = state.content[selectedKey] != null ? state.content[selectedKey] : node.textContent;
+    $("elementColor").value = state.elementColors[selectedKey] || "#14161f";
+  }
 
   /* ---------- Aperçu : site ---------- */
   function previewSite(root) {
     var tpl = TPL.site[state.template], nm = state.name || "Ton entreprise", sl = state.slogan || "Ton slogan s’affiche ici";
-    var nav = el("div", "pv-nav"); nav.appendChild(el("b", "", nm));
+    var nav = el("div", "pv-nav"); nav.appendChild(editText("b", "", nm, "brandName", "Nom de l’entreprise"));
     var links = el("span", "pv-links"); state.sections.slice(0, 4).forEach(function (k) { links.appendChild(el("span", "", SEC.site[k])); }); nav.appendChild(links);
     nav.appendChild(el("i", "pv-btn", "Contact")); root.appendChild(nav);
     var hero = el("div", "pv-hero pv-" + tpl.hero);
-    var box = el("div", "pv-herotxt"); box.appendChild(el("h4", "pv-h", sl)); box.appendChild(el("p", "", "Une phrase courte pour expliquer ce que tu proposes à tes clients.")); box.appendChild(el("i", "pv-btn", tpl.hero === "banner" ? "Voir les nouveautés" : "Nous contacter")); hero.appendChild(box);
+    var box = el("div", "pv-herotxt"); box.appendChild(editText("h4", "pv-h", sl, "heroTitle", "Titre principal")); box.appendChild(editText("p", "", "Une phrase courte pour expliquer ce que tu proposes à tes clients.", "heroDescription", "Description principale")); box.appendChild(editText("i", "pv-btn", tpl.hero === "banner" ? "Voir les nouveautés" : "Nous contacter", "heroButton", "Bouton principal")); hero.appendChild(box);
     if (tpl.hero === "left") hero.appendChild(el("div", "pv-avatar"));
     root.appendChild(hero);
     var builders = {
@@ -69,8 +88,8 @@
       temoignages: function (b) { var g = el("div", "pv-grid2"); [1, 2].forEach(function () { var c = el("div", "pv-card"); c.appendChild(el("p", "", "“Un travail soigné, livré dans les temps.”")); c.appendChild(el("b", "", "Prénom Nom")); g.appendChild(c); }); b.appendChild(g); },
       contact: function (b) { var c = el("div", "pv-card"); c.appendChild(el("div", "pv-input", "Ton nom")); c.appendChild(el("div", "pv-input", "Ton message")); c.appendChild(el("i", "pv-btn", "Envoyer")); b.appendChild(c); }
     };
-    state.sections.forEach(function (k) { var s = el("section", "pv-sec"); s.appendChild(el("h5", "", SEC.site[k])); builders[k](s); root.appendChild(s); });
-    root.appendChild(el("div", "pv-foot", "© " + nm));
+    state.sections.forEach(function (k) { var s = el("section", "pv-sec"); s.appendChild(editText("h5", "", SEC.site[k], "section_" + k, "Titre : " + SEC.site[k])); builders[k](s); root.appendChild(s); });
+    root.appendChild(editText("div", "pv-foot", "© " + nm, "footerText", "Pied de page"));
   }
 
   /* ---------- Aperçu : application ---------- */
@@ -78,10 +97,10 @@
   function previewApp(root) {
     var nm = state.name || "Ton appli", sl = state.slogan || "Ton slogan s’affiche ici";
     if (state.sections.indexOf(appTab) < 0) appTab = state.sections[0];
-    var ph = el("div", "phone"); ph.appendChild(el("div", "pv-appbar", nm));
+    var ph = el("div", "phone"); ph.appendChild(editText("div", "pv-appbar", nm, "appName", "Nom de l’application"));
     var scr = el("div", "pv-screen");
     var S = {
-      accueil: function () { scr.appendChild(el("h4", "pv-h", "Bonjour")); scr.appendChild(el("p", "", sl)); var c = el("div", "pv-card pv-accent"); c.appendChild(el("b", "", "Offre du moment")); c.appendChild(lines(2)); scr.appendChild(c); var g = el("div", "pv-grid2"); ["Action 1", "Action 2"].forEach(function (t) { var x = el("div", "pv-card"); x.appendChild(el("b", "", t)); g.appendChild(x); }); scr.appendChild(g); },
+      accueil: function () { scr.appendChild(editText("h4", "pv-h", "Bonjour", "appGreeting", "Titre d’accueil")); scr.appendChild(editText("p", "", sl, "appSlogan", "Slogan de l’application")); var c = el("div", "pv-card pv-accent"); c.appendChild(el("b", "", "Offre du moment")); c.appendChild(lines(2)); scr.appendChild(c); var g = el("div", "pv-grid2"); ["Action 1", "Action 2"].forEach(function (t) { var x = el("div", "pv-card"); x.appendChild(el("b", "", t)); g.appendChild(x); }); scr.appendChild(g); },
       catalogue: function () { [1, 2, 3].forEach(function (i) { var r = el("div", "pv-row"); r.appendChild(el("div", "pv-thumb")); var m = el("div", "pv-grow"); m.appendChild(el("b", "", "Article " + i)); m.appendChild(lines(1)); r.appendChild(m); r.appendChild(el("span", "pv-price", (i * 2 + 3) + " 000")); scr.appendChild(r); }); },
       commande: function () { [1, 2].forEach(function (i) { var r = el("div", "pv-row"); r.appendChild(el("div", "pv-thumb")); r.appendChild(el("b", "pv-grow", "Article " + i + " × 1")); r.appendChild(el("span", "pv-price", (i * 2 + 3) + " 000")); scr.appendChild(r); }); scr.appendChild(el("p", "", "Total : 12 000 FCFA")); scr.appendChild(el("i", "pv-btn pv-full", "Commander")); },
       rdv: function () { var d = el("div", "pv-days"); ["Lun", "Mar", "Mer", "Jeu", "Ven"].forEach(function (x, i) { d.appendChild(el("span", i === 1 ? "on" : "", x)); }); scr.appendChild(d); var t = el("div", "pv-grid3"); ["09:00", "10:30", "14:00", "15:30", "16:00", "17:30"].forEach(function (x, i) { t.appendChild(el("span", "pv-slot" + (i === 2 ? " on" : ""), x)); }); scr.appendChild(t); scr.appendChild(el("i", "pv-btn pv-full", "Réserver")); },
@@ -114,6 +133,8 @@
       b.hidden = state.type === "app" && b.getAttribute("data-viewport") !== "mobile";
     });
     if (state.type === "site") previewSite(root); else previewApp(root);
+    if (selectedKey) { var selected = root.querySelector('[data-editable="' + selectedKey + '"]'); if (selected) selected.classList.add("is-selected"); }
+    updateInspector();
   }
 
   /* ---------- Commandes ---------- */
@@ -148,6 +169,24 @@
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
   function bind() {
+    $("pv").addEventListener("click", function (event) {
+      var target = event.target.closest("[data-editable]");
+      if (!target) return;
+      event.preventDefault();
+      selectedKey = target.dataset.editable;
+      render();
+    });
+    $("elementText").addEventListener("input", function () {
+      if (!selectedKey) return;
+      state.content[selectedKey] = $("elementText").value.slice(0, 200);
+      render(); saveDraft();
+    });
+    $("elementColor").addEventListener("input", function () {
+      if (!selectedKey) return;
+      state.elementColors[selectedKey] = $("elementColor").value;
+      render(); saveDraft();
+    });
+    $("clearSelection").addEventListener("click", function () { selectedKey = null; render(); });
     document.querySelectorAll("[data-viewport]").forEach(function (b) {
       b.addEventListener("click", function () {
         viewport = b.getAttribute("data-viewport");
