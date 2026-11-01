@@ -1,38 +1,88 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Studio de design | Stromtech</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css"></head><body>
-<header class="site-header"><div class="container nav"><a class="logo" href="index.html">strom<b>tech</b></a><nav class="links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="index.html#services">Services</a><a href="studio.html">Studio design</a></nav><div class="bar"><a class="btn btn-line" href="espace.html">Mon espace</a></div></div></header>
-<main class="container">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+ <div class="container nav">
+  <a class="logo" href="index.html">strom<b>tech</b></a>
+  <nav class="links" aria-label="Navigation principale">
+   <a href="index.html">Accueil</a><a href="index.html#services">Services</a><a href="studio.html" aria-current="page">Studio design</a>
+  </nav>
+  <div class="bar"><a class="btn btn-line" href="espace.html">Mon espace</a></div>
+ </div>
+</header>
+<main class="container studio-main">
  <div class="studio-head">
+  <p class="studio-kicker">STROMTECH CREATIVE WORKSPACE</p>
   <h1 class="block-title">Studio de design</h1>
   <p class="block-intro" style="margin-bottom:0">Compose le modèle de ton site Web ou de ton application, vois le résultat tout de suite, puis envoie-le à Stromtech pour qu’on le réalise avec toi.</p>
   <p class="shared" id="sharedNote" hidden>Tu regardes une maquette partagée dans une conversation. Tu peux la modifier ici, sans effet sur l’original.</p>
  </div>
- <div class="studio-grid">
-  <form class="controls" id="controls" onsubmit="return false">
+
+ <form class="studio-editor" id="controls" onsubmit="return false">
+  <aside class="studio-panel studio-tools" aria-label="Outils et structure du projet">
+   <div class="panel-heading"><span class="panel-index">01</span><div><b>Structure</b><small>Choisis ton projet</small></div></div>
    <div class="grp"><h3>Ce que tu veux créer</h3><div class="seg" id="typeSeg"></div></div>
    <div class="grp"><h3>Modèle de départ</h3><div class="opts" id="tplList"></div></div>
+   <div class="grp"><h3 id="secLegend">Sections</h3><div id="secList"></div></div>
+  </aside>
+
+  <section class="studio-stage" aria-label="Zone centrale de création et aperçu">
+   <div class="studio-stagebar">
+    <div class="stage-heading"><span class="live-dot"></span><div><b>Zone de création</b><small id="viewLabel">Aperçu du site · ordinateur</small></div></div>
+    <div class="viewport-switch" role="group" aria-label="Format de prévisualisation">
+     <button type="button" data-viewport="desktop" aria-pressed="true"><span aria-hidden="true">▣</span> Desktop</button>
+     <button type="button" data-viewport="tablet" aria-pressed="false"><span aria-hidden="true">▤</span> Tablette</button>
+     <button type="button" data-viewport="mobile" aria-pressed="false"><span aria-hidden="true">▯</span> Mobile</button>
+    </div>
+   </div>
+   <div class="preview-wrap" aria-label="Aperçu en direct">
+    <div class="frame" id="frame">
+     <div class="frame-bar"><i></i><i></i><i></i></div>
+     <div class="pv" id="pv"></div>
+    </div>
+   </div>
+   <p class="stage-hint"><span aria-hidden="true">✦</span> Les changements apparaissent directement dans l’aperçu.</p>
+  </section>
+
+  <aside class="studio-panel studio-properties" aria-label="Propriétés et personnalisation">
+   <div class="panel-heading"><span class="panel-index">02</span><div><b>Personnalisation</b><small>Règle ton identité visuelle</small></div></div>
    <div class="grp"><h3>Ton activité</h3>
     <label for="name" class="sr" style="position:absolute;left:-9999px">Nom</label><input id="name" type="text" maxlength="60" placeholder="Nom de ton entreprise" autocomplete="off">
-    <label for="slogan" style="position:absolute;left:-9999px">Slogan</label><input id="slogan" type="text" maxlength="120" placeholder="Ton slogan" autocomplete="off"></div>
-   <div class="grp"><h3>Couleur principale</h3><div class="sws" id="swatches"></div><div class="sws" style="margin-top:10px"><label for="color" style="font-size:.9rem;color:var(--muted)">Ou choisis la tienne</label><input id="color" type="color" value="#2340ff"></div></div>
-   <div class="grp"><h3>Style</h3>
-    <div class="seg" id="themeSeg" style="margin-bottom:10px"></div>
-    <label for="font" style="position:absolute;left:-9999px">Police</label><select id="font"><option value="moderne">Police moderne</option><option value="elegante">Police élégante</option><option value="affirmee">Police affirmée</option></select>
-    <div class="seg" id="radiusSeg"></div></div>
-   <div class="grp"><h3 id="secLegend">Sections</h3><div id="secList"></div></div>
-   <div class="grp"><h3>Remarques</h3><label for="notes" style="position:absolute;left:-9999px">Remarques</label><textarea id="notes" maxlength="1000" placeholder="Une fonction en plus, un site que tu aimes, un logo à intégrer…"></textarea></div>
-   <div class="msg err" id="warn" role="alert" hidden></div>
-   <div class="actions"><button class="btn btn-blue" id="sendBtn" type="button">Envoyer ma maquette à Stromtech</button><button class="btn btn-line" id="reset" type="button">Recommencer</button></div>
-   <p class="small" style="margin:12px 0 0">Il faut un compte pour envoyer ta maquette. Ton travail est gardé sur cet appareil si tu dois te connecter.</p>
-  </form>
-  <section class="preview-wrap" aria-label="Aperçu en direct">
-   <div class="frame" id="frame"><div class="frame-bar"><i></i><i></i><i></i></div><div class="pv" id="pv"></div></div>
-  </section>
- </div>
+    <label for="slogan" class="sr" style="position:absolute;left:-9999px">Slogan</label><input id="slogan" type="text" maxlength="120" placeholder="Ton slogan" autocomplete="off">
+   </div>
+   <div class="grp"><h3>Couleur principale</h3><div class="sws" id="swatches"></div><div class="sws custom-color"><label for="color">Couleur personnalisée</label><input id="color" type="color" value="#2340ff"></div></div>
+   <div class="grp"><h3>Style visuel</h3>
+    <div class="seg" id="themeSeg"></div>
+    <label for="font" class="field-label">Typographie</label>
+    <select id="font"><option value="moderne">Police moderne</option><option value="elegante">Police élégante</option><option value="affirmee">Police affirmée</option></select>
+    <label class="field-label">Forme des éléments</label>
+    <div class="seg" id="radiusSeg"></div>
+   </div>
+   <div class="grp"><h3>Instructions complémentaires</h3>
+    <label for="notes" class="sr" style="position:absolute;left:-9999px">Remarques</label>
+    <textarea id="notes" maxlength="1000" placeholder="Une fonction en plus, un site que tu aimes, un logo à intégrer…"></textarea>
+   </div>
+   <div class="studio-submit">
+    <div class="msg err" id="warn" role="alert" hidden></div>
+    <button class="btn btn-blue" id="sendBtn" type="button">Envoyer ma maquette à Stromtech</button>
+    <button class="btn btn-line" id="reset" type="button">Recommencer</button>
+    <p class="small">Il faut un compte pour envoyer ta maquette. Ton travail est gardé sur cet appareil si tu dois te connecter.</p>
+   </div>
+  </aside>
+ </form>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="config.js"></script><script src="app.js"></script>
-<script src="studio.js"></script></body></html>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="studio.js"></script>
+</body>
+</html>
