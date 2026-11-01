@@ -629,6 +629,23 @@
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
 
+  function setStudioWorkspace(type) {
+    var info = {
+      site: { eyebrow: "WEB DESIGN STUDIO", title: "Atelier Sites Web", description: "Compose des pages web, organise tes sections et adapte le rendu aux écrans ordinateur, tablette et mobile.", templates: "Modèles de sites Web", help: "Choisis une structure adaptée : vitrine, portfolio, boutique, page de conversion ou événement." },
+      app: { eyebrow: "MOBILE APP STUDIO", title: "Atelier Applications mobiles", description: "Imagine les écrans de ton application, son parcours et ses principales fonctionnalités.", templates: "Modèles d’applications", help: "Démarre avec une base Commandes, Rendez-vous, Gestion, Livraison ou Éducation." },
+      cv: { eyebrow: "CV DESIGN STUDIO", title: "Atelier CV professionnels", description: "Construis un CV clair et soigné, rubrique par rubrique, avec un aperçu de document.", templates: "Modèles de CV", help: "Compare les présentations Classique, Moderne et Minimaliste avant de personnaliser ton contenu." },
+      poster: { eyebrow: "GRAPHIC DESIGN STUDIO", title: "Atelier Affiches et visuels", description: "Crée une composition visuelle, choisis son format et organise titres, images et informations.", templates: "Modèles d’affiches", help: "Choisis une direction graphique : événement, promotion, élégante, concert, éditoriale ou minimaliste." }
+    };
+    var data = info[type] || info.site;
+    $("studioWorkspaceEyebrow").textContent = data.eyebrow;
+    $("studioWorkspaceTitle").textContent = data.title;
+    $("studioWorkspaceDescription").textContent = data.description;
+    $("studioTemplateHeading").textContent = data.templates;
+    $("studioTemplateHelp").textContent = data.help;
+    $("studioWorkspace").hidden = false;
+    document.body.setAttribute("data-studio-service", type);
+  }
+
   function openStudioService(type) {
     if (["site","app","cv","poster"].indexOf(type) < 0) return;
     var saved = loadDraft(type);
@@ -638,6 +655,7 @@
     $("studioServiceHub").hidden = true;
     $("controls").hidden = false;
     $("studioBackHub").hidden = false;
+    setStudioWorkspace(type);
     buildControls(); render(); renderPages(); saveDraft();
     window.scrollTo({top:0,behavior:"smooth"});
   }
@@ -646,6 +664,8 @@
     $("controls").hidden = true;
     $("studioServiceHub").hidden = false;
     $("studioBackHub").hidden = true;
+    $("studioWorkspace").hidden = true;
+    document.body.removeAttribute("data-studio-service");
     window.scrollTo({top:0,behavior:"smooth"});
   }
   function bind() {
@@ -1031,6 +1051,7 @@
   $("studioBackHub").addEventListener("click", showStudioHub);
   if (shared) {
     $("studioServiceHub").hidden = true; $("controls").hidden = false; $("studioBackHub").hidden = false;
+    setStudioWorkspace(state.type);
     buildControls(); render(); renderPages();
   } else {
     $("studioServiceHub").hidden = false; $("controls").hidden = true; $("studioBackHub").hidden = true;
