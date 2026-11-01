@@ -809,3 +809,57 @@ body.studio-dark:has(.studio-main) .tpl-preview{background:#0b1224!important;bor
 body.studio-dark:has(.studio-main) .tpl-preview i{background:#42516b!important}
 body.studio-dark:has(.studio-main) .tpl-preview .tpl-preview-hero{background:linear-gradient(100deg,#087f6b,#38d6b0)!important}
 body.studio-dark:has(.studio-main) .tpl .tpl-tag{color:#38d6b0!important}
+
+
+/* Formats de création CV et affiche dans le Studio */
+.frame.is-cv .pv,.frame.is-poster .pv{background:#e9edf3!important;padding:22px;min-height:700px;display:flex;justify-content:center;align-items:flex-start}
+.pv-document{font-family:var(--pf);color:#202638;background:#fff;box-shadow:0 8px 30px #15213a24;overflow:hidden;position:relative}
+.pv-cv{width:min(100%,650px);min-height:850px;text-align:left}
+.cv-header{padding:34px 38px;background:var(--pc);color:#fff}
+.cv-header h2{font-size:30px;line-height:1.1;margin:0 0 8px;color:#fff}
+.cv-header p{margin:0;color:#fff;opacity:.92}
+.cv-body{display:grid;grid-template-columns:34% 66%;min-height:740px}
+.cv-side{background:#eef1f5;padding:28px 20px;color:#263047;white-space:pre-line}
+.cv-side h3,.cv-main h3{font-size:13px;letter-spacing:.09em;margin:0 0 9px;color:var(--pc)}
+.cv-side p,.cv-main p{font-size:13px;line-height:1.55;color:#3f485a;white-space:pre-line;margin:0 0 22px}
+.cv-side h3:not(:first-child),.cv-main h3:not(:first-child){margin-top:20px}
+.cv-main{padding:28px 26px}
+.pv-cv-moderne .cv-body{grid-template-columns:38% 62%}
+.pv-cv-moderne .cv-side{background:#202b40;color:#fff}
+.pv-cv-moderne .cv-side p{color:#f1f4fa}
+.pv-cv-moderne .cv-side h3{color:#fff}
+.pv-cv-minimal .cv-header{background:#fff;color:#202638;border-bottom:3px solid var(--pc)}
+.pv-cv-minimal .cv-header h2,.pv-cv-minimal .cv-header p{color:#202638}
+.pv-cv-minimal .cv-body{grid-template-columns:1fr}
+.pv-cv-minimal .cv-side{background:#fff;padding:22px 38px 0}
+.pv-cv-minimal .cv-side h3:nth-of-type(n+2){display:none}
+.pv-cv-minimal .cv-side p:nth-of-type(n+2){display:none}
+.pv-poster{width:min(100%,520px);min-height:740px;display:flex;flex-direction:column;text-align:center;background:#fff}
+.poster-top{padding:42px 32px 28px;background:var(--pc);color:#fff}
+.poster-brand{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#fff;margin:0 0 26px}
+.poster-title{font-size:clamp(30px,5vw,54px);line-height:1.02;color:#fff;margin:0 0 14px;text-transform:uppercase}
+.poster-subtitle{font-size:16px;color:#fff;margin:0}
+.poster-visual{height:270px;background:#f0f2f6;display:grid;place-items:center;overflow:hidden}
+.poster-placeholder{padding:20px;color:#68738a;font-size:14px}
+.poster-image{width:100%;height:100%;object-fit:cover}
+.poster-info{padding:30px 28px;display:grid;gap:14px;color:#202638}
+.poster-info h3{font-size:20px;color:var(--pc)}
+.poster-info p{color:#505a6e;margin:0}
+.poster-info b{color:var(--pc);font-size:14px}
+.pv-poster-promotion .poster-top{background:#171d2b}
+.pv-poster-elegant .poster-top{background:#f3eee7}
+.pv-poster-elegant .poster-brand,.pv-poster-elegant .poster-title,.pv-poster-elegant .poster-subtitle{color:#34302d}
+@media(max-width:700px){
+ .frame.is-cv .pv,.frame.is-poster .pv{padding:8px;min-height:520px}
+ .pv-cv{min-height:680px}
+ .cv-header{padding:24px 20px}
+ .cv-header h2{font-size:24px}
+ .cv-body{grid-template-columns:36% 64%}
+ .cv-side{padding:18px 12px}
+ .cv-main{padding:18px 14px}
+ .cv-side p,.cv-main p{font-size:11px}
+ .pv-poster{min-height:620px}
+ .poster-top{padding:28px 18px 20px}
+ .poster-visual{height:210px}
+ .poster-info{padding:22px 16px}
+}
