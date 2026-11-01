@@ -55,6 +55,18 @@
 
   <aside class="studio-panel studio-properties" aria-label="Propriétés et personnalisation">
    <div class="panel-heading"><span class="panel-index">02</span><div><b>Personnalisation</b><small>Règle ton identité visuelle</small></div></div>
+   <div class="grp element-inspector" id="elementInspector" aria-live="polite">
+    <h3>Élément sélectionné</h3>
+    <p class="inspector-empty" id="inspectorEmpty">Clique sur un texte ou un titre dans l’aperçu pour le modifier.</p>
+    <div id="inspectorFields" hidden>
+     <p class="inspector-name" id="selectedElementName"></p>
+     <label for="elementText" class="field-label">Texte</label>
+     <textarea id="elementText" rows="3" maxlength="200"></textarea>
+     <label for="elementColor" class="field-label">Couleur du texte</label>
+     <input id="elementColor" type="color" value="#14161f">
+     <button class="btn btn-line inspector-clear" id="clearSelection" type="button">Désélectionner</button>
+    </div>
+   </div>
    <div class="grp"><h3>Ton activité</h3>
     <label for="name" class="sr" style="position:absolute;left:-9999px">Nom</label><input id="name" type="text" maxlength="60" placeholder="Nom de ton entreprise" autocomplete="off">
     <label for="slogan" class="sr" style="position:absolute;left:-9999px">Slogan</label><input id="slogan" type="text" maxlength="120" placeholder="Ton slogan" autocomplete="off">
