@@ -663,3 +663,21 @@ body.studio-dark:has(.studio-main) .custom-card-add,body.studio-dark:has(.studio
 /* Présentation et témoignages personnalisables */
 .pv-about-description{line-height:1.65;white-space:pre-wrap}
 body.studio-dark:has(.studio-main) .pv-about-description{color:var(--ptx)}
+
+
+/* ===== Palette Stromtech et thème système du Studio ===== */
+:root{--blue:#087f6b;--blue-dark:#066655;--mist:#e2f3ee;--spark:#38d6b0;--ink:#14252b;--muted:#586b70;--line:#dce7e5;color-scheme:light dark}
+body:not(.studio-dark){background:#f4f7f8;color:var(--ink)}
+body:not(.studio-dark) .site-header{background:#f7fbf9ed;border-bottom-color:var(--line)}
+body:not(.studio-dark) .controls,body:not(.studio-dark) .studio-panel,body:not(.studio-dark) .frame{background:#fff}
+body:not(.studio-dark) .studio-stage{background:linear-gradient(145deg,#edf6f3,#e7f0f5)}
+body:not(.studio-dark) .studio-submit .btn-blue{background:var(--blue);color:#fff}
+body.studio-dark:has(.studio-main){--blue:#38d6b0;--blue-dark:#20b894;--mist:#1b3540;--spark:#38d6b0;--ink:#e9f5f2;--muted:#aabdb9;--line:#304b50}
+body.studio-dark:has(.studio-main) .studio-submit .btn-blue{background:#087f6b;color:#fff;box-shadow:0 8px 22px #087f6b35}
+@media(prefers-color-scheme:dark){
+ body:not(.studio-dark){background:#0b1020;color:#e9f5f2}
+ body:not(.studio-dark) .site-header{background:#0b1020ef;border-bottom-color:#ffffff20}
+ body:not(.studio-dark) .controls,body:not(.studio-dark) .studio-panel,body:not(.studio-dark) .frame{background:#141d32}
+ body:not(.studio-dark) .studio-stage{background:linear-gradient(145deg,#1a263a,#141e30)}
+ body:not(.studio-dark) .studio-submit .btn-blue{background:#087f6b;color:#fff}
+}
