@@ -32,7 +32,7 @@
    <div class="panel-heading"><span class="panel-index">01</span><div><b>Structure</b><small>Choisis ton projet</small></div></div>
    <div class="grp"><h3>Ce que tu veux créer</h3><div class="seg" id="typeSeg"></div></div>
    <div class="grp page-manager"><h3>Pages du projet</h3><div id="pageList" class="page-list" aria-label="Pages du projet"></div><div class="page-actions"><button type="button" id="addPage">+ Nouvelle page</button><button type="button" id="renamePage">Renommer</button><button type="button" id="duplicatePage">Dupliquer</button><button type="button" id="deletePage" class="danger-action">Supprimer</button></div><p class="identity-help" id="pageStatus" aria-live="polite">1 page · chaque page garde son contenu.</p></div><div class="grp"><h3>Modèle de départ</h3><div class="opts" id="tplList"></div></div>
-   <div class="grp"><h3 id="secLegend">Sections</h3><div id="secList"></div></div>
+   <div class="grp"><h3 id="secLegend">Sections</h3><div id="secList"></div><p class="identity-help">Pour Galerie et Produits, active la section puis ajoute tes propres images.</p></div>
   </aside>
 
   <section class="studio-stage" aria-label="Zone centrale de création et aperçu">
@@ -160,13 +160,6 @@
   </aside>
  </form>
 </main>
-<div id="templatePreviewDialog" class="template-preview-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="templatePreviewTitle">
- <div class="template-preview-panel">
-  <button type="button" id="templatePreviewClose" class="template-preview-close" aria-label="Fermer l’aperçu">×</button>
-  <img id="templatePreviewImage" src="" alt="" />
-  <div class="template-preview-copy"><h2 id="templatePreviewTitle"></h2><p id="templatePreviewDescription"></p><button type="button" id="templatePreviewUse" class="btn btn-blue">Utiliser ce modèle</button></div>
- </div>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
