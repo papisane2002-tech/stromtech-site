@@ -152,6 +152,15 @@
     <textarea id="notes" maxlength="1000" placeholder="Une fonction en plus, un site que tu aimes, un logo à intégrer…"></textarea>
    </div>
    <div class="studio-submit">
+    <div class="poster-export" id="posterExport" hidden>
+     <h3>Exporter ton affiche</h3>
+     <p class="small">Télécharge une image haute résolution ou un PDF à imprimer, sans les outils de l’éditeur.</p>
+     <div class="poster-export-actions">
+      <button class="btn btn-line" id="exportPosterPng" type="button">Télécharger en PNG</button>
+      <button class="btn btn-line" id="exportPosterPdf" type="button">Télécharger en PDF</button>
+     </div>
+     <p class="small" id="exportStatus" role="status" aria-live="polite"></p>
+    </div>
     <div class="msg err" id="warn" role="alert" hidden></div>
     <button class="btn btn-blue" id="sendBtn" type="button">Envoyer ma maquette à Stromtech</button>
     <button class="btn btn-line" id="reset" type="button">Recommencer</button>
@@ -160,6 +169,8 @@
   </aside>
  </form>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
