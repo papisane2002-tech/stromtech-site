@@ -147,16 +147,32 @@
     <label class="field-label">Forme des éléments</label>
     <div class="seg" id="radiusSeg"></div>
    </div>
+   <div class="grp poster-options" id="posterOptions" hidden>
+    <h3>Options avancées de l’affiche</h3>
+    <label for="posterFormat" class="field-label">Format de création</label>
+    <select id="posterFormat">
+     <option value="portrait">Affiche portrait · 4:5</option>
+     <option value="square">Publication carrée · 1:1</option>
+     <option value="story">Story / statut · 9:16</option>
+     <option value="landscape">Format paysage · 16:9</option>
+     <option value="a4">Impression A4</option>
+    </select>
+    <label for="posterVisualHeight" class="field-label">Place réservée au visuel <output id="posterVisualHeightValue">310 px</output></label>
+    <input id="posterVisualHeight" type="range" min="120" max="460" step="10" value="310">
+    <label for="posterImageFit" class="field-label">Ajustement de la photo</label>
+    <select id="posterImageFit"><option value="cover">Remplir le cadre</option><option value="contain">Afficher toute la photo</option></select>
+    <p class="identity-help">Tu peux aussi ajouter plusieurs blocs de texte, des images et un logo dans la zone de création.</p>
+   </div>
    <div class="grp"><h3>Instructions complémentaires</h3>
     <label for="notes" class="sr" style="position:absolute;left:-9999px">Remarques</label>
     <textarea id="notes" maxlength="1000" placeholder="Une fonction en plus, un site que tu aimes, un logo à intégrer…"></textarea>
    </div>
    <div class="studio-submit">
     <div class="poster-export" id="posterExport" hidden>
-     <h3 id="designExportTitle">Exporter ton affiche</h3>
-     <p class="small" id="designExportHelp">Télécharge une image haute résolution ou un PDF à imprimer, sans les outils de l’éditeur.</p>
+     <h3 id="designExportTitle">Exporter ton CV</h3>
+     <p class="small" id="designExportHelp">Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé.</p>
      <div class="poster-export-actions">
-      <button class="btn btn-line" id="exportPosterPng" type="button">Télécharger en PNG</button>
+      <button class="btn btn-line" id="exportPosterPng" type="button" hidden>Télécharger en PNG</button>
       <button class="btn btn-line" id="exportPosterPdf" type="button">Télécharger en PDF</button>
      </div>
      <p class="small" id="exportStatus" role="status" aria-live="polite"></p>
