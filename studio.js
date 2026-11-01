@@ -402,7 +402,14 @@
   function render() {
     var root = $("pv");
     $("posterExport").hidden = state.type !== "cv";
+    
     $("posterOptions").hidden = state.type !== "poster";
+    $("posterExport").hidden = true;
+    $("posterOrderNote").hidden = state.type !== "poster" && state.type !== "cv";
+    if (state.type === "cv" || state.type === "poster") {
+      $("posterOrderNote").querySelector("h3").textContent = state.type === "cv" ? "Ton CV est prêt à être finalisé" : "Ton affiche est prête à être finalisée";
+      $("posterOrderNote").querySelector("p").textContent = "Tu peux créer et modifier ton design dans le Studio. Le téléchargement du fichier final est réservé aux commandes payantes auprès de Stromtech.";
+    }
     $("posterOrderNote").hidden = state.type !== "poster";
     if (state.type === "cv" || state.type === "poster") {
       $("designExportTitle").textContent = "Exporter ton CV";
@@ -613,6 +620,37 @@
 
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
+
+  function openStudioService(type) {
+    if (["site","app","cv","poster"].indexOf(type) < 0) return;
+    var previous = state || defaults(type);
+    if (previous.type !== type) {
+      state = defaults(type);
+      state.name = previous.name || "";
+      state.brandMode = previous.brandMode || "name";
+      state.brandLogo = previous.brandLogo || "";
+      state.brandLogoWidth = previous.brandLogoWidth || 150;
+      state.brandLogoBorder = !!previous.brandLogoBorder;
+      state.brandLogoBorderColor = previous.brandLogoBorderColor || "#dce3f5";
+      state.brandLogoBorderWidth = previous.brandLogoBorderWidth || 1;
+      state.color = previous.color || "#087f6b";
+      state.font = previous.font || "moderne";
+      state.radius = previous.radius || "1";
+      state.theme = previous.theme || "light";
+    }
+    $("studioServiceHub").hidden = true;
+    $("controls").hidden = false;
+    $("studioBackHub").hidden = false;
+    buildControls(); render(); renderPages(); saveDraft();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+  function showStudioHub() {
+    saveDraft();
+    $("controls").hidden = true;
+    $("studioServiceHub").hidden = false;
+    $("studioBackHub").hidden = true;
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
   function bind() {
     bindBlockDragging();
     $("addPage").addEventListener("click", function () { createPage(false); });
@@ -739,7 +777,7 @@
   }
 
   async function exportPoster(format) {
-    if (state.type === "poster") { $("exportStatus").textContent = "Le téléchargement des affiches est réservé aux commandes Stromtech."; return; }
+    if (state.type === "poster" || state.type === "cv") { $("exportStatus").textContent = "Le téléchargement du fichier final est réservé aux commandes payantes Stromtech."; return; }
     var poster = $("pv").querySelector(state.type === "cv" ? ".pv-cv" : ".pv-poster");
     var status = $("exportStatus"), pngBtn = $("exportPosterPng"), pdfBtn = $("exportPosterPdf");
     if (!poster) { status.textContent = "Sélectionne d’abord le type Affiche."; return; }
@@ -988,6 +1026,17 @@
   if (!state) { raw = loadDraft(); state = clean(raw); }
   initPages(raw);
   if (shared) { $("sharedNote").hidden = false; }
-  bind(); buildControls(); render(); renderPages();
+
+  bind();
+  document.querySelectorAll("[data-studio-service]").forEach(function (button) {
+    button.addEventListener("click", function () { openStudioService(button.dataset.studioService); });
+  });
+  $("studioBackHub").addEventListener("click", showStudioHub);
+  if (shared) {
+    $("studioServiceHub").hidden = true; $("controls").hidden = false; $("studioBackHub").hidden = false;
+    buildControls(); render(); renderPages();
+  } else {
+    $("studioServiceHub").hidden = false; $("controls").hidden = true; $("studioBackHub").hidden = true;
+  }
   if (window.cfgOk) sb.auth.getSession().then(function (r) { var u = r.data.session && r.data.session.user; if (u && u.id === STROMTECH.ADMIN_ID) { $("sendBtn").hidden = true; } });
 })();
