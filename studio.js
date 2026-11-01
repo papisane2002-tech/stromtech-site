@@ -22,6 +22,7 @@
   };
   var KEY = "stromtech_studio_draft";
   var state;
+  var viewport = "desktop";
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
@@ -103,6 +104,15 @@
     root.style.setProperty("--pr", RADII[state.radius][1]);
     root.style.setProperty("--pf", FONTS[state.font][1]);
     $("frame").className = "frame is-" + state.type;
+    $("frame").dataset.viewport = viewport;
+    document.querySelectorAll("[data-viewport]").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-viewport") === viewport));
+    });
+    var label = $("viewLabel");
+    if (label) label.textContent = state.type === "app" ? "Aperçu de l’application · mobile" : "Aperçu du site · " + (viewport === "desktop" ? "ordinateur" : viewport === "tablet" ? "tablette" : "mobile");
+    document.querySelectorAll(".viewport-switch button").forEach(function (b) {
+      b.hidden = state.type === "app" && b.getAttribute("data-viewport") !== "mobile";
+    });
     if (state.type === "site") previewSite(root); else previewApp(root);
   }
 
@@ -138,6 +148,12 @@
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
   function bind() {
+    document.querySelectorAll("[data-viewport]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        viewport = b.getAttribute("data-viewport");
+        render();
+      });
+    });
     $("font").addEventListener("change", function () { state.font = $("font").value; change(false); });
     $("color").addEventListener("input", function () { state.color = $("color").value; change(false); });
     $("color").addEventListener("change", function () { buildControls(); });
