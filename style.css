@@ -1007,3 +1007,6 @@ body.studio-dark:has(.studio-main) .studio-workspace-banner h2{color:#f6f7ff}
 body.studio-dark:has(.studio-main) .studio-workspace-banner p{color:#b8c2d9}
 body.studio-dark:has(.studio-main) .studio-workspace-step{background:#0b1224;color:#d6eee8;border-color:#38d6b044}
 @media(max-width:760px){.studio-workspace-banner{align-items:flex-start;flex-direction:column;padding:18px}.studio-workspace-step{white-space:normal;line-height:1.6}}
+
+/* Le choix du service se fait depuis l’accueil du Studio, pas dans l’éditeur. */
+.studio-tools .grp:has(#typeSeg){display:none}
