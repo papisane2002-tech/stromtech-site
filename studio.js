@@ -63,7 +63,7 @@
   function updateInspector() {
     var empty = $("inspectorEmpty"), fields = $("inspectorFields");
     var node = selectedKey && $("pv").querySelector('[data-editable="' + selectedKey + '"]');
-    if (!node) { selectedKey = null; empty.hidden = false; fields.hidden = true; return; }
+    if (!node) { selectedKey = null; empty.hidden = false; fields.hidden = true; $("blockActions").hidden = true; return; }
     empty.hidden = true; fields.hidden = false;
     $("selectedElementName").textContent = node.dataset.editLabel || "Élément";
     $("elementText").value = state.content[selectedKey] != null ? state.content[selectedKey] : node.textContent;
