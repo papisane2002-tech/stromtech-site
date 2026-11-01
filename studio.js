@@ -237,6 +237,10 @@
       $("blockFontSizeValue").textContent = (style.fontSize || 16) + " px";
       $("blockTextAlign").value = style.textAlign || "left";
       $("blockFontWeight").value = style.fontWeight || "normal";
+      $("blockFontFamily").value = style.fontFamily || "Arial, sans-serif";
+      $("blockItalic").checked = !!style.italic;
+      $("blockLineHeight").value = style.lineHeight || 1.4;
+      $("blockLineHeightValue").textContent = Number($("blockLineHeight").value).toFixed(1);
       $("blockBackground").value = style.backgroundColor || "#2340ff";
       $("blockRadius").value = style.radius == null ? 12 : style.radius;
       $("blockRadiusValue").textContent = $("blockRadius").value + " px";
@@ -283,6 +287,9 @@
         if (blockStyle.fontSize) node.style.fontSize = blockStyle.fontSize + "px";
         if (blockStyle.textAlign) node.style.textAlign = blockStyle.textAlign;
         if (blockStyle.fontWeight) node.style.fontWeight = blockStyle.fontWeight;
+        if (blockStyle.fontFamily) node.style.fontFamily = blockStyle.fontFamily;
+        if (blockStyle.italic) node.style.fontStyle = "italic";
+        if (blockStyle.lineHeight) node.style.lineHeight = blockStyle.lineHeight;
         if (blockStyle.backgroundColor) node.style.backgroundColor = blockStyle.backgroundColor;
         if (blockStyle.radius != null) node.style.borderRadius = blockStyle.radius + "px";
       }
@@ -777,6 +784,9 @@
     $("blockFontSize").addEventListener("input", function () { $("blockFontSizeValue").textContent = this.value + " px"; updateSelectedBlockStyle(selectedKey, "fontSize", Number(this.value)); });
     $("blockTextAlign").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "textAlign", this.value); });
     $("blockFontWeight").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "fontWeight", this.value); });
+    $("blockFontFamily").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "fontFamily", this.value); });
+    $("blockItalic").addEventListener("change", function () { updateSelectedBlockStyle(selectedKey, "italic", this.checked); });
+    $("blockLineHeight").addEventListener("input", function () { $("blockLineHeightValue").textContent = Number(this.value).toFixed(1); updateSelectedBlockStyle(selectedKey, "lineHeight", Number(this.value)); });
     $("blockBackground").addEventListener("input", function () { updateSelectedBlockStyle(selectedKey, "backgroundColor", this.value); });
     $("blockRadius").addEventListener("input", function () { $("blockRadiusValue").textContent = this.value + " px"; updateSelectedBlockStyle(selectedKey, "radius", Number(this.value)); });
     $("elementColor").addEventListener("input", function () {
