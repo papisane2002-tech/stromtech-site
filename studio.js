@@ -109,7 +109,7 @@
       item.style.transform = "translate3d(" + (pos.x + offset / 100 * 100) + "px," + pos.y + "px,0)";
       var size = state.blockSizes[block.id];
       if (size) { item.style.width = size.w + "px"; item.style.height = size.h + "px"; }
-      if (block.type === "image") { node.style.width = "100%"; if (size) node.style.height = "100%"; }
+      if (block.type === "image") { if (!size) item.style.width = (state.imageWidths[key] || 60) + "%"; node.style.width = "100%"; if (size) node.style.height = "100%"; }
       if (block.type === "button") node.type = "button";
       item.appendChild(node);
       var handle = el("button", "pv-resize-handle"); handle.type = "button"; handle.setAttribute("aria-label", "Redimensionner cet élément"); handle.title = "Redimensionner";
