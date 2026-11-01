@@ -363,3 +363,69 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-s
 .text-action{border:0;background:none;color:var(--blue);font:700 .85rem Figtree,sans-serif;padding:6px 0;cursor:pointer}
 .pv-brand-logo{display:block;width:auto;max-width:150px;height:auto;max-height:54px;object-fit:contain;flex:none}
 .pv-app-logo{max-width:180px;max-height:64px;margin:0 auto 12px}
+
+
+/* ===== Refonte visuelle Studio Stromtech ===== */
+.studio-main{max-width:1680px}
+.studio-head{max-width:980px;padding:34px 0 24px}
+.studio-head .block-title{font-size:clamp(2.2rem,4vw,3.4rem);letter-spacing:-.055em;line-height:1.02}
+.studio-head .block-intro{max-width:720px;font-size:1.02rem;line-height:1.7;color:#667085}
+.studio-kicker{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #dbe3ff;border-radius:999px;background:#f4f6ff;color:#3854df;font-size:.68rem;letter-spacing:.13em}
+.studio-kicker:before{content:"";width:7px;height:7px;border-radius:50%;background:#5472ff;box-shadow:0 0 0 4px #5472ff1c}
+.studio-editor{gap:16px}
+.studio-panel{background:rgba(255,255,255,.96);border:1px solid #e6eaf3;border-radius:20px;padding:18px;box-shadow:0 12px 34px rgba(28,42,82,.07);backdrop-filter:blur(12px)}
+.panel-heading{padding-bottom:16px;margin-bottom:5px}
+.panel-index{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#edf1ff,#e3eaff);color:#3854df}
+.panel-heading b{font-size:1rem;letter-spacing:-.02em}
+.panel-heading small{font-size:.76rem}
+.studio-panel .grp{padding:16px 0;border-bottom:1px solid #edf0f6}
+.studio-panel .grp h3{font-size:.9rem;letter-spacing:-.015em;color:#202943}
+.studio-panel input[type=text],.studio-panel select,.studio-panel textarea,.element-inspector textarea{border:1px solid #dce2ee;border-radius:12px;background:#fbfcff;transition:border-color .16s,box-shadow .16s}
+.studio-panel input[type=text]:focus,.studio-panel select:focus,.studio-panel textarea:focus,.element-inspector textarea:focus{outline:0;border-color:#7188ff;box-shadow:0 0 0 4px #526fff18}
+.studio-panel .seg button,.studio-panel .tpl{border:1px solid #e1e6f0;background:#fff;transition:all .16s ease}
+.studio-panel .seg button:hover,.studio-panel .tpl:hover{border-color:#aab8ff;transform:translateY(-1px)}
+.studio-panel .seg button[aria-pressed=true],.studio-panel .tpl[aria-pressed=true]{border-color:#6d83ff;background:#f0f3ff;color:#3150e5;box-shadow:inset 0 0 0 1px #6d83ff22}
+.studio-stage{background:linear-gradient(145deg,#f6f8fc 0%,#eef1f8 100%);border:1px solid #e2e7f1;border-radius:22px;padding:18px;box-shadow:inset 0 1px #fff}
+.studio-stagebar{margin-bottom:18px}
+.viewport-switch{background:#e6eaf3;border:1px solid #dfe4ef}
+.viewport-switch button{padding:8px 11px}
+.viewport-switch button[aria-pressed=true]{border:1px solid #e1e6f1;box-shadow:0 3px 10px #18264b12;color:#2948db}
+.studio-stage .frame{border:1px solid #d8deea;border-radius:15px;box-shadow:0 18px 48px rgba(26,39,77,.13);background:#fff}
+.studio-stage .frame-bar{border-bottom:1px solid #e8ebf2;background:#fafbfe}
+.studio-stage .frame-bar i{width:9px;height:9px;border:0;background:#d7dce7}
+.studio-stage .frame-bar i:first-child{background:#ff7c78}
+.studio-stage .frame-bar i:nth-child(2){background:#ffc45b}
+.studio-stage .frame-bar i:nth-child(3){background:#51c98a}
+.stage-hint{padding:10px 12px;background:#fff;border:1px solid #e7ebf4;border-radius:11px}
+.block-toolbar button{border:1px solid #dfe5f2;border-radius:10px;background:#fff;padding:9px 12px;transition:all .16s}
+.block-toolbar button:hover{transform:translateY(-1px);box-shadow:0 4px 12px #1b2c5c12}
+.block-toolbar #addImageBlock{background:#eef2ff;border-color:#d8e0ff;color:#3854df}
+.studio-submit .btn{border-radius:12px;transition:transform .16s,box-shadow .16s}
+.studio-submit .btn-blue{box-shadow:0 7px 16px #2340ff26}
+.studio-submit .btn-blue:hover{transform:translateY(-1px);box-shadow:0 10px 20px #2340ff35}
+.element-inspector{background:linear-gradient(145deg,#f8f9ff,#f3f6ff);border:1px solid #e0e6ff;border-radius:14px}
+.identity-switch{display:grid;grid-template-columns:1fr 1fr}
+.identity-switch button{justify-content:center}
+#brandLogoField{background:#f8f9fd;border:1px solid #e8ecf5;border-radius:14px;padding:12px;margin-top:8px}
+#brandLogoWidth,#brandLogoBorderWidth{width:100%;accent-color:#405fff}
+#brandLogoBorderColor{display:block;width:100%;height:36px;padding:3px;border:1px solid #dce2ee;border-radius:9px;background:#fff}
+.logo-border-toggle{margin-top:8px;padding:8px 0}
+.logo-border-options{padding:8px 10px 2px;margin-top:4px;background:#fff;border:1px solid #e8ecf5;border-radius:10px}
+.logo-border-options .field-label{display:block}
+.logo-border-options output,#brandLogoWidthValue{float:right;color:#405fff;font-weight:700}
+.pv-brand-logo{object-fit:contain;flex:none}
+@media(max-width:940px){
+ .studio-head{padding-top:24px}
+ .studio-stage{box-shadow:none}
+ .studio-panel{box-shadow:0 8px 24px rgba(28,42,82,.06)}
+}
+@media(max-width:560px){
+ .studio-head .block-title{font-size:2.2rem}
+ .studio-head .block-intro{font-size:.92rem}
+ .studio-stage{padding:10px}
+ .studio-stagebar{gap:10px}
+ .stage-heading{width:100%}
+ .block-toolbar button{min-height:40px}
+ .studio-panel{box-shadow:0 6px 18px rgba(28,42,82,.05)}
+ #brandLogoField{padding:10px}
+}
