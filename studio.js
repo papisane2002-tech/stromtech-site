@@ -27,7 +27,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [] };
+    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -44,6 +44,7 @@
     if (o.content && typeof o.content === "object") Object.keys(o.content).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && typeof o.content[k] === "string") d.content[k] = o.content[k].slice(0, 200); });
     if (o.elementColors && typeof o.elementColors === "object") Object.keys(o.elementColors).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && /^#[0-9a-f]{6}$/i.test(o.elementColors[k])) d.elementColors[k] = o.elementColors[k]; });
     if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button"); }).map(function (b) { return { id: b.id, type: b.type }; });
+    if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     return d;
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
@@ -79,6 +80,8 @@
       var key = block.id;
       var node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
       node.dataset.blockId = block.id;
+      var offset = state.blockOffsets[block.id] || 0;
+      node.style.transform = "translateX(" + offset + "%)";
       if (block.type === "button") node.type = "button";
       wrap.appendChild(node);
     });
@@ -208,6 +211,8 @@
     $("addButtonBlock").addEventListener("click", function () { addBlock("button"); });
     $("moveBlockUp").addEventListener("click", function () { moveSelectedBlock(-1); });
     $("moveBlockDown").addEventListener("click", function () { moveSelectedBlock(1); });
+    $("moveBlockLeft").addEventListener("click", function () { shiftSelectedBlock(-1); });
+    $("moveBlockRight").addEventListener("click", function () { shiftSelectedBlock(1); });
     $("deleteBlock").addEventListener("click", deleteSelectedBlock);
     document.querySelectorAll("[data-viewport]").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -238,10 +243,16 @@
     var item = state.blocks.splice(i, 1)[0]; state.blocks.splice(j, 0, item);
     render(); saveDraft();
   }
+  function shiftSelectedBlock(direction) {
+    if (selectedBlockIndex() < 0) return;
+    var current = state.blockOffsets[selectedKey] || 0;
+    state.blockOffsets[selectedKey] = Math.max(-45, Math.min(45, current + direction * 5));
+    render(); saveDraft();
+  }
   function deleteSelectedBlock() {
     var i = selectedBlockIndex(); if (i < 0) return;
     var key = state.blocks[i].id;
-    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key];
+    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key];
     selectedKey = null; render(); saveDraft();
   }
 
