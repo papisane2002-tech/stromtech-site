@@ -940,3 +940,13 @@ body.studio-dark:has(.studio-main) .tpl .tpl-tag{color:#38d6b0!important}
  .pv-poster-split .poster-visual{height:260px;min-height:220px}
  .pv-poster-split .poster-top,.pv-poster-split .poster-info{padding-left:24px;padding-right:24px}
 }
+
+
+/* Export des affiches */
+.poster-export{padding:18px 0;border-bottom:1px solid var(--line)}
+.poster-export h3{font-size:1.05rem;margin-bottom:8px}
+.poster-export p{margin:0 0 12px}
+.poster-export-actions{display:grid;grid-template-columns:1fr;gap:9px}
+.poster-export-actions .btn{width:100%;font-size:.9rem;padding:11px 14px}
+.poster-export-actions .btn:disabled{opacity:.55;cursor:wait}
+#exportStatus{min-height:1.4em;margin-top:10px;color:var(--muted)}
