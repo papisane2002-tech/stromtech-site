@@ -24,9 +24,14 @@
       minimal: { label: "Minimaliste", desc: "Une présentation épurée et lisible.", sections: ["profil", "experience", "competences", "formation"] }
     },
     poster: {
-      evenement: { label: "Événement", desc: "Affiche pour fête, cérémonie ou événement.", sections: ["evenement", "infos", "contact"] },
-      promotion: { label: "Promotion", desc: "Mettre en avant une offre ou un produit.", sections: ["accroche", "infos", "contact"] },
-      elegant: { label: "Élégante", desc: "Composition simple et raffinée.", sections: ["evenement", "accroche", "contact"] }
+      evenement: { label: "Événement", desc: "Affiche festive avec titre très visible.", sections: ["evenement", "infos", "contact"] },
+      promotion: { label: "Promotion", desc: "Offre commerciale et prix mis en avant.", sections: ["accroche", "infos", "contact"] },
+      elegant: { label: "Élégante", desc: "Mise en page raffinée et aérée.", sections: ["evenement", "accroche", "contact"] },
+      concert: { label: "Concert", desc: "Visuel immersif et ambiance scène.", sections: ["evenement", "infos", "contact"] },
+      editorial: { label: "Éditoriale", desc: "Composition asymétrique et typographie forte.", sections: ["evenement", "accroche", "contact"] },
+      minimal: { label: "Minimaliste", desc: "Peu d’éléments, beaucoup d’espace.", sections: ["evenement", "infos", "contact"] },
+      sale: { label: "Vente flash", desc: "Prix et avantage au premier plan.", sections: ["accroche", "infos", "contact"] },
+      split: { label: "Duo photo", desc: "Image et texte en deux zones.", sections: ["evenement", "infos", "contact"] }
     },
     app: {
       commandes: { label: "Commandes", desc: "Catalogue, panier et suivi des commandes.", sections: ["accueil", "catalogue", "commande", "messages", "profil"] },
@@ -343,23 +348,29 @@
   }
   function previewPoster(root) {
     var poster = el("article", "pv-document pv-poster pv-poster-" + state.template);
-    var top = el("div", "poster-top");
+    var visual = el("div", "poster-visual");
+    var imageBlock = state.blocks.find(function(b){return b.type==="image" && state.imageData[b.id];});
+    if (imageBlock) {
+      var im = el("img", "poster-image"); im.src = state.imageData[imageBlock.id]; im.alt = "Visuel principal de l’affiche"; visual.appendChild(im);
+    } else {
+      visual.appendChild(el("span", "poster-placeholder", "Ajoute une photo ou une illustration avec « Image / logo »"));
+    }
+    var top = el("header", "poster-top");
     top.appendChild(editText("p", "poster-brand", state.name || "NOM DE LA MARQUE", "posterBrand", "Nom de la marque"));
     top.appendChild(editText("h2", "poster-title", state.slogan || "TON ÉVÉNEMENT", "posterTitle", "Titre principal de l’affiche"));
     top.appendChild(editText("p", "poster-subtitle", "Une phrase courte pour attirer l’attention", "posterSubtitle", "Sous-titre"));
-    poster.appendChild(top);
-    var visual = el("div", "poster-visual");
-    var imageBlock = state.blocks.find(function(b){return b.type==="image";});
-    if (imageBlock && state.imageData[imageBlock.id]) { var im=el("img","poster-image"); im.src=state.imageData[imageBlock.id]; visual.appendChild(im); }
-    else visual.appendChild(el("span","poster-placeholder","Ajoute une image avec « Image / logo »"));
-    poster.appendChild(visual);
-    var info = el("div", "poster-info");
-    info.appendChild(editText("h3", "", "DATE · HEURE · LIEU", "posterDetails", "Date, heure et lieu"));
-    info.appendChild(editText("p", "", "Informations complémentaires, tarif ou offre spéciale", "posterExtra", "Informations complémentaires"));
-    info.appendChild(editText("b", "", "CONTACT · TÉLÉPHONE · RÉSEAUX", "posterContact", "Coordonnées"));
-    poster.appendChild(info); root.appendChild(poster);
+    var info = el("footer", "poster-info");
+    info.appendChild(editText("h3", "poster-details", "DATE · HEURE · LIEU", "posterDetails", "Date, heure et lieu"));
+    info.appendChild(editText("p", "poster-extra", "Informations complémentaires, tarif ou offre spéciale", "posterExtra", "Informations complémentaires"));
+    info.appendChild(editText("b", "poster-contact", "CONTACT · TÉLÉPHONE · RÉSEAUX", "posterContact", "Coordonnées"));
+    info.appendChild(editText("span", "poster-cta", "RÉSERVE TA PLACE", "posterCTA", "Appel à l’action"));
+    if (state.template === "concert" || state.template === "split" || state.template === "sale") {
+      poster.appendChild(visual); poster.appendChild(top); poster.appendChild(info);
+    } else {
+      poster.appendChild(top); poster.appendChild(visual); poster.appendChild(info);
+    }
+    root.appendChild(poster);
   }
-
   /* ---------- Aperçu : application ---------- */
   var appTab = null;
   function previewApp(root) {
