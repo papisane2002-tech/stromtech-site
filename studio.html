@@ -24,10 +24,22 @@
   <p class="studio-kicker">STROMTECH CREATIVE WORKSPACE</p>
   <h1 class="block-title">Studio de design</h1>
   <p class="block-intro" style="margin-bottom:0">Crée un site Web, une application, un CV professionnel ou une affiche. Personnalise ta composition, visualise le résultat et envoie ton projet à Stromtech.</p>
+  <button class="studio-back-hub" id="studioBackHub" type="button" hidden>← Tous les ateliers</button>
   <p class="shared" id="sharedNote" hidden>Tu regardes une maquette partagée dans une conversation. Tu peux la modifier ici, sans effet sur l’original.</p>
  </div>
 
- <form class="studio-editor" id="controls" onsubmit="return false">
+ <section class="studio-service-hub" id="studioServiceHub" aria-labelledby="studioHubTitle">
+  <div class="studio-hub-intro"><span class="studio-hub-eyebrow">TON ESPACE CRÉATIF</span><h2 id="studioHubTitle">Que souhaites-tu créer aujourd’hui ?</h2><p>Choisis un atelier. Chaque service possède ses propres modèles, formats et outils de conception.</p></div>
+  <div class="studio-service-grid">
+   <button class="studio-service-card service-web" type="button" data-studio-service="site"><span class="studio-service-icon">⌘</span><span class="studio-service-tag">WEB DESIGN</span><strong>Sites Web</strong><span>Pages d’accueil, vitrines, portfolios et boutiques.</span><b>Ouvrir l’atelier <i>→</i></b></button>
+   <button class="studio-service-card service-app" type="button" data-studio-service="app"><span class="studio-service-icon">▣</span><span class="studio-service-tag">APP DESIGN</span><strong>Applications mobiles</strong><span>Écrans, parcours, interfaces et expériences mobiles.</span><b>Ouvrir l’atelier <i>→</i></b></button>
+   <button class="studio-service-card service-cv" type="button" data-studio-service="cv"><span class="studio-service-icon">▤</span><span class="studio-service-tag">CV DESIGN</span><strong>CV professionnels</strong><span>Modèles de CV, rubriques et mises en page soignées.</span><b>Ouvrir l’atelier <i>→</i></b></button>
+   <button class="studio-service-card service-poster" type="button" data-studio-service="poster"><span class="studio-service-icon">▧</span><span class="studio-service-tag">GRAPHIC DESIGN</span><strong>Affiches et visuels</strong><span>Événements, promotions, annonces et publications.</span><b>Ouvrir l’atelier <i>→</i></b></button>
+  </div>
+  <p class="studio-hub-footnote">Tu pourras revenir ici à tout moment pour changer d’atelier.</p>
+ </section>
+
+ <form class="studio-editor" id="controls" hidden onsubmit="return false">
   <aside class="studio-panel studio-tools" aria-label="Outils et structure du projet">
    <div class="panel-heading"><span class="panel-index">01</span><div><b>Structure</b><small>Choisis ton projet</small></div></div>
    <div class="grp"><h3>Ce que tu veux créer</h3><div class="seg" id="typeSeg"></div></div>
