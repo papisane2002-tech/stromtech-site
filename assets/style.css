@@ -154,3 +154,32 @@ footer{border-top:1px solid var(--line);padding:34px 0 22px;color:var(--muted);m
   .model-field{flex-direction:column}
   .model-field .btn{width:100%}
 }
+
+
+/* ===== Thèmes Stromtech : suit automatiquement le système de l'appareil ===== */
+:root{color-scheme:light dark}
+@media(prefers-color-scheme:light){
+ :root{--bg:#f4f7f8;--panel:#ffffff;--txt:#14252b;--muted:#586b70;--a:#087f6b;--line:#dce7e5}
+ body{background:radial-gradient(circle at 90% 0,#d9f3ed,transparent 32%),var(--bg);color:var(--txt)}
+ header{background:#f7fbf9ed;border-bottom-color:var(--line)}
+ .links a:hover{color:var(--txt);background:#087f6b0d}
+ .links a[aria-current=page]{color:#087f6b;background:#087f6b12}
+ .menu-btn{background:#ffffff;border-color:var(--line);color:var(--txt)}
+ .primary{background:var(--a);color:#fff}
+ .primary:hover{box-shadow:0 8px 22px #087f6b25}
+ .secondary{border-color:var(--line);color:var(--txt);background:#ffffff}
+ .secondary:hover{background:#eaf4f1}
+ .hero-card{background:linear-gradient(140deg,#dce9ff,#d9f3ed)}
+ .chips a:hover{border-color:var(--a);background:#087f6b10}
+ .card .go,.foot a:hover{color:var(--a)}
+ .band{background:linear-gradient(140deg,#e5edff,#dcf4ed);border-color:var(--line)}
+ .shot{background:#eaf0f2}
+ input,select,textarea{background:#fff;color:var(--txt);border-color:#cbd9d7}
+ .tabs button{background:#fff;color:var(--txt)}
+ .tabs button.on{background:var(--a);color:#fff;border-color:var(--a)}
+ details{background:var(--panel);border-color:var(--line)}
+ .lb{background:#14252bd9}
+ footer{border-top-color:var(--line)}
+ .foot h4{color:var(--txt)}
+ .foot a{color:var(--muted)}
+}
