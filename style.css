@@ -961,3 +961,31 @@ body.studio-dark:has(.studio-main) .poster-options select{background:#0b1224;col
 .poster-export-note{padding:16px 0;border-bottom:1px solid var(--line)}
 .poster-export-note h3{font-size:1.02rem;margin:0 0 7px;color:var(--ink)}
 .poster-export-note p{font-size:13px;line-height:1.55;margin:0;color:var(--muted)}
+
+
+/* Accueil du Studio : ateliers séparés par service */
+.studio-service-hub{margin:28px 0 56px;padding:clamp(22px,4vw,42px);border:1px solid var(--line);border-radius:26px;background:linear-gradient(145deg,#fff,#f0f7f5);box-shadow:0 18px 55px #102b2510}
+.studio-hub-intro{max-width:720px;margin:0 auto 28px;text-align:center}
+.studio-hub-eyebrow{display:inline-block;color:#087f6b;font-size:11px;font-weight:800;letter-spacing:.18em;margin-bottom:12px}
+.studio-hub-intro h2{font-size:clamp(27px,4vw,42px);line-height:1.08;letter-spacing:-.04em;margin:0 0 12px;color:var(--ink)}
+.studio-hub-intro p{margin:0;color:var(--muted);line-height:1.65}
+.studio-service-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:980px;margin:auto}
+.studio-service-card{position:relative;display:flex;min-height:230px;flex-direction:column;align-items:flex-start;gap:9px;padding:24px;text-align:left;border:1px solid var(--line);border-radius:20px;background:#fff;color:#14252b;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.studio-service-card:hover{transform:translateY(-4px);border-color:#38b99b;box-shadow:0 18px 36px #102b2515}
+.studio-service-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:#e4f7f1;color:#087f6b;font-size:25px;font-weight:800}
+.service-app .studio-service-icon{background:#e9edff;color:#4459d8}.service-cv .studio-service-icon{background:#fff1df;color:#a65b12}.service-poster .studio-service-icon{background:#f8e9f1;color:#a33368}
+.studio-service-tag{font-size:9px;font-weight:800;letter-spacing:.17em;color:#73817f}
+.studio-service-card strong{font-size:22px;letter-spacing:-.03em}
+.studio-service-card>span:not(.studio-service-icon):not(.studio-service-tag){font-size:13px;line-height:1.5;color:#64736f;max-width:34ch}
+.studio-service-card>b{margin-top:auto;padding-top:12px;font-size:12px;color:#087f6b}
+.studio-service-card>b i{font-style:normal;font-size:18px;margin-left:5px}
+.studio-hub-footnote{text-align:center;color:var(--muted);font-size:12px;margin:22px 0 0}
+.studio-back-hub{margin:0 0 18px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;background:var(--panel,#fff);color:var(--ink);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.studio-editor[hidden],.studio-service-hub[hidden]{display:none!important}
+body.studio-dark:has(.studio-main) .studio-service-hub{background:linear-gradient(145deg,#141d32,#10192b);border-color:#ffffff20}
+body.studio-dark:has(.studio-main) .studio-hub-intro h2{color:#f6f7ff}
+body.studio-dark:has(.studio-main) .studio-hub-intro p,body.studio-dark:has(.studio-main) .studio-hub-footnote{color:#b8c2d9}
+body.studio-dark:has(.studio-main) .studio-service-card{background:#0b1224;color:#f6f7ff;border-color:#ffffff20}
+body.studio-dark:has(.studio-main) .studio-service-card>span:not(.studio-service-icon):not(.studio-service-tag){color:#b8c2d9}
+body.studio-dark:has(.studio-main) .studio-back-hub{background:#141d32;color:#f6f7ff;border-color:#ffffff20}
+@media(max-width:640px){.studio-service-grid{grid-template-columns:1fr}.studio-service-card{min-height:200px;padding:20px}.studio-service-hub{padding:20px;border-radius:20px}}
