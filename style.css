@@ -352,3 +352,14 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-s
 .block-toolbar #addImageBlock{background:#eef1ff;color:var(--blue);border-color:#cdd5ff}
 #imageSizeGroup input[type=range]{width:100%;accent-color:var(--blue)}
 @media(max-width:560px){.block-toolbar button{font-size:.72rem;padding:8px 6px}}
+
+
+/* Identité de marque dans le Studio */
+.identity-help{font-size:.82rem;color:var(--muted);margin:0 0 10px}
+.identity-switch{margin-bottom:12px}
+#brandNameField input{width:100%}
+#brandLogoField{padding:10px 0 2px}
+#brandLogoField .btn{margin-bottom:6px}
+.text-action{border:0;background:none;color:var(--blue);font:700 .85rem Figtree,sans-serif;padding:6px 0;cursor:pointer}
+.pv-brand-logo{display:block;width:auto;max-width:150px;height:auto;max-height:54px;object-fit:contain;flex:none}
+.pv-app-logo{max-width:180px;max-height:64px;margin:0 auto 12px}
