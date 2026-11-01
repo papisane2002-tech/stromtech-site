@@ -160,6 +160,13 @@
   </aside>
  </form>
 </main>
+<div id="templatePreviewDialog" class="template-preview-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="templatePreviewTitle">
+ <div class="template-preview-panel">
+  <button type="button" id="templatePreviewClose" class="template-preview-close" aria-label="Fermer l’aperçu">×</button>
+  <img id="templatePreviewImage" src="" alt="" />
+  <div class="template-preview-copy"><h2 id="templatePreviewTitle"></h2><p id="templatePreviewDescription"></p><button type="button" id="templatePreviewUse" class="btn btn-blue">Utiliser ce modèle</button></div>
+ </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
