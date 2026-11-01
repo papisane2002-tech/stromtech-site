@@ -989,3 +989,21 @@ body.studio-dark:has(.studio-main) .studio-service-card{background:#0b1224;color
 body.studio-dark:has(.studio-main) .studio-service-card>span:not(.studio-service-icon):not(.studio-service-tag){color:#b8c2d9}
 body.studio-dark:has(.studio-main) .studio-back-hub{background:#141d32;color:#f6f7ff;border-color:#ffffff20}
 @media(max-width:640px){.studio-service-grid{grid-template-columns:1fr}.studio-service-card{min-height:200px;padding:20px}.studio-service-hub{padding:20px;border-radius:20px}}
+
+
+/* En-tête de chaque atelier spécialisé du Studio Design */
+.studio-workspace-banner{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:22px 0 18px;padding:22px 26px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(115deg,#eaf8f3,#f4f6ff);box-shadow:0 12px 32px #102b250a}
+.studio-workspace-banner[hidden]{display:none!important}
+.studio-workspace-eyebrow{display:block;margin-bottom:7px;color:#087f6b;font-size:10px;font-weight:900;letter-spacing:.18em}
+.studio-workspace-banner h2{margin:0 0 7px;color:var(--ink);font-size:clamp(22px,3vw,30px);letter-spacing:-.04em}
+.studio-workspace-banner p{max-width:690px;margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+.studio-workspace-step{flex:none;padding:10px 13px;border:1px solid #087f6b25;border-radius:999px;background:#ffffffb8;color:#38534d;font-size:11px;font-weight:800}
+.studio-workspace-step i{padding:0 4px;color:#087f6b;font-style:normal}
+.studio-template-help{margin:-5px 0 12px;color:var(--muted);font-size:12px;line-height:1.5}
+body[data-studio-service="cv"] .studio-stage .viewport-switch button:not([data-viewport="mobile"]),
+body[data-studio-service="poster"] .studio-stage .viewport-switch button:not([data-viewport="mobile"]){display:none}
+body.studio-dark:has(.studio-main) .studio-workspace-banner{background:linear-gradient(115deg,#142d31,#172039);border-color:#ffffff20}
+body.studio-dark:has(.studio-main) .studio-workspace-banner h2{color:#f6f7ff}
+body.studio-dark:has(.studio-main) .studio-workspace-banner p{color:#b8c2d9}
+body.studio-dark:has(.studio-main) .studio-workspace-step{background:#0b1224;color:#d6eee8;border-color:#38d6b044}
+@media(max-width:760px){.studio-workspace-banner{align-items:flex-start;flex-direction:column;padding:18px}.studio-workspace-step{white-space:normal;line-height:1.6}}
