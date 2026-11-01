@@ -395,7 +395,8 @@
   }
 
   function render() {
-    var root = $("pv"); root.textContent = "";
+    var root = $("pv");
+    $("posterExport").hidden = state.type !== "poster"; root.textContent = "";
     var dark = state.theme === "dark";
     root.style.setProperty("--pc", state.color);
     root.style.setProperty("--pbg", dark ? "#12141c" : "#ffffff");
@@ -702,6 +703,45 @@
     ["name", "slogan", "notes"].forEach(function (id) { $(id).addEventListener("input", function () { state[id] = $(id).value; change(false); }); });
     $("reset").addEventListener("click", function () { state = defaults(); try { localStorage.removeItem(KEY); } catch (e) {} change(true); showMsg($("warn"), ""); });
     $("sendBtn").addEventListener("click", send);
+    $("exportPosterPng").addEventListener("click", function () { exportPoster("png"); });
+    $("exportPosterPdf").addEventListener("click", function () { exportPoster("pdf"); });
+  }
+
+  async function exportPoster(format) {
+    var poster = $("pv").querySelector(".pv-poster");
+    var status = $("exportStatus"), pngBtn = $("exportPosterPng"), pdfBtn = $("exportPosterPdf");
+    if (!poster) { status.textContent = "Sélectionne d’abord le type Affiche."; return; }
+    if (typeof window.html2canvas !== "function") { status.textContent = "Le module d’export n’a pas pu se charger. Vérifie ta connexion puis recharge la page."; return; }
+    if (format === "pdf" && !(window.jspdf && window.jspdf.jsPDF)) { status.textContent = "Le module PDF n’a pas pu se charger. Vérifie ta connexion puis recharge la page."; return; }
+    pngBtn.disabled = true; pdfBtn.disabled = true; status.textContent = "Préparation du fichier…";
+    try {
+      await document.fonts.ready;
+      var canvas = await window.html2canvas(poster, {
+        scale: 3, backgroundColor: "#ffffff", useCORS: true,
+        logging: false, scrollX: 0, scrollY: 0,
+        onclone: function (doc) {
+          doc.querySelectorAll(".is-selected,.is-dragging,.is-resizing").forEach(function (node) {
+            node.classList.remove("is-selected", "is-dragging", "is-resizing");
+          });
+          doc.querySelectorAll(".pv-resize-handle").forEach(function (node) { node.remove(); });
+        }
+      });
+      var filename = (state.name || "stromtech-affiche").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "") || "stromtech-affiche";
+      if (format === "png") {
+        var link = document.createElement("a");
+        link.download = filename + ".png"; link.href = canvas.toDataURL("image/png"); link.click();
+      } else {
+        var JsPDF = window.jspdf.jsPDF;
+        var width = 210, height = width * canvas.height / canvas.width;
+        var pdf = new JsPDF({ orientation: height > width ? "portrait" : "landscape", unit: "mm", format: [width, height], compress: true });
+        pdf.addImage(canvas.toDataURL("image/jpeg", 0.96), "JPEG", 0, 0, width, height, undefined, "FAST");
+        pdf.save(filename + ".pdf");
+      }
+      status.textContent = format === "png" ? "Image PNG téléchargée." : "PDF prêt à imprimer téléchargé.";
+    } catch (error) {
+      console.error("Export affiche Stromtech :", error);
+      status.textContent = "L’export a échoué. Essaie avec une image plus légère ou recharge le Studio.";
+    } finally { pngBtn.disabled = false; pdfBtn.disabled = false; }
   }
 
   function addBlock(type) {
