@@ -16,7 +16,7 @@
   <nav class="links" aria-label="Navigation principale">
    <a href="index.html">Accueil</a><a href="index.html#services">Services</a><a href="studio.html" aria-current="page">Studio design</a>
   </nav>
-  <div class="bar"><a class="btn btn-line" href="espace.html">Mon espace</a></div>
+  <div class="bar"><button class="btn btn-line theme-toggle" id="studioThemeToggle" type="button" aria-pressed="false">☾ Thème sombre</button><a class="btn btn-line" href="espace.html">Mon espace</a></div>
  </div>
 </header>
 <main class="container studio-main">
@@ -129,5 +129,26 @@
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script src="studio.js"></script>
+<script>
+(function(){
+  var button=document.getElementById("studioThemeToggle");
+  if(!button)return;
+  var key="stromtech_studio_interface_theme";
+  function apply(theme){
+    var dark=theme==="dark";
+    document.body.classList.toggle("studio-dark",dark);
+    button.setAttribute("aria-pressed",String(dark));
+    button.textContent=dark?"☀ Thème clair":"☾ Thème sombre";
+  }
+  var saved="light";
+  try{saved=localStorage.getItem(key)||"light";}catch(e){}
+  apply(saved);
+  button.addEventListener("click",function(){
+    var next=document.body.classList.contains("studio-dark")?"light":"dark";
+    apply(next);
+    try{localStorage.setItem(key,next);}catch(e){}
+  });
+})();
+</script>
 </body>
 </html>
