@@ -94,6 +94,14 @@
       <label for="imageBorderColor" class="field-label">Couleur de la bordure</label>
       <input id="imageBorderColor" type="color" value="#dce2ee">
      </div>
+     <div id="blockPositionGroup" class="block-position-group" hidden>
+      <h4>Position de l’élément</h4>
+      <label for="blockPositionX" class="field-label">Horizontal <output id="blockPositionXValue">0 px</output></label>
+      <input id="blockPositionX" type="range" min="-500" max="500" step="1" value="0">
+      <label for="blockPositionY" class="field-label">Vertical <output id="blockPositionYValue">0 px</output></label>
+      <input id="blockPositionY" type="range" min="-500" max="500" step="1" value="0">
+      <button type="button" id="resetBlockPosition" class="btn btn-line">Réinitialiser la position</button>
+     </div>
      <div class="block-actions" id="blockActions" hidden>
       <p class="drag-hint">Fais glisser le bloc directement dans l’aperçu pour le déplacer.</p>
       <button type="button" id="deleteBlock" class="danger-action">Supprimer le bloc</button>
