@@ -441,13 +441,13 @@
         contactEditor.appendChild(el("h4","","Coordonnées de contact"));
         [["email","Adresse e-mail",100],["phone","Téléphone",80],["location","Adresse / localisation",80]].forEach(function(field){
           var inputField=document.createElement("input");inputField.type="text";inputField.maxLength=field[2];inputField.placeholder=field[1];inputField.value=state.contactDetails[field[0]]||"";inputField.setAttribute("aria-label",field[1]);
-          inputField.addEventListener("input",function(){state.contactDetails[field[0]]=this.value;render();saveDraft();});
+          inputField.addEventListener("change",function(){state.contactDetails[field[0]]=this.value;render();saveDraft();});
           contactEditor.appendChild(inputField);
         });
         contactEditor.appendChild(el("h4","","Personnaliser le formulaire"));
         [["nameLabel","Libellé du champ nom",60],["messageLabel","Libellé du champ message",60],["buttonLabel","Texte du bouton",40]].forEach(function(field){
           var inputField=document.createElement("input");inputField.type="text";inputField.maxLength=field[2];inputField.placeholder=field[1];inputField.value=state.contactDetails[field[0]]||"";inputField.setAttribute("aria-label",field[1]);
-          inputField.addEventListener("input",function(){state.contactDetails[field[0]]=this.value;render();saveDraft();});
+          inputField.addEventListener("change",function(){state.contactDetails[field[0]]=this.value;render();saveDraft();});
           contactEditor.appendChild(inputField);
         });
         sl.appendChild(contactEditor);
@@ -462,7 +462,7 @@
             [["quote","Avis du client",240],["author","Nom du client",60]].forEach(function(field) {
               var inputField=document.createElement("input");inputField.type="text";inputField.maxLength=field[2];inputField.placeholder=field[1];inputField.value=detail[field[0]]||"";
               inputField.setAttribute("aria-label",field[1]+" "+(index+1));
-              inputField.addEventListener("input",function(){if(!state.testimonialDetails[index])state.testimonialDetails[index]={quote:"",author:""};state.testimonialDetails[index][field[0]]=this.value;render();saveDraft();});
+              inputField.addEventListener("change",function(){if(!state.testimonialDetails[index])state.testimonialDetails[index]={quote:"",author:""};state.testimonialDetails[index][field[0]]=this.value;render();saveDraft();});
               card.appendChild(inputField);
             });
             testimonialEditor.appendChild(card);
