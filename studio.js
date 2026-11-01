@@ -27,7 +27,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {} };
+    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -45,6 +45,7 @@
     if (o.elementColors && typeof o.elementColors === "object") Object.keys(o.elementColors).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && /^#[0-9a-f]{6}$/i.test(o.elementColors[k])) d.elementColors[k] = o.elementColors[k]; });
     if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button"); }).map(function (b) { return { id: b.id, type: b.type }; });
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
+    if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
     return d;
   }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
@@ -80,8 +81,9 @@
       var key = block.id;
       var node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
       node.dataset.blockId = block.id;
+      var pos = state.blockPositions[block.id] || { x: 0, y: 0 };
       var offset = state.blockOffsets[block.id] || 0;
-      node.style.transform = "translateX(" + offset + "%)";
+      node.style.transform = "translate3d(" + (pos.x + offset / 100 * 100) + "px," + pos.y + "px,0)";
       if (block.type === "button") node.type = "button";
       wrap.appendChild(node);
     });
@@ -189,6 +191,7 @@
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
   function bind() {
+    bindBlockDragging();
     $("pv").addEventListener("click", function (event) {
       var target = event.target.closest("[data-editable]");
       if (!target) return;
@@ -209,10 +212,6 @@
     $("clearSelection").addEventListener("click", function () { selectedKey = null; render(); });
     $("addTextBlock").addEventListener("click", function () { addBlock("text"); });
     $("addButtonBlock").addEventListener("click", function () { addBlock("button"); });
-    $("moveBlockUp").addEventListener("click", function () { moveSelectedBlock(-1); });
-    $("moveBlockDown").addEventListener("click", function () { moveSelectedBlock(1); });
-    $("moveBlockLeft").addEventListener("click", function () { shiftSelectedBlock(-1); });
-    $("moveBlockRight").addEventListener("click", function () { shiftSelectedBlock(1); });
     $("deleteBlock").addEventListener("click", deleteSelectedBlock);
     document.querySelectorAll("[data-viewport]").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -236,23 +235,47 @@
     state.content[id] = type === "button" ? "Nouveau bouton" : "Ton nouveau texte";
     selectedKey = id; render(); saveDraft();
   }
+  function bindBlockDragging() {
+    var drag = null, host = $("pv");
+    host.addEventListener("pointerdown", function (event) {
+      var node = event.target.closest("[data-block-id]");
+      if (!node || event.button !== 0) return;
+      selectedKey = node.dataset.blockId;
+      var pos = state.blockPositions[selectedKey] || { x: 0, y: 0 };
+      drag = { id: selectedKey, node: node, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, x: pos.x, y: pos.y, moved: false };
+      node.classList.add("is-selected", "is-dragging");
+      if (node.setPointerCapture) node.setPointerCapture(event.pointerId);
+      updateInspector();
+      event.preventDefault();
+    });
+    host.addEventListener("pointermove", function (event) {
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      var dx = event.clientX - drag.startX, dy = event.clientY - drag.startY;
+      if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+      if (!drag.moved) return;
+      var x = Math.max(-1200, Math.min(1200, drag.x + dx));
+      var y = Math.max(-1200, Math.min(1200, drag.y + dy));
+      drag.node.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+    });
+    function finish(event) {
+      if (!drag || (event && event.pointerId !== drag.pointerId)) return;
+      if (drag.moved) {
+        var dx = event.clientX - drag.startX, dy = event.clientY - drag.startY;
+        state.blockPositions[drag.id] = { x: Math.max(-1200, Math.min(1200, drag.x + dx)), y: Math.max(-1200, Math.min(1200, drag.y + dy)) };
+        saveDraft();
+      }
+      drag.node.classList.remove("is-dragging");
+      drag = null;
+      updateInspector();
+    }
+    host.addEventListener("pointerup", finish);
+    host.addEventListener("pointercancel", finish);
+  }
   function selectedBlockIndex() { return state.blocks.findIndex(function (b) { return b.id === selectedKey; }); }
-  function moveSelectedBlock(delta) {
-    var i = selectedBlockIndex(), j = i + delta;
-    if (i < 0 || j < 0 || j >= state.blocks.length) return;
-    var item = state.blocks.splice(i, 1)[0]; state.blocks.splice(j, 0, item);
-    render(); saveDraft();
-  }
-  function shiftSelectedBlock(direction) {
-    if (selectedBlockIndex() < 0) return;
-    var current = state.blockOffsets[selectedKey] || 0;
-    state.blockOffsets[selectedKey] = Math.max(-45, Math.min(45, current + direction * 5));
-    render(); saveDraft();
-  }
   function deleteSelectedBlock() {
     var i = selectedBlockIndex(); if (i < 0) return;
     var key = state.blocks[i].id;
-    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key];
+    state.blocks.splice(i, 1); delete state.content[key]; delete state.elementColors[key]; delete state.blockOffsets[key]; delete state.blockPositions[key];
     selectedKey = null; render(); saveDraft();
   }
 
