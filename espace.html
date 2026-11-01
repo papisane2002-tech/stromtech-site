@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mon espace | Stromtech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<header class="site-header"><div class="container nav"><a class="logo" href="index.html">strom<b>tech</b></a><nav class="links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="index.html#services">Services</a><a href="studio.html">Studio design</a></nav><div class="bar"><button class="link" id="logout" type="button" style="background:none;border:0;cursor:pointer;font:500 1rem Figtree,sans-serif;color:#5a6280;text-decoration:underline">Déconnexion</button></div></div></header>
+<main class="container">
+ <div class="msg err" id="warn" role="alert" hidden style="margin-top:24px"></div>
+ <div class="app">
+  <aside class="threads" aria-label="Mes demandes">
+   <button class="btn btn-blue" id="newBtn" type="button">Nouvelle demande</button>
+   <ul id="list"></ul>
+  </aside>
+  <section class="pane">
+   <div id="newView" hidden>
+    <form class="form" id="quote">
+     <h2 style="font-size:1.8rem">Nouvelle demande de devis</h2>
+     <p>Décris ton projet : Stromtech te répond ici même.</p>
+     <label for="service">Service souhaité *</label><select id="service" required><option value="">Choisir un service</option><option>Conception de site Web</option><option>Application Web ou mobile</option><option>Affiche ou création graphique</option><option>CV professionnel</option><option>Autre demande</option></select>
+     <div class="two"><div><label for="budget">Budget estimé</label><select id="budget"><option>À discuter</option><option>Moins de 10 000 FCFA</option><option>10 000 à 25 000 FCFA</option><option>25 000 à 50 000 FCFA</option><option>Plus de 50 000 FCFA</option></select></div><div><label for="deadline">Délai souhaité</label><select id="deadline"><option>À discuter</option><option>Urgent</option><option>Dans la semaine</option><option>Dans le mois</option></select></div></div>
+     <label for="details">Décris ton projet *</label><textarea id="details" required placeholder="Explique ce que tu souhaites réaliser…"></textarea>
+     <button class="btn btn-blue" type="submit">Envoyer ma demande</button>
+    </form>
+   </div>
+   <div id="chatView" hidden>
+    <div class="chat-head"><h2 id="chatTitle"></h2></div>
+    <div class="msgs" id="msgs" aria-live="polite"></div>
+    <form class="send" id="send"><label for="body" class="sr" style="position:absolute;left:-9999px">Ton message</label><textarea id="body" required placeholder="Écris ton message…"></textarea><button class="btn btn-blue" type="submit">Envoyer</button></form>
+   </div>
+   <div id="emptyView" hidden></div>
+  </section>
+ </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="config.js"></script><script src="app.js"></script>
+<script src="chat.js"></script><script>initMessaging("client")</script></body></html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connexion | Stromtech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"></head><body>
+<header class="site-header"><div class="container nav"><a class="logo" href="index.html">strom<b>tech</b></a><nav class="links" aria-label="Navigation principale"><a href="index.html">Accueil</a><a href="index.html#services">Services</a><a href="studio.html">Studio design</a></nav><a class="btn btn-line" href="index.html">Retour au site</a></div></header>
+<main class="auth-wrap"><div class="container"><div class="auth">
+ <h1 class="block-title" style="font-size:2.2rem">Mon espace</h1>
+ <p>Connecte-toi pour envoyer ta demande et discuter avec Stromtech.</p>
+ <div class="tabs" role="tablist"><button type="button" role="tab" id="tabIn" aria-selected="true">Connexion</button><button type="button" role="tab" id="tabUp" aria-selected="false">Créer un compte</button></div>
+ <div class="msg err" id="warn" role="alert" hidden></div>
+ <form class="form" id="formIn">
+  <label for="emailIn">Email</label><input id="emailIn" type="email" required autocomplete="email">
+  <label for="passIn">Mot de passe</label><input id="passIn" type="password" required autocomplete="current-password">
+  <button class="btn btn-blue" type="submit">Se connecter</button>
+ </form>
+ <form class="form" id="formUp" hidden>
+  <label for="nameUp">Nom et prénom</label><input id="nameUp" required autocomplete="name">
+  <label for="phoneUp">Téléphone</label><input id="phoneUp" type="tel" required autocomplete="tel">
+  <label for="emailUp">Email</label><input id="emailUp" type="email" required autocomplete="email">
+  <label for="passUp">Mot de passe (6 caractères minimum)</label><input id="passUp" type="password" required minlength="6" autocomplete="new-password">
+  <button class="btn btn-blue" type="submit">Créer mon compte</button>
+ </form>
+</div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><script src="config.js"></script><script src="app.js"></script>
+<script>
+(function(){
+ var $=function(i){return document.getElementById(i)}, warn=$("warn");
+ var qs=new URLSearchParams(location.search), next=safeNext(qs.get("next"));
+ function tab(up){$("formIn").hidden=up;$("formUp").hidden=!up;$("tabIn").setAttribute("aria-selected",!up);$("tabUp").setAttribute("aria-selected",up);showMsg(warn,"")}
+ $("tabIn").onclick=function(){tab(false)};$("tabUp").onclick=function(){tab(true)};
+ if(qs.get("mode")==="signup")tab(true);
+ if(!cfgOk){showMsg(warn,"Configuration manquante : renseigne config.js (URL Supabase, clé anon, ADMIN_ID).",true);return}
+ function go(u){location.replace(u.id===STROMTECH.ADMIN_ID?"admin.html":(next||"espace.html"))}
+ sb.auth.getSession().then(function(r){if(r.data.session)go(r.data.session.user)});
+ function nice(m){return /invalid login/i.test(m)?"Email ou mot de passe incorrect.":/already registered/i.test(m)?"Cet email a déjà un compte. Connecte-toi.":/email not confirmed/i.test(m)?"Confirme d’abord ton email grâce au message reçu.":m}
+ $("formIn").addEventListener("submit",async function(e){e.preventDefault();var b=e.submitter;b.disabled=true;
+  var r=await sb.auth.signInWithPassword({email:$("emailIn").value.trim(),password:$("passIn").value});b.disabled=false;
+  if(r.error)return showMsg(warn,nice(r.error.message),true);go(r.data.user)});
+ $("formUp").addEventListener("submit",async function(e){e.preventDefault();var b=e.submitter;b.disabled=true;
+  var r=await sb.auth.signUp({email:$("emailUp").value.trim(),password:$("passUp").value,options:{data:{name:$("nameUp").value.trim(),phone:$("phoneUp").value.trim()},emailRedirectTo:location.origin+location.pathname.replace(/[^/]*$/,"")+"connexion.html"}});b.disabled=false;
+  if(r.error)return showMsg(warn,nice(r.error.message),true);
+  if(r.data.session)return go(r.data.user);
+  showMsg(warn,"Compte créé. Ouvre le message de confirmation reçu par email, puis connecte-toi.",false);tab(false);showMsg(warn,"Compte créé. Ouvre le message de confirmation reçu par email, puis connecte-toi.",false)});
+})();
+</script></body></html>
