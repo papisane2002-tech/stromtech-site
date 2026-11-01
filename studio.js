@@ -31,7 +31,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {} };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] } };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
@@ -55,6 +55,7 @@
     if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button" || b.type === "image") && (b.type !== "image" || (o.imageData && typeof o.imageData[b.id] === "string" && o.imageData[b.id].indexOf("data:image/webp;base64,") === 0 && o.imageData[b.id].length < 500000)); }).map(function (b) { return { id: b.id, type: b.type }; });
     if (o.imageData && typeof o.imageData === "object") Object.keys(o.imageData).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageData[k] === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.imageData[k]) && o.imageData[k].length < 500000) d.imageData[k] = o.imageData[k]; });
     if (o.imageWidths && typeof o.imageWidths === "object") Object.keys(o.imageWidths).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageWidths[k] === "number" && isFinite(o.imageWidths[k])) d.imageWidths[k] = Math.max(15, Math.min(100, o.imageWidths[k])); });
+    if (o.sectionImages && typeof o.sectionImages === "object") ["galerie","produits"].forEach(function (k) { if (Array.isArray(o.sectionImages[k])) d.sectionImages[k] = o.sectionImages[k].slice(0, 8).filter(function (v) { return typeof v === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(v) && v.length < 180000; }); });
     if (o.imageStyles && typeof o.imageStyles === "object") Object.keys(o.imageStyles).slice(0, 3).forEach(function (k) { var v=o.imageStyles[k]; if (!/^block_[0-9]{1,16}$/.test(k) || !v || typeof v !== "object") return; var z={}; if (["contain","cover","fill"].indexOf(v.fit)>=0) z.fit=v.fit; if (typeof v.radius==="number" && isFinite(v.radius)) z.radius=Math.max(0,Math.min(40,v.radius)); if (typeof v.border==="boolean") z.border=v.border; if (/^#[0-9a-f]{6}$/i.test(v.borderColor)) z.borderColor=v.borderColor; d.imageStyles[k]=z; });
     if (o.blockOffsets && typeof o.blockOffsets === "object") Object.keys(o.blockOffsets).slice(0, 30).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.blockOffsets[k] === "number" && isFinite(o.blockOffsets[k])) d.blockOffsets[k] = Math.max(-45, Math.min(45, o.blockOffsets[k])); });
     if (o.blockPositions && typeof o.blockPositions === "object") Object.keys(o.blockPositions).slice(0, 30).forEach(function (k) { var p = o.blockPositions[k]; if (/^block_[0-9]{1,16}$/.test(k) && p && typeof p.x === "number" && typeof p.y === "number" && isFinite(p.x) && isFinite(p.y)) d.blockPositions[k] = { x: Math.max(-1200, Math.min(1200, p.x)), y: Math.max(-1200, Math.min(1200, p.y)) }; });
@@ -63,7 +64,7 @@
     return d;
   }
   var pages = [], activePageId = null;
-  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageStyles", "imageData", "imageWidths"];
+  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "blockStyles", "imageStyles", "imageData", "imageWidths", "sectionImages"];
   function pageSnapshot(source) {
     var snap = {};
     PAGE_FIELDS.forEach(function (k) { snap[k] = source[k] instanceof Array ? source[k].slice() : (source[k] && typeof source[k] === "object" ? JSON.parse(JSON.stringify(source[k])) : source[k]); });
@@ -290,8 +291,8 @@
     var builders = {
       about: function (b) { b.appendChild(lines(3)); },
       services: function (b) { var g = el("div", "pv-grid3"); [1, 2, 3].forEach(function (i) { var c = el("div", "pv-card"); c.appendChild(el("b", "", "Service " + i)); c.appendChild(lines(2)); g.appendChild(c); }); b.appendChild(g); },
-      produits: function (b) { var g = el("div", "pv-grid4"); [1, 2, 3, 4].forEach(function (i) { var c = el("div", "pv-card"); c.appendChild(el("div", "pv-sq")); c.appendChild(el("b", "", "Produit " + i)); c.appendChild(el("span", "pv-price", (i * 5 + 5) + " 000 FCFA")); g.appendChild(c); }); b.appendChild(g); },
-      galerie: function (b) { var g = el("div", "pv-grid3"); for (var i = 0; i < 6; i++) g.appendChild(el("div", "pv-sq")); b.appendChild(g); },
+      produits: function (b) { var g = el("div", "pv-grid4 pv-user-images"); var imgs = state.sectionImages.produits || []; for (var i = 0; i < Math.max(4, imgs.length); i++) { var c = el("div", "pv-card"); if (imgs[i]) { var im = el("img", "pv-section-image"); im.src = imgs[i]; im.alt = "Produit " + (i + 1); c.appendChild(im); } else c.appendChild(el("div", "pv-sq")); c.appendChild(el("b", "", "Produit " + (i + 1))); c.appendChild(el("span", "pv-price", (i * 5 + 5) + " 000 FCFA")); g.appendChild(c); } b.appendChild(g); },
+      galerie: function (b) { var g = el("div", "pv-grid3 pv-user-images"); var imgs = state.sectionImages.galerie || []; for (var i = 0; i < Math.max(6, imgs.length); i++) { if (imgs[i]) { var im = el("img", "pv-section-image pv-gallery-image"); im.src = imgs[i]; im.alt = "Image de galerie " + (i + 1); g.appendChild(im); } else g.appendChild(el("div", "pv-sq")); } b.appendChild(g); },
       tarifs: function (b) { var g = el("div", "pv-grid3"); ["Basique", "Standard", "Premium"].forEach(function (n) { var c = el("div", "pv-card"); c.appendChild(el("b", "", n)); c.appendChild(el("span", "pv-price", "— FCFA")); c.appendChild(lines(2)); g.appendChild(c); }); b.appendChild(g); },
       temoignages: function (b) { var g = el("div", "pv-grid2"); [1, 2].forEach(function () { var c = el("div", "pv-card"); c.appendChild(el("p", "", "“Un travail soigné, livré dans les temps.”")); c.appendChild(el("b", "", "Prénom Nom")); g.appendChild(c); }); b.appendChild(g); },
       contact: function (b) { var c = el("div", "pv-card"); c.appendChild(el("div", "pv-input", "Ton nom")); c.appendChild(el("div", "pv-input", "Ton message")); c.appendChild(el("i", "pv-btn", "Envoyer")); b.appendChild(c); }
@@ -357,23 +358,11 @@
     var tl = $("tplList"); tl.textContent = "";
     Object.keys(TPL[state.type]).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
-      var imageName = ({ landing: "page-conversion", evenement: "evenement", livraison: "livraison", education: "education" })[k];
-      if (imageName) {
-        var image = el("img", "tpl-real-image"); image.src = "assets/templates/" + imageName + ".webp"; image.alt = "Aperçu du modèle " + t.label; image.loading = "lazy"; image.onerror = function () { this.hidden = true; };
-        b.appendChild(image);
-      } else {
-        var visual = el("span", "tpl-preview tpl-preview-" + k);
-        visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
-        b.appendChild(visual);
-      }
+      var visual = el("span", "tpl-preview tpl-preview-" + k);
+      visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
+      b.appendChild(visual);
       b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || (state.type === "site" ? "Site Web" : "Application")));
       b.appendChild(el("span", "", t.desc));
-      if (imageName) {
-        var actions = el("span", "tpl-card-actions");
-        var preview = el("button", "tpl-preview-action", "Aperçu"); preview.type = "button";
-        preview.addEventListener("click", function (event) { event.stopPropagation(); openTemplatePreview(k); });
-        actions.appendChild(preview); b.appendChild(actions);
-      }
       b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); change(true); }); tl.appendChild(b);
     });
     var sw = $("swatches"); sw.textContent = "";
@@ -400,33 +389,24 @@
       cb.disabled = (!on && full) || (state.type === "app" && k === "accueil");
       cb.addEventListener("change", function () { state.sections = Object.keys(SEC[state.type]).filter(function (x) { return x === k ? cb.checked : state.sections.indexOf(x) >= 0; }); change(true); });
       lab.appendChild(cb); lab.appendChild(document.createTextNode(" " + SEC[state.type][k])); sl.appendChild(lab);
+      if (state.type === "site" && (k === "galerie" || k === "produits") && on) {
+        var tools = el("div", "section-image-tools");
+        var count = (state.sectionImages[k] || []).length;
+        var choose = el("button", "section-image-pick", k === "galerie" ? "＋ Ajouter des photos" : "＋ Ajouter des images de produits"); choose.type = "button"; choose.disabled = count >= 8;
+        var input = document.createElement("input"); input.type = "file"; input.accept = "image/png,image/jpeg,image/webp"; input.multiple = true; input.hidden = true;
+        choose.addEventListener("click", function () { input.click(); });
+        input.addEventListener("change", function () { addSectionImages(k, input.files); input.value = ""; });
+        tools.appendChild(choose); tools.appendChild(el("span", "section-image-count", count + "/8 images"));
+        if (count) { var clear = el("button", "section-image-clear", "Tout retirer"); clear.type = "button"; clear.addEventListener("click", function () { state.sectionImages[k] = []; change(true); }); tools.appendChild(clear); }
+        tools.appendChild(input); sl.appendChild(tools);
+      }
     });
-  }
-
-  function openTemplatePreview(key) {
-    var template = TPL[state.type][key];
-    if (!template) return;
-    var imageName = ({ landing: "page-conversion", evenement: "evenement", livraison: "livraison", education: "education" })[key];
-    if (!imageName) return;
-    $("templatePreviewImage").src = "assets/templates/" + imageName + ".webp";
-    $("templatePreviewImage").alt = "Aperçu du modèle " + template.label;
-    $("templatePreviewTitle").textContent = template.label;
-    $("templatePreviewDescription").textContent = template.desc;
-    $("templatePreviewUse").onclick = function () {
-      state.template = key; state.sections = template.sections.slice();
-      $("templatePreviewDialog").hidden = true; change(true);
-    };
-    $("templatePreviewDialog").hidden = false;
-    $("templatePreviewClose").focus();
   }
 
   function change(rebuild) { if (rebuild) buildControls(); render(); saveDraft(); }
 
   function bind() {
     bindBlockDragging();
-    $("templatePreviewClose").addEventListener("click", function () { $("templatePreviewDialog").hidden = true; });
-    $("templatePreviewDialog").addEventListener("click", function (event) { if (event.target === $("templatePreviewDialog")) $("templatePreviewDialog").hidden = true; });
-    document.addEventListener("keydown", function (event) { if (event.key === "Escape" && !$("templatePreviewDialog").hidden) $("templatePreviewDialog").hidden = true; });
     $("addPage").addEventListener("click", function () { createPage(false); });
     $("renamePage").addEventListener("click", renameCurrentPage);
     $("duplicatePage").addEventListener("click", function () { createPage(true); });
@@ -577,6 +557,38 @@
     };
     reader.onerror = function () { showMsg($("warn"), "La lecture du fichier a échoué.", true); };
     reader.readAsDataURL(file);
+  }
+
+  function addSectionImages(section, files) {
+    if (!files || !files.length) return;
+    var accepted = Array.prototype.slice.call(files).filter(function (f) { return /^image\/(png|jpeg|webp)$/.test(f.type); });
+    if (!accepted.length) { showMsg($("warn"), "Choisis des images PNG, JPG ou WebP.", true); return; }
+    var current = state.sectionImages[section] || [];
+    var room = 8 - current.length;
+    if (room <= 0) { showMsg($("warn"), "Maximum 8 images pour cette section.", true); return; }
+    if (accepted.length > room) accepted = accepted.slice(0, room);
+    var pending = accepted.length, added = 0, failed = false;
+    accepted.forEach(function (file) {
+      if (file.size > 5 * 1024 * 1024) { pending--; failed = true; if (!pending) finish(); return; }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var image = new Image();
+        image.onload = function () {
+          var scale = Math.min(1, 900 / Math.max(image.width, image.height));
+          var canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale));
+          canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+          var data = canvas.toDataURL("image/webp", 0.65);
+          var total = Object.keys(state.sectionImages).reduce(function (n, key) { return n + (state.sectionImages[key] || []).reduce(function (m, v) { return m + v.length; }, 0); }, 0);
+          if (data.length < 140000 && total + data.length < 650000) { state.sectionImages[section].push(data); added++; } else failed = true;
+          pending--; if (!pending) finish();
+        };
+        image.onerror = function () { failed = true; pending--; if (!pending) finish(); };
+        image.src = reader.result;
+      };
+      reader.onerror = function () { failed = true; pending--; if (!pending) finish(); };
+      reader.readAsDataURL(file);
+    });
+    function finish() { buildControls(); render(); saveDraft(); showMsg($("warn"), added + " image(s) ajoutée(s)." + (failed ? " Certaines images n’ont pas pu être ajoutées (format, taille ou espace)." : ""), failed); }
   }
 
   function addBrandLogo(file) {
