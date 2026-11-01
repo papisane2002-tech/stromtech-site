@@ -261,7 +261,7 @@
     selectedKey = id; render(); saveDraft();
   }
   function addImage(file) {
-    if (!/^image\\/(png|jpeg|webp)$/.test(file.type)) { showMsg($("warn"), "Choisis une image PNG, JPG ou WebP.", true); return; }
+    if (!/^image\/(png|jpeg|webp)$/.test(file.type)) { showMsg($("warn"), "Choisis une image PNG, JPG ou WebP.", true); return; }
     if (file.size > 5 * 1024 * 1024) { showMsg($("warn"), "Image trop volumineuse : 5 Mo maximum avant optimisation.", true); return; }
     var used = Object.keys(state.imageData).reduce(function (n, k) { return n + state.imageData[k].length; }, 0);
     if (Object.keys(state.imageData).length >= 3 || used >= 450000) { showMsg($("warn"), "Limite atteinte : 3 images maximum et 450 Ko au total après optimisation.", true); return; }
