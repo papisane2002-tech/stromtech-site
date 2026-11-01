@@ -12,12 +12,16 @@
     site: {
       vitrine: { label: "Vitrine", desc: "Présenter une activité : restaurant, salon, entreprise.", hero: "center", sections: ["about", "services", "galerie", "contact"] },
       portfolio: { label: "Portfolio", desc: "Montrer ses réalisations : artiste, photographe, freelance.", hero: "left", sections: ["about", "galerie", "temoignages", "contact"] },
-      boutique: { label: "Boutique", desc: "Vendre des produits avec un catalogue.", hero: "banner", sections: ["produits", "temoignages", "contact"] }
+      boutique: { label: "Boutique", desc: "Vendre des produits avec un catalogue.", hero: "banner", tag: "Vente en ligne", sections: ["produits", "temoignages", "contact"] },
+      landing: { label: "Page de conversion", desc: "Présenter une offre et guider les visiteurs vers une action.", hero: "left", tag: "Offre & contact", sections: ["about", "services", "tarifs", "contact"] },
+      evenement: { label: "Événement", desc: "Promouvoir une cérémonie, une activité ou un événement.", hero: "banner", tag: "Promotion", sections: ["about", "galerie", "tarifs", "contact"] }
     },
     app: {
       commandes: { label: "Commandes", desc: "Catalogue, panier et suivi des commandes.", sections: ["accueil", "catalogue", "commande", "messages", "profil"] },
       rendezvous: { label: "Rendez-vous", desc: "Réservation de créneaux et messagerie.", sections: ["accueil", "rdv", "messages", "profil"] },
-      gestion: { label: "Gestion", desc: "Suivre un catalogue, un stock ou des clients.", sections: ["accueil", "catalogue", "messages", "profil"] }
+      gestion: { label: "Gestion", desc: "Suivre un catalogue, un stock ou des clients.", tag: "Espace professionnel", sections: ["accueil", "catalogue", "messages", "profil"] },
+      livraison: { label: "Livraison", desc: "Présenter des articles, prendre les commandes et suivre les échanges.", tag: "Commerce mobile", sections: ["accueil", "catalogue", "commande", "messages", "profil"] },
+      education: { label: "Éducation", desc: "Organiser des contenus, rendez-vous et échanges avec les apprenants.", tag: "Formation", sections: ["accueil", "catalogue", "rdv", "messages", "profil"] }
     }
   };
   var KEY = "stromtech_studio_draft";
@@ -306,7 +310,10 @@
     var tl = $("tplList"); tl.textContent = "";
     Object.keys(TPL[state.type]).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
-      b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "", t.desc));
+      var visual = el("span", "tpl-preview tpl-preview-" + k);
+      visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
+      b.appendChild(visual); b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || (state.type === "site" ? "Site Web" : "Application")));
+      b.appendChild(el("span", "", t.desc));
       b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); change(true); }); tl.appendChild(b);
     });
     var sw = $("swatches"); sw.textContent = "";
