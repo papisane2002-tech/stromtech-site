@@ -443,7 +443,8 @@
     $("brandLogoBorderColor").value = state.brandLogoBorderColor; $("brandLogoBorderWidth").value = state.brandLogoBorderWidth; $("brandLogoBorderWidthValue").textContent = state.brandLogoBorderWidth + " px";
     renderPages();
     $("secLegend").textContent = state.type === "site" ? "Sections de ta page" : state.type === "app" ? "Écrans de ton application (5 maximum)" : state.type === "cv" ? "Rubriques du CV" : "Éléments de l’affiche";
-    var sectionGroup = $("secLegend").parentElement; sectionGroup.hidden = state.type === "cv" || state.type === "poster";\n    var pageGroup = document.querySelector(".page-manager"); if (pageGroup) pageGroup.hidden = state.type === "cv" || state.type === "poster";
+    var sectionGroup = $("secLegend").parentElement; sectionGroup.hidden = state.type === "cv" || state.type === "poster";
+    var pageGroup = document.querySelector(".page-manager"); if (pageGroup) pageGroup.hidden = state.type === "cv" || state.type === "poster";
     var sl = $("secList"); sl.textContent = ""; var max = state.type === "app" ? 5 : 7, full = state.sections.length >= max;
     Object.keys(SEC[state.type]).forEach(function (k) {
       var on = state.sections.indexOf(k) >= 0, lab = el("label", "chk"), cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = on;
