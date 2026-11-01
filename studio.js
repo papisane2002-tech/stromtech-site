@@ -27,13 +27,14 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || (type === "site" ? "vitrine" : "commandes");
-    return { type: type, template: tpl, name: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, imageData: {}, imageWidths: {} };
+    return { type: type, template: tpl, name: "", brandMode: "name", brandLogo: "", slogan: "", color: "#2340ff", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, imageData: {}, imageWidths: {} };
   }
   function clean(o) {
     var d = defaults(o && o.type === "app" ? "app" : "site");
     if (!o || typeof o !== "object") return d;
     if (TPL[d.type][o.template]) { d.template = o.template; d.sections = TPL[d.type][o.template].sections.slice(); }
     if (typeof o.name === "string") d.name = o.name.slice(0, 60);
+    if (o.brandMode === "logo" && typeof o.brandLogo === "string" && /^data:image\\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.brandLogo) && o.brandLogo.length < 250000) { d.brandMode = "logo"; d.brandLogo = o.brandLogo; }
     if (typeof o.slogan === "string") d.slogan = o.slogan.slice(0, 120);
     if (typeof o.notes === "string") d.notes = o.notes.slice(0, 1000);
     if (/^#[0-9a-f]{6}$/i.test(o.color)) d.color = o.color;
@@ -109,7 +110,9 @@
   /* ---------- Aperçu : site ---------- */
   function previewSite(root) {
     var tpl = TPL.site[state.template], nm = state.name || "Ton entreprise", sl = state.slogan || "Ton slogan s’affiche ici";
-    var nav = el("div", "pv-nav"); nav.appendChild(editText("b", "", nm, "brandName", "Nom de l’entreprise"));
+    var nav = el("div", "pv-nav");
+    if (state.brandMode === "logo" && state.brandLogo) { var brandImg = el("img", "pv-brand-logo"); brandImg.src = state.brandLogo; brandImg.alt = nm; nav.appendChild(brandImg); }
+    else nav.appendChild(editText("b", "", nm, "brandName", "Nom de l’entreprise"));
     var links = el("span", "pv-links"); state.sections.slice(0, 4).forEach(function (k) { links.appendChild(el("span", "", SEC.site[k])); }); nav.appendChild(links);
     nav.appendChild(el("i", "pv-btn", "Contact")); root.appendChild(nav);
     var hero = el("div", "pv-hero pv-" + tpl.hero);
@@ -135,7 +138,9 @@
   function previewApp(root) {
     var nm = state.name || "Ton appli", sl = state.slogan || "Ton slogan s’affiche ici";
     if (state.sections.indexOf(appTab) < 0) appTab = state.sections[0];
-    var ph = el("div", "phone"); ph.appendChild(editText("div", "pv-appbar", nm, "appName", "Nom de l’application"));
+    var ph = el("div", "phone");
+    if (state.brandMode === "logo" && state.brandLogo) { var appLogo = el("img", "pv-brand-logo pv-app-logo"); appLogo.src = state.brandLogo; appLogo.alt = nm; ph.appendChild(appLogo); }
+    else ph.appendChild(editText("div", "pv-appbar", nm, "appName", "Nom de l’application"));
     var scr = el("div", "pv-screen");
     var S = {
       accueil: function () { scr.appendChild(editText("h4", "pv-h", "Bonjour", "appGreeting", "Titre d’accueil")); scr.appendChild(editText("p", "", sl, "appSlogan", "Slogan de l’application")); var c = el("div", "pv-card pv-accent"); c.appendChild(el("b", "", "Offre du moment")); c.appendChild(lines(2)); scr.appendChild(c); var g = el("div", "pv-grid2"); ["Action 1", "Action 2"].forEach(function (t) { var x = el("div", "pv-card"); x.appendChild(el("b", "", t)); g.appendChild(x); }); scr.appendChild(g); },
@@ -195,6 +200,12 @@
     seg($("radiusSeg"), Object.keys(RADII).map(function (k) { return [k, RADII[k][0]]; }), state.radius, function (v) { state.radius = v; change(true); });
     $("font").value = state.font;
     $("name").value = state.name; $("slogan").value = state.slogan; $("notes").value = state.notes;
+    $("brandNameField").hidden = state.brandMode === "logo";
+    $("brandLogoField").hidden = state.brandMode !== "logo";
+    $("brandNameMode").setAttribute("aria-pressed", String(state.brandMode === "name"));
+    $("brandLogoMode").setAttribute("aria-pressed", String(state.brandMode === "logo"));
+    $("brandLogoStatus").textContent = state.brandLogo ? "Logo ajouté à l’aperçu." : "PNG, JPG ou WebP · 5 Mo maximum";
+    $("removeBrandLogo").hidden = !state.brandLogo;
     $("secLegend").textContent = state.type === "site" ? "Sections de ta page" : "Écrans de ton application (5 maximum)";
     var sl = $("secList"); sl.textContent = ""; var max = state.type === "app" ? 5 : 7, full = state.sections.length >= max;
     Object.keys(SEC[state.type]).forEach(function (k) {
@@ -229,6 +240,11 @@
     $("addTextBlock").addEventListener("click", function () { addBlock("text"); });
     $("addButtonBlock").addEventListener("click", function () { addBlock("button"); });
     $("addImageBlock").addEventListener("click", function () { $("imageUpload").click(); });
+    $("brandNameMode").addEventListener("click", function () { state.brandMode = "name"; change(true); });
+    $("brandLogoMode").addEventListener("click", function () { state.brandMode = "logo"; buildControls(); render(); saveDraft(); if (!state.brandLogo) $("brandLogoUpload").click(); });
+    $("chooseBrandLogo").addEventListener("click", function () { $("brandLogoUpload").click(); });
+    $("brandLogoUpload").addEventListener("change", function () { if (this.files && this.files[0]) addBrandLogo(this.files[0]); this.value = ""; });
+    $("removeBrandLogo").addEventListener("click", function () { state.brandLogo = ""; state.brandMode = "name"; change(true); });
     $("imageUpload").addEventListener("change", function () { if (this.files && this.files[0]) addImage(this.files[0]); this.value = ""; });
     $("imageWidth").addEventListener("input", function () {
       if (!selectedKey) return;
@@ -283,6 +299,30 @@
       image.src = reader.result;
     };
     reader.onerror = function () { showMsg($("warn"), "La lecture du fichier a échoué.", true); };
+    reader.readAsDataURL(file);
+  }
+
+  function addBrandLogo(file) {
+    if (!/^image\\/(png|jpeg|webp)$/.test(file.type)) { showMsg($("warn"), "Choisis un logo PNG, JPG ou WebP.", true); return; }
+    if (file.size > 5 * 1024 * 1024) { showMsg($("warn"), "Logo trop volumineux : 5 Mo maximum.", true); return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var image = new Image();
+      image.onload = function () {
+        var scale = Math.min(1, 700 / Math.max(image.width, image.height));
+        var canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+        var data = canvas.toDataURL("image/webp", 0.78);
+        if (data.length > 220000) { showMsg($("warn"), "Ce logo est trop lourd. Essaie une image plus légère.", true); return; }
+        state.brandLogo = data; state.brandMode = "logo";
+        change(true); showMsg($("warn"), "Logo ajouté à l’identité de ton entreprise.", false);
+      };
+      image.onerror = function () { showMsg($("warn"), "Impossible de lire ce logo.", true); };
+      image.src = reader.result;
+    };
+    reader.onerror = function () { showMsg($("warn"), "La lecture du logo a échoué.", true); };
     reader.readAsDataURL(file);
   }
 
