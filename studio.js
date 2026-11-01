@@ -451,8 +451,9 @@
               inputField.value = detail[field[0]] || "";
               inputField.setAttribute("aria-label", field[1] + " " + (index+1));
               inputField.addEventListener("input", function() {
-                if (!collection[index]) collection[index] = {name:"",price:"",description:""};
-                collection[index][field[0]] = this.value;
+                var targetCollection = k === "services" ? state.serviceDetails : state.pricingDetails;
+                if (!targetCollection[index]) targetCollection[index] = {name:"",price:"",description:""};
+                targetCollection[index][field[0]] = this.value;
                 render(); saveDraft();
               });
               card.appendChild(inputField);
@@ -463,15 +464,16 @@
         var addCard = el("button", "custom-card-add", "＋ Ajouter " + (isServices ? "un service" : "une offre"));
         addCard.type = "button"; addCard.disabled = collection.length >= cardLimit;
         addCard.addEventListener("click", function() {
-          if (collection.length >= cardLimit) return;
-          collection.push({name:"",price:"",description:""});
+          var targetCollection = k === "services" ? state.serviceDetails : state.pricingDetails;
+          if (targetCollection.length >= cardLimit) return;
+          targetCollection.push({name:"",price:"",description:""});
           change(true);
         });
         editor.appendChild(addCard);
         if (collection.length > cardMinimum) {
           var removeCard = el("button", "custom-card-remove", "Retirer le dernier " + (isServices ? "service" : "forfait"));
           removeCard.type = "button";
-          removeCard.addEventListener("click", function(){collection.pop();change(true);});
+          removeCard.addEventListener("click", function(){var targetCollection = k === "services" ? state.serviceDetails : state.pricingDetails;targetCollection.pop();change(true);});
           editor.appendChild(removeCard);
         }
         sl.appendChild(editor);
