@@ -276,7 +276,7 @@
       if (!selectedKey) return;
       state.imageWidths[selectedKey] = Number(this.value);
       var img = $("pv").querySelector('[data-block-id="' + selectedKey + '"]');
-      if (img) { img.style.width = this.value + "%"; img.style.height = ""; }
+      if (img) { img.style.width = this.value + "%"; img.style.height = ""; var innerImage = img.querySelector("img"); if (innerImage) { innerImage.style.width = "100%"; innerImage.style.height = "auto"; } }
       delete state.blockSizes[selectedKey];
       saveDraft();
     });
