@@ -197,7 +197,7 @@
     items.forEach(function (it) { var b = el("button", "", it[1]); b.type = "button"; b.setAttribute("aria-pressed", String(it[0] === current)); b.addEventListener("click", function () { onPick(it[0]); }); host.appendChild(b); });
   }
   function buildControls() {
-    seg($("typeSeg"), [["site", "Site Web"], ["app", "Application mobile"]], state.type, function (v) { if (v !== state.type) { state = Object.assign(defaults(v), { name: state.name, slogan: state.slogan, color: state.color, font: state.font, radius: state.radius, theme: state.theme, notes: state.notes }); change(true); } });
+    seg($("typeSeg"), [["site", "Site Web"], ["app", "Application mobile"]], state.type, function (v) { if (v !== state.type) { state = Object.assign(defaults(v), { name: state.name, brandMode: state.brandMode, brandLogo: state.brandLogo, brandLogoWidth: state.brandLogoWidth, brandLogoBorder: state.brandLogoBorder, brandLogoBorderColor: state.brandLogoBorderColor, brandLogoBorderWidth: state.brandLogoBorderWidth, slogan: state.slogan, color: state.color, font: state.font, radius: state.radius, theme: state.theme, notes: state.notes }); change(true); } });
     var tl = $("tplList"); tl.textContent = "";
     Object.keys(TPL[state.type]).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
