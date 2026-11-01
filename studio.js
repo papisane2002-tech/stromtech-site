@@ -73,7 +73,7 @@
     if (Array.isArray(o.sections)) { var ok = o.sections.filter(function (k) { return SEC[d.type][k]; }); if (ok.length) d.sections = ok.slice(0, d.type === "app" ? 5 : 7); }
     if (o.content && typeof o.content === "object") Object.keys(o.content).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && typeof o.content[k] === "string") d.content[k] = o.content[k].slice(0, 200); });
     if (o.elementColors && typeof o.elementColors === "object") Object.keys(o.elementColors).slice(0, 60).forEach(function (k) { if (/^[a-zA-Z0-9_-]{1,60}$/.test(k) && /^#[0-9a-f]{6}$/i.test(o.elementColors[k])) d.elementColors[k] = o.elementColors[k]; });
-    if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button" || b.type === "image") && (b.type !== "image" || (o.imageData && typeof o.imageData[b.id] === "string" && o.imageData[b.id].indexOf("data:image/webp;base64,") === 0 && o.imageData[b.id].length < 500000)); }).map(function (b) { return { id: b.id, type: b.type }; });
+    if (Array.isArray(o.blocks)) d.blocks = o.blocks.slice(0, 30).filter(function (b) { return b && typeof b.id === "string" && /^block_[0-9]{1,16}$/.test(b.id) && (b.type === "text" || b.type === "button" || b.type === "image" || b.type === "shape") && (b.type !== "image" || (o.imageData && typeof o.imageData[b.id] === "string" && o.imageData[b.id].indexOf("data:image/webp;base64,") === 0 && o.imageData[b.id].length < 500000)); }).map(function (b) { return { id: b.id, type: b.type }; });
     if (o.imageData && typeof o.imageData === "object") Object.keys(o.imageData).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageData[k] === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(o.imageData[k]) && o.imageData[k].length < 500000) d.imageData[k] = o.imageData[k]; });
     if (o.imageWidths && typeof o.imageWidths === "object") Object.keys(o.imageWidths).slice(0, 3).forEach(function (k) { if (/^block_[0-9]{1,16}$/.test(k) && typeof o.imageWidths[k] === "number" && isFinite(o.imageWidths[k])) d.imageWidths[k] = Math.max(15, Math.min(100, o.imageWidths[k])); });
     if (o.sectionImages && typeof o.sectionImages === "object") ["galerie","produits"].forEach(function (k) { if (Array.isArray(o.sectionImages[k])) d.sectionImages[k] = o.sectionImages[k].slice(0, 8).filter(function (v) { return typeof v === "string" && /^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(v) && v.length < 180000; }); });
@@ -205,7 +205,8 @@
     $("elementColor").value = state.elementColors[selectedKey] || "#14161f";
     var selectedBlock = state.blocks.find(function (b) { return b.id === selectedKey; });
     var isImage = selectedBlock && selectedBlock.type === "image";
-    $("elementTextLabel").hidden = !!isImage; $("elementText").hidden = !!isImage;
+    var isShape = selectedBlock && selectedBlock.type === "shape";
+    $("elementTextLabel").hidden = !!isImage || !!isShape; $("elementText").hidden = !!isImage || !!isShape;
     $("elementColorLabel").hidden = !!isImage; $("elementColor").hidden = !!isImage;
     $("imageSizeGroup").hidden = !isImage;
     if (isImage) {
@@ -256,6 +257,8 @@
         node.alt = state.content[key] || "Image ajoutée";
         node.style.width = (state.imageWidths[key] || 60) + "%";
         node.dataset.editable = key; node.dataset.editLabel = "Image / logo";
+      } else if (block.type === "shape") {
+        node = el("div", "pv-custom-shape"); node.dataset.editable = key; node.dataset.editLabel = "Forme graphique"; node.setAttribute("role", "img"); node.setAttribute("aria-label", "Forme graphique");
       } else {
         node = block.type === "button" ? editText("button", "pv-btn pv-custom-button", state.content[key] != null ? state.content[key] : "Nouveau bouton", key, "Bloc bouton") : editText("p", "pv-custom-text", state.content[key] != null ? state.content[key] : "Ton nouveau texte", key, "Bloc texte");
       }
@@ -275,6 +278,7 @@
       if (block.type === "button") node.type = "button";
       if (block.type !== "image") {
         var blockStyle = state.blockStyles[key] || {};
+        if (block.type === "shape") { node.style.backgroundColor = blockStyle.backgroundColor || "#38d6b0"; node.style.borderRadius = (blockStyle.radius == null ? 16 : blockStyle.radius) + "px"; node.style.width = "100%"; node.style.height = "100%"; }
         if (blockStyle.fontSize) node.style.fontSize = blockStyle.fontSize + "px";
         if (blockStyle.textAlign) node.style.textAlign = blockStyle.textAlign;
         if (blockStyle.fontWeight) node.style.fontWeight = blockStyle.fontWeight;
@@ -418,7 +422,7 @@
       $("posterOrderNote").querySelector("h3").textContent = state.type === "cv" ? "Ton CV est prêt à être finalisé" : "Ton affiche est prête à être finalisée";
       $("posterOrderNote").querySelector("p").textContent = "Tu peux créer et modifier ton design dans le Studio. Le téléchargement du fichier final est réservé aux commandes payantes auprès de Stromtech.";
     }
-    $("posterOrderNote").hidden = state.type !== "poster";
+    $("posterOrderNote").hidden = state.type !== "poster" && state.type !== "cv";
     if (state.type === "cv" || state.type === "poster") {
       $("designExportTitle").textContent = "Exporter ton CV";
       $("designExportHelp").textContent = "Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé.";
@@ -456,6 +460,21 @@
     }
     if (selectedKey) { var selected = root.querySelector('[data-editable="' + selectedKey + '"]'); if (selected) selected.classList.add("is-selected"); }
     updateInspector();
+    renderLayers();
+  }
+
+  function renderLayers() {
+    var host = $("studioLayers"); if (!host) return;
+    host.textContent = "";
+    if (!state.blocks.length) { var empty = el("p", "identity-help", "Aucun élément ajouté pour le moment."); host.appendChild(empty); return; }
+    state.blocks.forEach(function (block, index) {
+      var row = el("div", "studio-layer-row" + (block.id === selectedKey ? " is-active" : ""));
+      var select = el("button", "studio-layer-select", block.type === "image" ? "▧ Image" : block.type === "shape" ? "▰ Forme" : block.type === "button" ? "▣ Bouton" : "T  " + ((state.content[block.id] || "Texte").slice(0, 18)));
+      select.type = "button"; select.addEventListener("click", function () { selectedKey = block.id; render(); }); row.appendChild(select);
+      var up = el("button", "studio-layer-move", "↑"); up.type = "button"; up.title = "Avancer le calque"; up.disabled = index === state.blocks.length - 1; up.addEventListener("click", function () { var a = state.blocks[index]; state.blocks[index] = state.blocks[index + 1]; state.blocks[index + 1] = a; render(); saveDraft(); }); row.appendChild(up);
+      var down = el("button", "studio-layer-move", "↓"); down.type = "button"; down.title = "Reculer le calque"; down.disabled = index === 0; down.addEventListener("click", function () { var a = state.blocks[index]; state.blocks[index] = state.blocks[index - 1]; state.blocks[index - 1] = a; render(); saveDraft(); }); row.appendChild(down);
+      host.appendChild(row);
+    });
   }
 
   /* ---------- Commandes ---------- */
@@ -755,6 +774,7 @@
     $("addTextBlock").addEventListener("click", function () { addBlock("text"); });
     $("addButtonBlock").addEventListener("click", function () { addBlock("button"); });
     $("addImageBlock").addEventListener("click", function () { $("imageUpload").click(); });
+    $("addShapeBlock").addEventListener("click", function () { addBlock("shape"); });
     $("brandNameMode").addEventListener("click", function () { state.brandMode = "name"; change(true); });
     $("brandLogoMode").addEventListener("click", function () { state.brandMode = "logo"; buildControls(); render(); saveDraft(); if (!state.brandLogo) $("brandLogoUpload").click(); });
     $("chooseBrandLogo").addEventListener("click", function () { $("brandLogoUpload").click(); });
@@ -848,7 +868,8 @@
     var id = "block_" + Date.now();
     while (state.blocks.some(function (b) { return b.id === id; })) id = "block_" + (Number(id.slice(6)) + 1);
     state.blocks.push({ id: id, type: type });
-    state.content[id] = type === "button" ? "Nouveau bouton" : "Ton nouveau texte";
+    state.content[id] = type === "button" ? "Nouveau bouton" : type === "shape" ? "" : "Ton nouveau texte";
+    if (type === "shape") state.blockStyles[id] = { backgroundColor: "#38d6b0", radius: 16 };
     selectedKey = id; render(); saveDraft();
   }
   function addImage(file) {
