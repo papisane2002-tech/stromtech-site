@@ -82,8 +82,14 @@
      <button class="btn btn-line inspector-clear" id="clearSelection" type="button">Désélectionner</button>
     </div>
    </div>
-   <div class="grp"><h3>Ton activité</h3>
-    <label for="name" class="sr" style="position:absolute;left:-9999px">Nom</label><input id="name" type="text" maxlength="60" placeholder="Nom de ton entreprise" autocomplete="off">
+   <div class="grp"><h3>Identité de ton entreprise</h3>
+    <p class="identity-help">Choisis d’afficher le nom de ton entreprise ou son logo.</p>
+    <div class="seg identity-switch" id="brandModeSeg">
+     <button type="button" id="brandNameMode" aria-pressed="true">Afficher le nom</button>
+     <button type="button" id="brandLogoMode" aria-pressed="false">Utiliser un logo</button>
+    </div>
+    <div id="brandNameField"><label for="name" class="sr" style="position:absolute;left:-9999px">Nom</label><input id="name" type="text" maxlength="60" placeholder="Nom de ton entreprise" autocomplete="off"></div>
+    <div id="brandLogoField" hidden><button type="button" class="btn btn-line" id="chooseBrandLogo">Choisir mon logo</button><input id="brandLogoUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden><p class="identity-help" id="brandLogoStatus">PNG, JPG ou WebP · 5 Mo maximum</p><button type="button" class="text-action" id="removeBrandLogo" hidden>Retirer le logo</button></div>
     <label for="slogan" class="sr" style="position:absolute;left:-9999px">Slogan</label><input id="slogan" type="text" maxlength="120" placeholder="Ton slogan" autocomplete="off">
    </div>
    <div class="grp"><h3>Couleur principale</h3><div class="sws" id="swatches"></div><div class="sws custom-color"><label for="color">Couleur personnalisée</label><input id="color" type="color" value="#2340ff"></div></div>
