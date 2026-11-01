@@ -548,3 +548,7 @@ body.studio-dark:has(.studio-main) .studio-panel:hover{border-color:#52658a}
 .pv-custom-item.is-resizing{outline:1px dashed var(--pc);outline-offset:3px}
 .pv-custom-item.is-resizing>[data-editable]{outline:0!important}
 @media(max-width:560px){.pv-resize-handle{width:28px;height:28px;right:-10px;bottom:-10px}}
+
+
+/* Gestion des pages du Studio */
+.page-list{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}.page-tab{border:1px solid var(--line,#dce3f5);background:var(--panel,#fff);color:inherit;border-radius:9px;padding:8px 11px;font:inherit;font-size:13px;cursor:pointer}.page-tab.is-active{border-color:var(--blue,#2340ff);background:rgba(35,64,255,.09);font-weight:700}.page-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.page-actions button{border:1px solid var(--line,#dce3f5);background:transparent;color:inherit;border-radius:8px;padding:8px 6px;font:inherit;font-size:12px;cursor:pointer}.page-actions button:disabled{opacity:.45;cursor:not-allowed}.page-actions .danger-action{color:#c62839;border-color:rgba(198,40,57,.35)}
