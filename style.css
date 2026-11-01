@@ -641,3 +641,21 @@ body.studio-dark:has(.studio-main) .section-image-fit{background:#111a2a;color:#
 body.studio-dark:has(.studio-main) .section-image-row{background:#111a2a;border-color:#3a4861}body.studio-dark:has(.studio-main) .section-image-row-name{color:#d5def1}
 
 .product-details-editor{display:grid;gap:8px;width:100%;margin:10px 0}.product-details-editor h4{margin:3px 0;font-size:12px;color:#34415e}.product-detail-fields{display:grid;gap:6px;padding:9px;border:1px solid #e1e6f0;border-radius:9px;background:#fff}.product-detail-fields>b{font-size:11px;color:#52617f}.product-detail-fields input{width:100%;min-width:0;min-height:34px;padding:7px 9px;border:1px solid #d8e0f0;border-radius:7px;background:#fff;color:#24345a;font-size:12px}.pv-product-description{margin:5px 0;font-size:12px;color:var(--ptx);opacity:.78}.pv-user-images .pv-card{min-width:0}body.studio-dark:has(.studio-main) .product-detail-fields{background:#111a2a;border-color:#3a4861}body.studio-dark:has(.studio-main) .product-detail-fields>b{color:#d5def1}body.studio-dark:has(.studio-main) .product-detail-fields input{background:#172238;color:#f2f5ff;border-color:#3a4861}
+
+
+/* Édition des cartes Services et Tarifs dans le Studio */
+.custom-cards-editor{display:grid;gap:8px;width:100%;margin:10px 0;padding:10px;border:1px solid #e1e6f0;border-radius:10px;background:#f7f8fc}
+.custom-cards-editor h4{margin:2px 0;font-size:12px;color:#34415e}
+.custom-card-fields{display:grid;gap:6px;padding:9px;border:1px solid #e1e6f0;border-radius:9px;background:#fff}
+.custom-card-fields>b{font-size:11px;color:#52617f}
+.custom-card-fields input{width:100%;min-width:0;min-height:34px;padding:7px 9px;border:1px solid #d8e0f0;border-radius:7px;background:#fff;color:#24345a;font-size:12px}
+.custom-card-add,.custom-card-remove{min-height:34px;padding:7px 9px;border:1px solid #d8e0f0;border-radius:8px;background:#fff;color:#24345a;font-size:12px;cursor:pointer}
+.custom-card-add{border-color:#cbd5ff;color:#2340ff;font-weight:700}
+.custom-card-add:disabled{opacity:.45;cursor:not-allowed}
+.custom-card-remove{color:#b23b4a}
+body.studio-dark:has(.studio-main) .custom-cards-editor{background:#172238;border-color:#34435d}
+body.studio-dark:has(.studio-main) .custom-cards-editor h4{color:#f2f5ff}
+body.studio-dark:has(.studio-main) .custom-card-fields{background:#111a2a;border-color:#3a4861}
+body.studio-dark:has(.studio-main) .custom-card-fields>b{color:#d5def1}
+body.studio-dark:has(.studio-main) .custom-card-fields input{background:#172238;color:#f2f5ff;border-color:#3a4861}
+body.studio-dark:has(.studio-main) .custom-card-add,body.studio-dark:has(.studio-main) .custom-card-remove{background:#111a2a;color:#dce5fa;border-color:#3a4861}
