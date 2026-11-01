@@ -70,6 +70,18 @@
      <textarea id="elementText" rows="3" maxlength="200"></textarea>
      <label for="elementColor" class="field-label" id="elementColorLabel">Couleur du texte</label>
      <input id="elementColor" type="color" value="#14161f">
+     <div id="blockStyleGroup" class="block-style-group" hidden>
+      <label for="blockFontSize" class="field-label">Taille du texte <output id="blockFontSizeValue">16 px</output></label>
+      <input id="blockFontSize" type="range" min="12" max="48" step="1" value="16">
+      <label for="blockTextAlign" class="field-label">Alignement</label>
+      <select id="blockTextAlign"><option value="left">À gauche</option><option value="center">Centré</option><option value="right">À droite</option></select>
+      <label for="blockFontWeight" class="field-label">Épaisseur</label>
+      <select id="blockFontWeight"><option value="normal">Normale</option><option value="600">Semi-gras</option><option value="700">Gras</option></select>
+      <label for="blockBackground" class="field-label">Couleur de fond</label>
+      <input id="blockBackground" type="color" value="#2340ff">
+      <label for="blockRadius" class="field-label">Arrondi <output id="blockRadiusValue">12 px</output></label>
+      <input id="blockRadius" type="range" min="0" max="32" step="1" value="12">
+     </div>
      <div id="imageSizeGroup" hidden>
       <label for="imageWidth" class="field-label">Largeur de l’image</label>
       <input id="imageWidth" type="range" min="15" max="100" step="1" value="60">
