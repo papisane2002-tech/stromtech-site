@@ -636,3 +636,6 @@ body.studio-dark:has(.studio-main) .section-image-tools button{background:#111a2
 .pv-section-image{width:100%;height:150px;min-height:0;max-height:none;object-fit:cover;display:block;border-radius:var(--pr,12px)}
 .pv-product-image{height:120px;object-fit:contain;background:#fff}.pv-gallery-image{height:150px;aspect-ratio:auto;object-fit:cover}
 body.studio-dark:has(.studio-main) .section-image-fit{background:#111a2a;color:#f2f5ff;border-color:#3a4861}
+
+.section-image-list{display:grid;gap:6px;width:100%;margin-top:4px}.section-image-row{display:flex;align-items:center;gap:6px;min-width:0;padding:5px;border:1px solid #e1e6f0;border-radius:9px;background:#fff}.section-image-thumb{width:42px;height:42px;flex:0 0 42px;object-fit:cover;border-radius:6px}.section-image-row-name{flex:1;min-width:0;font-size:11px;color:#52617f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.section-image-row button{padding:6px 8px;min-height:30px}.section-image-row button:disabled{opacity:.35;cursor:not-allowed}.section-image-row .section-image-remove{color:#b23b4a}
+body.studio-dark:has(.studio-main) .section-image-row{background:#111a2a;border-color:#3a4861}body.studio-dark:has(.studio-main) .section-image-row-name{color:#d5def1}
