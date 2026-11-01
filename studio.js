@@ -56,9 +56,92 @@
     if (o.blockSizes && typeof o.blockSizes === "object") Object.keys(o.blockSizes).slice(0, 30).forEach(function (k) { var z = o.blockSizes[k]; if (/^block_[0-9]{1,16}$/.test(k) && z && typeof z.w === "number" && typeof z.h === "number" && isFinite(z.w) && isFinite(z.h)) d.blockSizes[k] = { w: Math.max(48, Math.min(1200, z.w)), h: Math.max(40, Math.min(900, z.h)) }; });
     return d;
   }
+  var pages = [], activePageId = null;
+  var PAGE_FIELDS = ["template", "sections", "content", "elementColors", "blocks", "blockOffsets", "blockPositions", "blockSizes", "imageData", "imageWidths"];
+  function pageSnapshot(source) {
+    var snap = {};
+    PAGE_FIELDS.forEach(function (k) { snap[k] = source[k] instanceof Array ? source[k].slice() : (source[k] && typeof source[k] === "object" ? JSON.parse(JSON.stringify(source[k])) : source[k]); });
+    return snap;
+  }
+  function storeCurrentPage() {
+    if (!pages.length) return;
+    var page = pages.find(function (p) { return p.id === activePageId; });
+    if (page) page.data = pageSnapshot(state);
+  }
+  function applyPage(page) {
+    if (!page) return;
+    PAGE_FIELDS.forEach(function (k) {
+      var value = page.data[k];
+      state[k] = value instanceof Array ? value.slice() : (value && typeof value === "object" ? JSON.parse(JSON.stringify(value)) : value);
+    });
+    activePageId = page.id; selectedKey = null; appTab = null;
+  }
+  function initPages(raw) {
+    pages = [];
+    if (raw && Array.isArray(raw.pages)) {
+      raw.pages.slice(0, 10).forEach(function (p, i) {
+        if (!p || typeof p.id !== "string" || !p.data || typeof p.data !== "object") return;
+        var base = clean(Object.assign({}, state, p.data));
+        pages.push({ id: p.id.slice(0, 40), name: (typeof p.name === "string" ? p.name : "Page " + (i + 1)).slice(0, 40), data: pageSnapshot(base) });
+      });
+    }
+    if (!pages.length) pages.push({ id: "page_" + Date.now(), name: "Page 1", data: pageSnapshot(state) });
+    var wanted = raw && typeof raw.activePageId === "string" ? raw.activePageId : "";
+    var active = pages.find(function (p) { return p.id === wanted; }) || pages[0];
+    applyPage(active);
+  }
+  function exportState() {
+    storeCurrentPage();
+    var out = Object.assign({}, state, { pages: pages, activePageId: activePageId });
+    return out;
+  }
+  function renderPages() {
+    var host = $("pageList"); if (!host) return;
+    host.textContent = "";
+    pages.forEach(function (page) {
+      var b = el("button", "page-tab" + (page.id === activePageId ? " is-active" : ""), page.name);
+      b.type = "button"; b.setAttribute("aria-pressed", String(page.id === activePageId));
+      b.addEventListener("click", function () { switchPage(page.id); });
+      host.appendChild(b);
+    });
+    $("pageStatus").textContent = pages.length + " page" + (pages.length > 1 ? "s" : "") + " · maximum 10";
+    $("duplicatePage").disabled = pages.length >= 10;
+    $("addPage").disabled = pages.length >= 10;
+    $("deletePage").disabled = pages.length <= 1;
+  }
+  function switchPage(id) {
+    storeCurrentPage();
+    var target = pages.find(function (p) { return p.id === id; });
+    if (!target) return;
+    applyPage(target); buildControls(); render(); renderPages(); saveDraft();
+  }
+  function createPage(copyCurrent) {
+    if (pages.length >= 10) return;
+    storeCurrentPage();
+    var data = copyCurrent ? pageSnapshot(state) : pageSnapshot(defaults(state.type));
+    var n = pages.length + 1, page = { id: "page_" + Date.now(), name: "Page " + n, data: data };
+    pages.push(page); applyPage(page); buildControls(); render(); renderPages(); saveDraft();
+  }
+  function renameCurrentPage() {
+    var page = pages.find(function (p) { return p.id === activePageId; });
+    if (!page) return;
+    var value = window.prompt("Nouveau nom de la page :", page.name);
+    if (value === null) return;
+    value = value.trim().slice(0, 40);
+    if (!value) return window.alert("Le nom de la page ne peut pas être vide.");
+    page.name = value; renderPages(); saveDraft();
+  }
+  function deleteCurrentPage() {
+    if (pages.length <= 1) return;
+    var index = pages.findIndex(function (p) { return p.id === activePageId; });
+    if (index < 0 || !window.confirm("Supprimer « " + pages[index].name + " » ? Cette action ne concerne que cette page.")) return;
+    pages.splice(index, 1);
+    var next = pages[Math.max(0, index - 1)]; applyPage(next);
+    buildControls(); render(); renderPages(); saveDraft();
+  }
   function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
   function dec(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return JSON.parse(decodeURIComponent(escape(atob(s)))); }
-  function saveDraft() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function saveDraft() { try { localStorage.setItem(KEY, JSON.stringify(exportState())); } catch (e) {} }
   function loadDraft() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
 
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -242,6 +325,7 @@
     $("brandLogoWidth").value = state.brandLogoWidth; $("brandLogoWidthValue").textContent = state.brandLogoWidth + " px";
     $("brandLogoBorder").checked = state.brandLogoBorder; $("brandLogoBorderOptions").hidden = !state.brandLogoBorder;
     $("brandLogoBorderColor").value = state.brandLogoBorderColor; $("brandLogoBorderWidth").value = state.brandLogoBorderWidth; $("brandLogoBorderWidthValue").textContent = state.brandLogoBorderWidth + " px";
+    renderPages();
     $("secLegend").textContent = state.type === "site" ? "Sections de ta page" : "Écrans de ton application (5 maximum)";
     var sl = $("secList"); sl.textContent = ""; var max = state.type === "app" ? 5 : 7, full = state.sections.length >= max;
     Object.keys(SEC[state.type]).forEach(function (k) {
@@ -255,6 +339,10 @@
 
   function bind() {
     bindBlockDragging();
+    $("addPage").addEventListener("click", function () { createPage(false); });
+    $("renamePage").addEventListener("click", renameCurrentPage);
+    $("duplicatePage").addEventListener("click", function () { createPage(true); });
+    $("deletePage").addEventListener("click", deleteCurrentPage);
     $("pv").addEventListener("click", function (event) {
       var target = event.target.closest("[data-editable]");
       if (!target) return;
@@ -446,7 +534,7 @@
     var user = s.user; btn.disabled = true;
     var meta = user.user_metadata || {}, who = state.name || meta.name || user.email;
     var kind = state.type === "site" ? "site Web" : "application";
-    var link = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + "studio.html?d=" + enc(state);
+    var link = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + "studio.html?d=" + enc(exportState());
     var secs = state.sections.map(function (k) { return SEC[state.type][k]; }).join(", ");
     var body = ["Maquette " + kind + " créée dans le studio de design", "", "Modèle : " + TPL[state.type][state.template].label, "Nom : " + (state.name || "—"), "Slogan : " + (state.slogan || "—"), "Couleur : " + state.color, "Thème : " + (state.theme === "dark" ? "sombre" : "clair"), "Police : " + FONTS[state.font][0], "Coins : " + RADII[state.radius][0], (state.type === "site" ? "Sections : " : "Écrans : ") + secs, state.notes ? "Remarques : " + state.notes : null, meta.phone ? "Téléphone : " + meta.phone : null, "", "Voir la maquette : " + link].filter(function (x) { return x !== null; }).join("\n");
     var c = await sb.from("conversations").insert({ customer_id: user.id, subject: "Maquette " + kind + " · " + who }).select("id").single();
@@ -458,10 +546,11 @@
     location.href = "espace.html?open=" + encodeURIComponent(c.data.id);
   }
 
-  var d = new URLSearchParams(location.search).get("d"), shared = false;
-  if (d) { try { state = clean(dec(d)); shared = true; } catch (e) { state = null; } }
-  if (!state) state = clean(loadDraft());
+  var d = new URLSearchParams(location.search).get("d"), shared = false, raw = null;
+  if (d) { try { raw = dec(d); state = clean(raw); shared = true; } catch (e) { state = null; raw = null; } }
+  if (!state) { raw = loadDraft(); state = clean(raw); }
+  initPages(raw);
   if (shared) { $("sharedNote").hidden = false; }
-  bind(); buildControls(); render();
+  bind(); buildControls(); render(); renderPages();
   if (window.cfgOk) sb.auth.getSession().then(function (r) { var u = r.data.session && r.data.session.user; if (u && u.id === STROMTECH.ADMIN_ID) { $("sendBtn").hidden = true; } });
 })();
