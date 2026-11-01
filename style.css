@@ -659,3 +659,7 @@ body.studio-dark:has(.studio-main) .custom-card-fields{background:#111a2a;border
 body.studio-dark:has(.studio-main) .custom-card-fields>b{color:#d5def1}
 body.studio-dark:has(.studio-main) .custom-card-fields input{background:#172238;color:#f2f5ff;border-color:#3a4861}
 body.studio-dark:has(.studio-main) .custom-card-add,body.studio-dark:has(.studio-main) .custom-card-remove{background:#111a2a;color:#dce5fa;border-color:#3a4861}
+
+/* Présentation et témoignages personnalisables */
+.pv-about-description{line-height:1.65;white-space:pre-wrap}
+body.studio-dark:has(.studio-main) .pv-about-description{color:var(--ptx)}
