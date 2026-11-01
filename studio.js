@@ -407,7 +407,22 @@
         choose.addEventListener("click", function () { input.click(); });
         input.addEventListener("change", function () { addSectionImages(k, input.files); input.value = ""; });
         tools.appendChild(choose); tools.appendChild(el("span", "section-image-count", count + "/8 images"));
-        if (count) { var clear = el("button", "section-image-clear", "Tout retirer"); clear.type = "button"; clear.addEventListener("click", function () { state.sectionImages[k] = []; change(true); }); tools.appendChild(clear); }
+        if (count) {
+          var imageList = el("div", "section-image-list");
+          state.sectionImages[k].forEach(function (src, index) {
+            var row = el("div", "section-image-row");
+            var thumb = el("img", "section-image-thumb"); thumb.src = src; thumb.alt = (k === "galerie" ? "Photo " : "Produit ") + (index + 1); row.appendChild(thumb);
+            row.appendChild(el("span", "section-image-row-name", (k === "galerie" ? "Photo " : "Image produit ") + (index + 1)));
+            var up = el("button", "section-image-order", "↑"); up.type = "button"; up.disabled = index === 0; up.title = "Monter";
+            up.addEventListener("click", function () { moveSectionImage(k, index, -1); }); row.appendChild(up);
+            var down = el("button", "section-image-order", "↓"); down.type = "button"; down.disabled = index === count - 1; down.title = "Descendre";
+            down.addEventListener("click", function () { moveSectionImage(k, index, 1); }); row.appendChild(down);
+            var remove = el("button", "section-image-remove", "Retirer"); remove.type = "button"; remove.addEventListener("click", function () { state.sectionImages[k].splice(index, 1); change(true); }); row.appendChild(remove);
+            imageList.appendChild(row);
+          });
+          tools.appendChild(imageList);
+          var clear = el("button", "section-image-clear", "Tout retirer"); clear.type = "button"; clear.addEventListener("click", function () { state.sectionImages[k] = []; change(true); }); tools.appendChild(clear);
+        }
         tools.appendChild(input); sl.appendChild(tools);
       }
     });
@@ -567,6 +582,14 @@
     };
     reader.onerror = function () { showMsg($("warn"), "La lecture du fichier a échoué.", true); };
     reader.readAsDataURL(file);
+  }
+
+  function moveSectionImage(section, index, direction) {
+    var images = state.sectionImages[section];
+    var target = index + direction;
+    if (!images || target < 0 || target >= images.length) return;
+    var current = images[index]; images[index] = images[target]; images[target] = current;
+    change(true);
   }
 
   function applySectionImageSizing(section) {
