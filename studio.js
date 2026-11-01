@@ -396,7 +396,13 @@
 
   function render() {
     var root = $("pv");
-    $("posterExport").hidden = state.type !== "poster"; root.textContent = "";
+    $("posterExport").hidden = state.type !== "poster" && state.type !== "cv";
+    if (state.type === "cv" || state.type === "poster") {
+      $("designExportTitle").textContent = state.type === "cv" ? "Exporter ton CV" : "Exporter ton affiche";
+      $("designExportHelp").textContent = state.type === "cv" ? "Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé." : "Télécharge une image haute résolution ou un PDF à imprimer, sans les outils de l’éditeur.";
+      $("exportPosterPng").hidden = state.type === "cv";
+    }
+    root.textContent = "";
     var dark = state.theme === "dark";
     root.style.setProperty("--pc", state.color);
     root.style.setProperty("--pbg", dark ? "#12141c" : "#ffffff");
@@ -708,7 +714,7 @@
   }
 
   async function exportPoster(format) {
-    var poster = $("pv").querySelector(".pv-poster");
+    var poster = $("pv").querySelector(state.type === "cv" ? ".pv-cv" : ".pv-poster");
     var status = $("exportStatus"), pngBtn = $("exportPosterPng"), pdfBtn = $("exportPosterPdf");
     if (!poster) { status.textContent = "Sélectionne d’abord le type Affiche."; return; }
     if (typeof window.html2canvas !== "function") { status.textContent = "Le module d’export n’a pas pu se charger. Vérifie ta connexion puis recharge la page."; return; }
@@ -726,14 +732,15 @@
           doc.querySelectorAll(".pv-resize-handle").forEach(function (node) { node.remove(); });
         }
       });
-      var filename = (state.name || "stromtech-affiche").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "") || "stromtech-affiche";
+      var baseName = state.type === "cv" ? (state.name || "stromtech-cv") : (state.name || "stromtech-affiche");
+      var filename = baseName.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "") || "stromtech-affiche";
       if (format === "png") {
         var link = document.createElement("a");
         link.download = filename + ".png"; link.href = canvas.toDataURL("image/png"); link.click();
       } else {
         var JsPDF = window.jspdf.jsPDF;
-        var width = 210, height = width * canvas.height / canvas.width;
-        var pdf = new JsPDF({ orientation: height > width ? "portrait" : "landscape", unit: "mm", format: [width, height], compress: true });
+        var width = 210, height = state.type === "cv" ? 297 : width * canvas.height / canvas.width;
+        var pdf = new JsPDF({ orientation: "portrait", unit: "mm", format: state.type === "cv" ? "a4" : [width, height], compress: true });
         pdf.addImage(canvas.toDataURL("image/jpeg", 0.96), "JPEG", 0, 0, width, height, undefined, "FAST");
         pdf.save(filename + ".pdf");
       }
