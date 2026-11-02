@@ -1081,3 +1081,58 @@ body.studio-dark .pc-search,body.studio-dark .pc-fold{border-color:#2e3548;backg
 .pc-layer.on .pc-layer-name{background:#2340ff;color:#fff;border-color:#2340ff}
 .pc-layer-name{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .studio-main:has(.frame.is-poster) .grp:has(#brandModeSeg),.studio-main:has(.frame.is-poster) .grp:has(#themeSeg){display:none}
+
+
+/* ===== Adaptation mobile globale Stromtech ===== */
+/* Navigation accessible sur toutes les pages, sans menu masqué sur téléphone. */
+.menu-btn{display:none}
+#top{position:sticky;top:0;z-index:20;background:#ffffffee;backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+#top nav{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+#top .logo{font:800 1.5rem "Bricolage Grotesque",sans-serif;letter-spacing:-.03em;text-decoration:none}
+#top .logo span{color:var(--blue)}
+#top .cta{white-space:nowrap}
+img,svg,video,canvas{max-width:100%}
+input,select,textarea,button{max-width:100%}
+.container{min-width:0}
+@media(max-width:820px){
+  #top nav{min-height:0;flex-wrap:wrap;padding-block:10px}
+  #top .links{display:flex;order:3;flex:1 0 100%;justify-content:center;flex-wrap:wrap;gap:8px 18px;padding:8px 0 2px}
+  #top .links a{font-size:.92rem;padding:4px 2px}
+  #top .cta{margin-left:auto;padding:10px 16px;font-size:.9rem}
+  .site-header .nav{flex-wrap:wrap;padding-block:9px;gap:10px}
+  .site-header .nav>.links{display:flex;order:4;flex:1 0 100%;justify-content:center;flex-wrap:wrap;gap:8px 18px;padding:7px 0 2px}
+  .site-header .nav>.links a{font-size:.92rem}
+  .site-header .nav>.bar{margin-left:auto;display:flex;flex-wrap:wrap;gap:8px}
+  .site-header .nav>.bar .btn{padding:9px 12px;font-size:.84rem}
+  .hero-grid,.quote-grid,.service-row{min-width:0}
+  .hero-actions .btn{flex:1 1 180px;text-align:center}
+  .pane,.threads,.form,.how{min-width:0}
+  .send .btn{width:100%}
+}
+@media(max-width:560px){
+  body{font-size:16px}
+  .container{width:calc(100% - 28px)}
+  #top nav{gap:8px}
+  #top .logo,.site-header .nav>.logo{font-size:1.3rem}
+  #top .links{justify-content:flex-start;gap:6px 14px}
+  #top .links a,.site-header .nav>.links a{font-size:.86rem}
+  #top .cta{padding:9px 12px;font-size:.82rem}
+  .site-header .nav>.links{justify-content:flex-start}
+  .site-header .nav>.bar{width:100%;margin:0}
+  .site-header .nav>.bar .btn{flex:1;text-align:center}
+  .block{padding-block:44px}
+  .hero{padding-block:36px 44px}
+  .hero h1{font-size:clamp(2.15rem,10vw,3.2rem)}
+  .hero p.lead{font-size:1.05rem}
+  .form{padding:18px}
+  .pane{padding:13px}
+  .chat-head .btn{padding:9px 12px;font-size:.85rem}
+  .send textarea{width:100%;min-width:0}
+  .auth{width:100%}
+  .studio-main{width:calc(100% - 20px)!important}
+  .studio-editor{min-width:0}
+  .studio-stage,.studio-panel{min-width:0}
+  .studio-stagebar>*{max-width:100%}
+  .viewport-switch{flex-wrap:wrap}
+  .pc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
