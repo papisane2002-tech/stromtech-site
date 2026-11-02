@@ -39,6 +39,19 @@
   setType(o && o.type ? o.type : "devis");
   if (o) say("Ton brouillon a été restauré : vérifie-le, ajoute à nouveau tes PDF si besoin, puis envoie ta demande.", true);
   quote.addEventListener("input", function () { Draft.save({ type: reqType }); });
+  document.querySelectorAll("[data-poster-model]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var field = $("posterModel");
+      if (field) { field.value = button.getAttribute("data-poster-model"); Draft.save({ type: reqType }); }
+      var form = $("demande"); if (form) form.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+  document.querySelectorAll("[data-poster-package]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var field = $("posterPackage");
+      if (field) { field.value = button.getAttribute("data-poster-package"); Draft.save({ type: reqType }); }
+    });
+  });
 
   quote.addEventListener("submit", async function (e) {
     e.preventDefault();
