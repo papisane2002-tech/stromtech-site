@@ -1445,3 +1445,33 @@ body:has(.studio-main) .studio-stage .pv-grid4{
     flex-basis: 100%;
   }
 }
+
+
+/* Ordre mobile explicite de l'éditeur : création, structure, personnalisation */
+@media (max-width: 1100px) {
+  body:has(.studio-main) .studio-editor {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-flow: row;
+  }
+
+  body:has(.studio-main) .studio-stage {
+    grid-column: 1;
+    grid-row: 1;
+    order: -2;
+    position: relative;
+    z-index: 1;
+  }
+
+  body:has(.studio-main) .studio-tools {
+    grid-column: 1;
+    grid-row: 2;
+    order: -1;
+  }
+
+  body:has(.studio-main) .studio-properties {
+    grid-column: 1;
+    grid-row: 3;
+    order: 0;
+  }
+}
