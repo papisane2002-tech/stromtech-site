@@ -70,7 +70,7 @@
       field.value = button.getAttribute("data-service-model");
       var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
       var art = button.closest(".service-model-card").querySelector(".service-model-art");
-      if (preview && art) preview.replaceChildren(art.cloneNode(true), preview.querySelector("div:last-child"));
+      if (preview && art) { var details = title ? title.parentElement : null; preview.replaceChildren(art.cloneNode(true)); if (details) preview.appendChild(details); }
       if (title) title.textContent = field.value;
       if (help) help.textContent = "Ce modèle sera indiqué dans ta demande Stromtech.";
       Draft.save({ type: reqType });
@@ -84,7 +84,7 @@
         field.value = button.getAttribute("data-poster-model");
         var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
         var sample = button.closest(".poster-choice").querySelector(".poster-sample");
-        if (preview && sample) preview.replaceChildren(sample.cloneNode(true), preview.querySelector("div:last-child"));
+        if (preview && sample) { var details = title ? title.parentElement : null; preview.replaceChildren(sample.cloneNode(true)); if (details) preview.appendChild(details); }
         if (title) title.textContent = field.value;
         if (help) help.textContent = "Ce modèle sera indiqué dans ta demande Stromtech.";
         Draft.save({ type: reqType });
