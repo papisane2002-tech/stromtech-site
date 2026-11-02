@@ -192,3 +192,32 @@ footer{border-top:1px solid var(--line);padding:34px 0 22px;color:var(--muted);m
 .poster-sample span,.poster-sample small{font-size:.66rem;font-weight:900;letter-spacing:.18em}.poster-sample strong{font-size:clamp(1.3rem,3vw,2rem);line-height:1.05;font-weight:900}.poster-sample i{font-size:.8rem;font-style:normal}.sample-wedding{background:radial-gradient(circle at 50% 30%,#b98c72,#402d37 70%);font-family:Georgia,serif}.sample-wedding strong{font-weight:400;letter-spacing:.08em}.sample-birthday{background:linear-gradient(145deg,#fa668b,#6538b7);font-family:system-ui,sans-serif}.sample-birthday strong{font-size:2rem;font-style:italic}.sample-promo{background:linear-gradient(145deg,#ffb21b,#ed4a24);color:#25130a}.sample-promo strong{font-size:3rem}.sample-event{background:linear-gradient(145deg,#111827,#263e65 60%,#8b315f);font-family:system-ui,sans-serif}.sample-event strong{letter-spacing:.06em}
 @media(max-width:860px){.poster-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.poster-gallery{grid-template-columns:1fr 1fr;gap:10px}.poster-choice{padding:9px}.poster-choice h3{font-size:.9rem}.poster-choice p{font-size:.8rem}.poster-choice .btn{font-size:.8rem;padding:9px 6px}.poster-sample{padding:10px}}
+
+/* Galerie d'affiches interactive */
+.audience-choice{width:100%;text-align:left;color:inherit;cursor:pointer;font:inherit;transition:transform .2s,border-color .2s}
+.audience-choice:hover,.audience-choice:focus-visible{transform:translateY(-4px);border-color:var(--a);outline:none}
+.audience-cta{display:inline-block;margin-top:10px;color:var(--a);font-weight:800;font-size:.86rem}
+.poster-choice[hidden]{display:none!important}
+.poster-gallery-more{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:18px}
+.selected-poster-preview{display:flex;align-items:center;gap:14px;padding:12px;border:1px dashed var(--line);border-radius:14px;background:var(--panel);min-height:110px}
+.selected-poster-preview>.poster-sample{width:76px;flex:0 0 76px;aspect-ratio:3/4;padding:6px;gap:4px}
+.selected-poster-preview>.poster-sample span,.selected-poster-preview>.poster-sample small{font-size:5px}
+.selected-poster-preview>.poster-sample strong{font-size:11px}
+.selected-poster-preview>.poster-sample i{font-size:7px}
+.selected-poster-empty{width:76px;height:100px;flex:0 0 76px;border-radius:8px;background:linear-gradient(135deg,#263451,#111827);display:grid;place-items:center;color:#b8c2d9;font-size:1.8rem}
+.selected-poster-preview p{margin:4px 0 0;color:var(--muted);font-size:.85rem}
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.sample-wedding2{background:linear-gradient(145deg,#e6cdb2,#795b63 60%,#342b3d);color:#fff}.sample-wedding2 strong{font-family:Georgia,serif;font-weight:400}
+.sample-wedding3{background:linear-gradient(145deg,#182331,#b28a48);color:#fff}.sample-wedding3 strong{font-family:Georgia,serif}
+.sample-wedding4{background:linear-gradient(145deg,#d7b9ad,#6e5360);color:#fff}.sample-wedding4 strong{font-family:Georgia,serif}
+.sample-birthday2{background:linear-gradient(135deg,#111827,#5b21b6,#ec4899);color:#fff}
+.sample-birthday3{background:linear-gradient(145deg,#ffbd59,#fa668b,#7145bb);color:#fff}
+.sample-birthday4{background:linear-gradient(145deg,#171717,#7d5b37);color:#f8e4bd}
+.sample-promo2{background:linear-gradient(145deg,#073b36,#13a58a);color:#fff}
+.sample-promo3{background:linear-gradient(145deg,#f9d423,#ff4e50);color:#27140c}
+.sample-promo4{background:linear-gradient(145deg,#174a72,#36a4a5);color:#fff}
+.sample-event2{background:linear-gradient(145deg,#090b20,#e13c75,#ff9b43);color:#fff}
+.sample-event3{background:linear-gradient(145deg,#102c4c,#2676a8);color:#fff}
+.sample-event4{background:linear-gradient(145deg,#0b1020,#4c1d95,#be185d);color:#fff}
+@media(max-width:860px){.poster-gallery-more{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.poster-gallery-more{grid-template-columns:1fr 1fr;gap:10px}.selected-poster-preview{gap:10px;padding:9px}}
