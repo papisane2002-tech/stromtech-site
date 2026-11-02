@@ -51,6 +51,32 @@
       var gallery = $("modeles"); if (gallery) gallery.scrollIntoView({ behavior: "smooth" });
     });
   });
+  var serviceAudienceLabels = { entreprise:"Entreprises et commerces", portfolio:"Portfolio et créatifs", restaurant:"Restaurants", boutique:"Boutiques", medical:"Santé et médecine", stock:"Commerçants", booking:"Cabinets et services", business:"Entreprises", orders:"Boutiques et restaurants", etudiant:"Étudiants et diplômés", emploi:"Recherche d'emploi", reconversion:"Reconversion", creatif:"Profils créatifs" };
+  document.querySelectorAll("[data-service-audience]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var category = button.getAttribute("data-service-audience");
+      document.querySelectorAll(".service-model-card").forEach(function (card) {
+        card.hidden = card.getAttribute("data-service-category") !== category;
+      });
+      var hint = $("service-gallery-hint");
+      if (hint) hint.textContent = "Modèles proposés pour : " + (serviceAudienceLabels[category] || category) + ". Choisis celui qui correspond à ton projet.";
+      var gallery = $("modeles"); if (gallery) gallery.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+  document.querySelectorAll("[data-service-model]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var field = $("posterModel");
+      if (!field) return;
+      field.value = button.getAttribute("data-service-model");
+      var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
+      var art = button.closest(".service-model-card").querySelector(".service-model-art");
+      if (preview && art) preview.replaceChildren(art.cloneNode(true), preview.querySelector("div:last-child"));
+      if (title) title.textContent = field.value;
+      if (help) help.textContent = "Ce modèle sera indiqué dans ta demande Stromtech.";
+      Draft.save({ type: reqType });
+      var form = $("demande"); if (form) form.scrollIntoView({ behavior: "smooth" });
+    });
+  });
   document.querySelectorAll("[data-poster-model]").forEach(function (button) {
     button.addEventListener("click", function () {
       var field = $("posterModel");
