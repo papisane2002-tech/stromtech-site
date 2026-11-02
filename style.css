@@ -1051,3 +1051,15 @@ body.studio-dark:has(.studio-main) .studio-layer-row.is-active .studio-layer-sel
 .pc-hint{margin:0;font-size:.82rem;color:#68738a}
 body.studio-dark .pc-grp{border-color:#2e3548}
 body.studio-dark .pc-btn{background:#1e2230;color:#f2f4ff;border-color:#2e3548}
+
+.pc-search{width:100%;padding:9px 12px;border:1.5px solid #c9cfe4;border-radius:10px;font:inherit;margin:4px 0 8px;box-sizing:border-box}
+.pc-gal{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+.pc-card{display:grid;gap:6px;padding:6px;border:2px solid transparent;border-radius:12px;background:none;font:inherit;font-size:.78rem;text-align:center;cursor:pointer;color:inherit}
+.pc-card[aria-pressed=true],.pc-card:hover{border-color:#2340ff}
+.pc-thumb{width:120px;height:150px;margin:0 auto;overflow:hidden;border-radius:8px;position:relative;box-shadow:0 2px 8px #0002}
+.pc-thumb-in{position:absolute;left:0;top:0;width:560px;height:700px;transform-origin:0 0;transform:scale(.2143);pointer-events:none;overflow:hidden}
+.pc-fold{border:1px solid #dce2ee;border-radius:10px;padding:8px 10px}
+.pc-fold summary{cursor:pointer;font-size:.85rem;font-weight:700}
+.pc-fold .pc-btns{margin-top:8px}
+.pc-shape{min-width:36px;font-size:1.05rem;padding:5px 9px}
+body.studio-dark .pc-search,body.studio-dark .pc-fold{border-color:#2e3548;background:#1e2230;color:#f2f4ff}

@@ -23,16 +23,7 @@
       moderne: { label: "Moderne", desc: "CV contemporain avec colonne latérale.", sections: ["profil", "competences", "experience", "formation", "contact"] },
       minimal: { label: "Minimaliste", desc: "Une présentation épurée et lisible.", sections: ["profil", "experience", "competences", "formation"] }
     },
-    poster: {
-      evenement: { label: "Événement", desc: "Affiche festive avec titre très visible.", sections: ["evenement", "infos", "contact"] },
-      promotion: { label: "Promotion", desc: "Offre commerciale et prix mis en avant.", sections: ["accroche", "infos", "contact"] },
-      elegant: { label: "Élégante", desc: "Mise en page raffinée et aérée.", sections: ["evenement", "accroche", "contact"] },
-      concert: { label: "Concert", desc: "Visuel immersif et ambiance scène.", sections: ["evenement", "infos", "contact"] },
-      editorial: { label: "Éditoriale", desc: "Composition asymétrique et typographie forte.", sections: ["evenement", "accroche", "contact"] },
-      minimal: { label: "Minimaliste", desc: "Peu d’éléments, beaucoup d’espace.", sections: ["evenement", "infos", "contact"] },
-      sale: { label: "Vente flash", desc: "Prix et avantage au premier plan.", sections: ["accroche", "infos", "contact"] },
-      split: { label: "Duo photo", desc: "Image et texte en deux zones.", sections: ["evenement", "infos", "contact"] }
-    },
+    poster: (function () { var o = {}; Object.keys(window.PosterCanvas.TPLS).forEach(function (k) { var t = window.PosterCanvas.TPLS[k]; o[k] = { label: t.n, desc: t.d, sections: ["evenement", "infos", "contact"] }; }); return o; })(),
     app: {
       commandes: { label: "Commandes", desc: "Catalogue, panier et suivi des commandes.", sections: ["accueil", "catalogue", "commande", "messages", "profil"] },
       rendezvous: { label: "Rendez-vous", desc: "Réservation de créneaux et messagerie.", sections: ["accueil", "rdv", "messages", "profil"] },
@@ -47,7 +38,7 @@
   var selectedKey = null;
 
   function defaults(type, tpl) {
-    type = type || "site"; tpl = tpl || ({site:"vitrine",app:"commandes",cv:"classique",poster:"evenement"}[type] || "vitrine");
+    type = type || "site"; tpl = tpl || ({site:"vitrine",app:"commandes",cv:"classique",poster:"blank"}[type] || "vitrine");
     return { type: type, template: tpl, posterFormat: "portrait", canvas: null, posterVisualHeight: 310, posterImageFit: "cover", name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
   }
   function clean(o) {
@@ -70,7 +61,7 @@
       d.canvas = { W: nm(cx.W, 200, 1200, 560), H: nm(cx.H, 200, 1400, 700), bg: hx(cx.bg) || "#ffffff", bg2: hx(cx.bg2), angle: nm(cx.angle, 0, 360, 160), els: [] };
       cx.els.slice(0, 40).forEach(function (e) {
         if (!e || typeof e !== "object" || !/^e[0-9]{1,6}$/.test(e.id) || (e.k !== "t" && e.k !== "i")) return;
-        var z = { id: e.id, k: e.k, x: nm(e.x, -2000, 2000, 0), y: nm(e.y, -2000, 2000, 0), w: nm(e.w, 8, 2400, 100), h: nm(e.h, 8, 2400, 40), rot: nm(e.rot, -180, 180, 0), op: nm(e.op, 5, 100, 100), rad: nm(e.rad, 0, 999, 0), bg: hx(e.bg), ac: e.ac ? 1 : 0 };
+        var z = { id: e.id, k: e.k, x: nm(e.x, -2000, 2000, 0), y: nm(e.y, -2000, 2000, 0), w: nm(e.w, 8, 2400, 100), h: nm(e.h, 8, 2400, 40), rot: nm(e.rot, -180, 180, 0), op: nm(e.op, 5, 100, 100), rad: nm(e.rad, 0, 999, 0), bg: hx(e.bg), ac: e.ac ? 1 : 0, sp: ["tri","star","diamond","hex","arrow","plus"].indexOf(e.sp) >= 0 ? e.sp : "", fx: ["shadow","glow","outline","relief"].indexOf(e.fx) >= 0 ? e.fx : "", fc: hx(e.fc) || "#ff2bd6", bd: hx(e.bd), bw: nm(e.bw, 0, 30, 0), fl: ["bw","sepia","blur","dark","vivid"].indexOf(e.fl) >= 0 ? e.fl : "" };
         if (e.k === "i") { if (imgs >= 6 || typeof e.src !== "string" || !/^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(e.src) || e.src.length > 500000) return; imgs++; z.src = e.src; }
         else { z.tx = typeof e.tx === "string" ? e.tx.slice(0, 300) : ""; z.fs = nm(e.fs, 8, 200, 18); z.fw = e.fw >= 700 ? 700 : 400; z.fi = e.fi ? 1 : 0; z.ff = ["Figtree","Bebas Neue","Anton","Oswald","Montserrat","Poppins","Raleway","Playfair Display","Roboto Slab","Pacifico","Lobster","Dancing Script","Permanent Marker"].indexOf(e.ff) >= 0 ? e.ff : "Figtree"; z.c = hx(e.c) || "#14161f"; z.al = ["left","center","right"].indexOf(e.al) >= 0 ? e.al : "left"; }
         d.canvas.els.push(z);
@@ -527,7 +518,7 @@
   function buildControls() {
     seg($("typeSeg"), [["site", "Site Web"], ["app", "Application mobile"], ["cv", "CV professionnel"], ["poster", "Affiche"]], state.type, function (v) { if (v !== state.type) { state = Object.assign(defaults(v), { name: state.name, brandMode: state.brandMode, brandLogo: state.brandLogo, brandLogoWidth: state.brandLogoWidth, brandLogoBorder: state.brandLogoBorder, brandLogoBorderColor: state.brandLogoBorderColor, brandLogoBorderWidth: state.brandLogoBorderWidth, slogan: state.slogan, color: state.color, font: state.font, radius: state.radius, theme: state.theme, notes: state.notes }); change(true); } });
     var tl = $("tplList"); tl.textContent = "";
-    Object.keys(TPL[state.type]).forEach(function (k) {
+    (state.type === "poster" ? [] : Object.keys(TPL[state.type])).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
       var visual = el("span", "tpl-preview tpl-preview-" + k);
       visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
@@ -535,6 +526,11 @@
       b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || ({site:"Site Web",app:"Application",cv:"CV",poster:"Affiche"}[state.type])));
       b.appendChild(el("span", "", t.desc));
       b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); if (state.type === "poster") state.canvas = null; change(true); }); tl.appendChild(b);
+    });
+    if (state.type === "poster") window.PosterCanvas.gallery(tl, state, function (k) {
+      if (k === state.template && state.canvas) return;
+      if (state.canvas && state.canvas.els.length && !window.confirm("Remplacer ta création actuelle par ce modèle ?")) return;
+      state.template = k; state.sections = TPL.poster[k].sections.slice(); state.canvas = null; change(true);
     });
     var sw = $("swatches"); sw.textContent = "";
     COLORS.forEach(function (c) { var b = el("button", "sw"); b.type = "button"; b.style.background = c[1]; b.title = c[0]; b.setAttribute("aria-label", c[0]); b.setAttribute("aria-pressed", String(state.color.toLowerCase() === c[1])); b.addEventListener("click", function () { state.color = c[1]; change(true); }); sw.appendChild(b); });
