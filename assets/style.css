@@ -338,3 +338,62 @@ footer{border-top:1px solid var(--line);padding:34px 0 22px;color:var(--muted);m
 .service-model-card .service-model-art-img{margin-bottom:12px;}
 .selected-poster-preview>.service-model-art-img{width:76px;height:96px;max-height:96px;flex:0 0 76px;object-fit:contain;padding:2px;background:#eef2f7;border-radius:8px;}
 @media(max-width:560px){.service-model-art-img{max-height:230px}.selected-poster-preview>.service-model-art-img{width:64px;height:84px;max-height:84px;flex-basis:64px}}
+
+
+/* Inspection des modèles : navigation de pages dans une fenêtre intégrée */
+.inspect-model-btn{width:100%;margin-top:0}
+.model-inspector[hidden]{display:none!important}
+.model-inspector{position:fixed;inset:0;z-index:10050;background:#07101beF;display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+.model-inspector-panel{width:min(100%,1050px);max-height:94vh;overflow:auto;background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 24px 80px #0008}
+.model-inspector-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.model-inspector-top h2{margin:8px 0 4px;font-size:1.45rem}
+.model-inspector-subtitle{margin:0;color:var(--muted);font-size:.9rem}
+.model-inspector-close{width:42px;height:42px;flex:0 0 42px;border:1px solid var(--line);border-radius:50%;background:transparent;color:var(--txt);font-size:1.8rem;cursor:pointer}
+.model-inspector-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 12px}
+.model-inspector-tab{border:1px solid var(--line);background:transparent;color:var(--txt);border-radius:99px;padding:9px 15px;font:700 .88rem system-ui;cursor:pointer}
+.model-inspector-tab.active{background:var(--a);border-color:var(--a);color:#061b1a}
+.model-inspector-screen{min-height:360px;display:grid;place-items:center;padding:18px;border-radius:15px;background:linear-gradient(135deg,#e8eef5,#dce7ee);overflow:hidden}
+.inspector-page{width:100%;max-width:850px;min-height:330px;background:#fff;color:#203148;border-radius:10px;overflow:hidden;font-family:Arial,sans-serif;box-shadow:0 8px 30px #10233a20}
+.inspector-brand{padding:16px 22px;font-size:13px;font-weight:800;color:#147e70;border-bottom:1px solid #e8edf2}
+.inspector-hero{padding:35px 7%;background:linear-gradient(120deg,#edf4f6,#e3edf8)}
+.inspector-hero small{font-size:10px;letter-spacing:.15em;color:#168878;font-weight:800}
+.inspector-hero h3{font-size:clamp(22px,4vw,38px);line-height:1.08;margin:12px 0;color:#17283e}
+.inspector-hero p{max-width:560px;color:#63748a;font-size:14px}
+.inspector-action{display:inline-block;padding:10px 16px;border-radius:7px;background:#147e70;color:white;font-size:12px;font-weight:700}
+.inspector-content-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:18px}
+.inspector-content-card{min-height:90px;border:1px solid #e4eaf0;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:9px}
+.inspector-content-card b{font-size:12px;color:#24364e}
+.inspector-content-card span{font-size:10px;line-height:1.4;color:#6a7a8e}
+.inspector-app-page{max-width:380px;min-height:500px;border:9px solid #182235;border-radius:30px;padding-bottom:16px}
+.inspector-app-page .inspector-brand{padding:17px 18px}
+.inspector-app-page .inspector-hero{padding:25px 18px}
+.inspector-app-page .inspector-hero h3{font-size:23px}
+.inspector-app-page .inspector-content-grid{grid-template-columns:1fr 1fr;padding:12px}
+.inspector-app-page .inspector-content-card{min-height:75px;padding:10px}
+.model-inspector-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;color:var(--muted);font-size:.85rem}
+.model-inspector-bottom .btn{margin:0}
+body.model-inspector-open{overflow:hidden}
+/* Smartphone mieux dimensionné dans les cartes de modèles */
+.mock-phone{width:48%;max-width:176px;min-width:0;height:96%;padding:7px 5px 5px;border-radius:19px}
+.mock-phone-screen{border-radius:14px;padding-left:8px;padding-right:8px}
+.service-model-card:has(.mock-phone){align-items:stretch}
+.service-model-card:has(.mock-phone) .service-model-art{display:flex;align-items:center;justify-content:center;min-height:250px}
+.service-model-card .service-model-art-img[src*="app-"]{max-height:330px;object-fit:contain}
+@media(max-width:700px){
+ .model-inspector{padding:8px}
+ .model-inspector-panel{padding:14px;border-radius:14px;max-height:96vh}
+ .model-inspector-screen{min-height:300px;padding:8px}
+ .inspector-page{min-height:290px}
+ .inspector-hero{padding:24px 6%}
+ .inspector-content-grid{gap:7px;padding:10px}
+ .inspector-content-card{padding:9px;min-height:78px}
+ .model-inspector-bottom{align-items:stretch;flex-direction:column}
+ .model-inspector-bottom .btn{width:100%}
+ .service-model-card:has(.mock-phone) .service-model-art{min-height:220px}
+ .mock-phone{width:53%;max-width:150px}
+}
+@media(max-width:420px){
+ .model-inspector-tab{padding:8px 11px;font-size:.8rem}
+ .inspector-app-page{min-height:430px}
+ .inspector-content-grid{grid-template-columns:1fr 1fr}
+}
