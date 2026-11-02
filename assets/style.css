@@ -332,3 +332,9 @@ footer{border-top:1px solid var(--line);padding:34px 0 22px;color:var(--muted);m
 .canva-inspiration-grid .card .btn{margin-top:auto}
 @media(max-width:760px){.canva-inspiration-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.canva-inspiration-grid{grid-template-columns:1fr}}
+
+/* Aperçus Stromtech originaux : sites, applications et CV */
+.service-model-art-img{display:block;width:100%;height:auto;max-height:270px;object-fit:contain;object-position:center;border-radius:12px;background:#eef2f7;}
+.service-model-card .service-model-art-img{margin-bottom:12px;}
+.selected-poster-preview>.service-model-art-img{width:76px;height:96px;max-height:96px;flex:0 0 76px;object-fit:contain;padding:2px;background:#eef2f7;border-radius:8px;}
+@media(max-width:560px){.service-model-art-img{max-height:230px}.selected-poster-preview>.service-model-art-img{width:64px;height:84px;max-height:84px;flex-basis:64px}}
