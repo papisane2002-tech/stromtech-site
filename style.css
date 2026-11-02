@@ -1136,3 +1136,47 @@ input,select,textarea,button{max-width:100%}
   .viewport-switch{flex-wrap:wrap}
   .pc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 }
+
+
+/* Correctif aperçu Studio : empêcher les formats de dépasser la zone centrale */
+body:has(.studio-main) .studio-stage,
+body:has(.studio-main) .studio-stage .preview-wrap,
+body:has(.studio-main) .studio-stage .frame,
+body:has(.studio-main) .studio-stage .pv{
+  min-width:0;
+  max-width:100%;
+}
+body:has(.studio-main) .studio-stage .preview-wrap{
+  width:100%;
+  overflow-x:hidden;
+}
+body:has(.studio-main) .studio-stage .frame{
+  overflow:hidden;
+}
+body:has(.studio-main) .studio-stage .pv{
+  width:100%;
+  overflow-x:hidden;
+  overflow-wrap:anywhere;
+}
+body:has(.studio-main) .studio-stage .pv img,
+body:has(.studio-main) .studio-stage .pv video,
+body:has(.studio-main) .studio-stage .pv iframe{
+  max-width:100%;
+}
+body:has(.studio-main) .studio-stage .pv-grid2,
+body:has(.studio-main) .studio-stage .pv-grid3,
+body:has(.studio-main) .studio-stage .pv-grid4{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+@media(max-width:560px){
+  body:has(.studio-main) .studio-stage{min-width:0;min-height:0}
+  body:has(.studio-main) .studio-stage .frame{border-radius:12px}
+  body:has(.studio-main) .studio-stage .pv-nav{min-width:0;flex-wrap:wrap}
+  body:has(.studio-main) .studio-stage .pv-hero.pv-left{display:block}
+  body:has(.studio-main) .studio-stage .pv-avatar{width:72px;height:72px}
+  body:has(.studio-main) .studio-stage .pv-grid2,
+  body:has(.studio-main) .studio-stage .pv-grid3,
+  body:has(.studio-main) .studio-stage .pv-grid4{
+    grid-template-columns:minmax(0,1fr);
+  }
+}
