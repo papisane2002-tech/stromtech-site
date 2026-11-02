@@ -1475,3 +1475,50 @@ body:has(.studio-main) .studio-stage .pv-grid4{
     order: 0;
   }
 }
+
+
+/* Défilement mobile naturel : aucun panneau ni aperçu ne passe au-dessus d'un autre */
+@media (max-width: 1100px) {
+  body:has(.studio-main) .studio-editor {
+    position: static !important;
+    isolation: auto;
+    overflow: visible;
+  }
+
+  body:has(.studio-main) .studio-stage,
+  body:has(.studio-main) .studio-tools,
+  body:has(.studio-main) .studio-properties {
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
+    transform: none !important;
+    float: none !important;
+  }
+
+  body:has(.studio-main) .studio-stage {
+    overflow: hidden;
+    contain: paint;
+  }
+
+  body:has(.studio-main) .studio-stage .preview-wrap {
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
+    transform: none !important;
+    overflow: hidden;
+  }
+
+  body:has(.studio-main) .studio-stage .frame,
+  body:has(.studio-main) .studio-stage .frame-bar,
+  body:has(.studio-main) .studio-stage .pv,
+  body:has(.studio-main) .studio-stage .pv-poster {
+    position: relative;
+    z-index: auto !important;
+  }
+
+  body:has(.studio-main) .studio-tools,
+  body:has(.studio-main) .studio-properties {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
