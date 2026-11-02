@@ -106,7 +106,7 @@
     var d = null;
     page.addEventListener("pointerdown", function (ev) {
       var node = ev.target.closest(".pc-el"), id = node && node.dataset.id, e = find(id), k = page.clientWidth / ctx.state.canvas.W;
-      if (!e) { if (sel) { sel = null; paint(); panel(); } return; }
+      if (!e) { sel = null; paint(); panel(); setTab("bg"); return; }
       if (sel !== id) { sel = id; paint(); panel(); node = page.querySelector('[data-id="' + id + '"]'); }
       d = { e: e, node: node, x: ev.clientX, y: ev.clientY, ox: e.x, oy: e.y, ow: e.w, oh: e.h, k: k, rs: !!ev.target.closest(".pc-handle"), moved: false };
       page.setPointerCapture(ev.pointerId); ev.preventDefault();
@@ -128,35 +128,17 @@
   var openF = {};
   function fold(title) { var d = h("details", "pc-fold"), s = h("summary", "", title); d.appendChild(s); d.open = !!openF[title]; d.addEventListener("toggle", function () { openF[title] = d.open; }); return d; }
   function library(g) {
-    var cv = ctx.state.canvas, f = fold("Formes"), w = h("div", "pc-btns");
+    if (openF.Formes === undefined) openF.Formes = true; var f = fold("Formes"), w = h("div", "pc-btns");
     [["▭", "", 0, 200, 120], ["▢", "", 18, 200, 120], ["●", "", 999, 140, 140], ["▲", "tri", 0, 140, 130], ["★", "star", 0, 150, 150], ["◆", "diamond", 0, 140, 140], ["⬢", "hex", 0, 150, 130], ["➤", "arrow", 0, 180, 110], ["✚", "plus", 0, 120, 120], ["▬", "", 0, 260, 6]].forEach(function (x) {
-      w.appendChild(btn(x[0], function () { sel = T(cv, { x: 60, y: 160, w: x[3], h: x[4], bg: ctx.state.color, ac: 1, sp: x[1], rad: x[2] }).id; commit(); }, "pc-shape"));
+      w.appendChild(btn(x[0], function () { addEl({ w: x[3], h: x[4], bg: ctx.state.color, ac: 1, sp: x[1], rad: x[2] }); }, "pc-shape"));
     }); f.appendChild(w); g.appendChild(f);
     var f2 = fold("Icônes"), q = h("input", "pc-search"), b = h("div", "pc-btns"); q.type = "search"; q.placeholder = "Chercher : fête, musique, prix…";
-    ICONS.forEach(function (x) { var i = btn(x[0], function () { sel = T(cv, { x: 80, y: 160, w: 90, h: 90, tx: x[0], fs: 64, al: "center" }).id; commit(); }, "pc-shape"); i.dataset.k = x[1]; b.appendChild(i); });
+    ICONS.forEach(function (x) { var i = btn(x[0], function () { addEl({ w: 90, h: 90, tx: x[0], fs: 64, al: "center" }); }, "pc-shape"); i.dataset.k = x[1]; b.appendChild(i); });
     q.addEventListener("input", function () { var v = q.value.toLowerCase(); [].forEach.call(b.children, function (i) { i.hidden = v && i.dataset.k.indexOf(v) < 0; }); });
     f2.appendChild(q); f2.appendChild(b); g.appendChild(f2);
   }
-  function panel() {
-    var cv = ctx.state.canvas, p = ctx.panel, e = find(sel); p.textContent = "";
-    var g = h("div", "pc-grp"); g.appendChild(h("h4", "", "Ajouter"));
-    var add = h("div", "pc-btns");
-    add.appendChild(btn("+ Texte", function () { sel = T(cv, { x: 40, y: 120, w: 260, h: 50, tx: "Nouveau texte", fs: 28, fw: 700, c: ink() }).id; commit(); }));
-    add.appendChild(btn("+ Image", function () { ctx.upload.click(); }));
-    add.appendChild(btn("↶ Annuler", function () { go(-1); }));
-    add.appendChild(btn("↷ Rétablir", function () { go(1); }));
-    g.appendChild(add); library(g); p.appendChild(g);
-
-    g = h("div", "pc-grp"); g.appendChild(h("h4", "", "Fond de la page"));
-    g.appendChild(row("Couleur", inp("color", cv.bg, live(function (v) { cv.bg = v; }))));
-    if (cv.bg2) {
-      g.appendChild(row("Couleur 2", inp("color", cv.bg2, live(function (v) { cv.bg2 = v; }))));
-      g.appendChild(row("Angle", inp("range", cv.angle, live(function (v) { cv.angle = v; }), { min: 0, max: 360 })));
-      g.appendChild(btn("Fond uni", function () { cv.bg2 = ""; commit(); }));
-    } else g.appendChild(btn("Passer en dégradé", function () { cv.bg2 = ctx.state.color; commit(); }));
-    var pal = h("div", "pc-pal"); PAL.forEach(function (c) { var b = h("button", "pc-sw"); b.type = "button"; b.style.background = c[0]; b.title = "Appliquer cette palette"; b.addEventListener("click", function () { cv.bg = c[0]; cv.bg2 = ""; cv.els.forEach(function (x) { if (x.k === "t" && x.tx && !x.bg && !x.ac) x.c = c[1]; }); commit(); }); pal.appendChild(b); });
-    g.appendChild(pal); p.appendChild(g);
-
+  function propsUI() {
+    var cv = ctx.state.canvas, p = ctx.panel, e = find(sel), g; p.textContent = "";
     g = h("div", "pc-grp"); g.appendChild(h("h4", "", e ? "Élément sélectionné" : "Élément sélectionné"));
     if (!e) { g.appendChild(h("p", "pc-hint", "Clique sur un élément de l’affiche pour le modifier, le déplacer ou le redimensionner avec la poignée d’angle.")); p.appendChild(g); return; }
     if (e.k === "t") {
@@ -192,6 +174,65 @@
     ac.appendChild(btn("Supprimer", function () { cv.els.splice(i, 1); sel = null; commit(); }, "danger"));
     g.appendChild(ac); p.appendChild(g);
   }
+  var curTab = "models";
+  function addEl(o) { var cv = ctx.state.canvas; o = Object.assign({ k: "t" }, o); sel = T(cv, Object.assign({ x: Math.round((cv.W - o.w) / 2), y: Math.round((cv.H - o.h) / 2) }, o)).id; commit(); }
+  function setTab(id) { curTab = id; var a = document.querySelector(".studio-tools"); if (a) a.dataset.pctab = id; [].forEach.call(document.querySelectorAll("#pcTabs button"), function (b) { b.setAttribute("aria-pressed", String(b.dataset.t === id)); }); }
+  var SOL = ["#ffffff", "#f4eee5", "#fff4e0", "#ffd23f", "#f26b1d", "#d62839", "#ff2bd6", "#7a3cff", "#2340ff", "#00b4d8", "#087f6b", "#14301f", "#14161f", "#000000"];
+  var GR = [["#ff6b6b", "#feca57"], ["#667eea", "#764ba2"], ["#00c6ff", "#0072ff"], ["#f857a6", "#ff5858"], ["#11998e", "#38ef7d"], ["#141e30", "#243b55"]];
+  var TXT = [["Ajouter un titre", "Ton titre", { fs: 54, fw: 700, ff: "Montserrat", w: 360, h: 80 }], ["Ajouter un sous-titre", "Ton sous-titre", { fs: 28, fw: 700, ff: "Montserrat", w: 320, h: 44 }], ["Ajouter un texte", "Ton texte", { fs: 16, fw: 400, ff: "Figtree", w: 300, h: 60 }]];
+  var COMBO = [["Élégant", { ff: "Playfair Display", fs: 44 }], ["Impact", { ff: "Bebas Neue", fs: 72 }], ["Manuscrit", { ff: "Dancing Script", fs: 52 }], ["Rétro", { ff: "Lobster", fs: 48 }], ["Néon", { ff: "Anton", fs: 56, fx: "glow", fc: "#00e5ff" }], ["Relief 3D", { ff: "Anton", fs: 56, fx: "relief", fc: "#14161f" }], ["Marqueur", { ff: "Permanent Marker", fs: 44 }]];
+  function bgUI() {
+    var cv = ctx.state.canvas, p = document.getElementById("pcBgBody"); if (!p) return; p.textContent = "";
+    p.appendChild(row("Couleur de l’arrière-plan", inp("color", cv.bg, live(function (v) { cv.bg = v; }))));
+    var sw = h("div", "pc-pal"); SOL.forEach(function (c) { var b = h("button", "pc-sw"); b.type = "button"; b.style.background = c; b.title = c; b.addEventListener("click", function () { cv.bg = c; cv.bg2 = ""; commit(); }); sw.appendChild(b); }); p.appendChild(sw);
+    p.appendChild(h("h4", "", "Dégradés"));
+    var gp = h("div", "pc-pal"); GR.forEach(function (c) { var b = h("button", "pc-sw"); b.type = "button"; b.style.background = "linear-gradient(135deg," + c[0] + "," + c[1] + ")"; b.addEventListener("click", function () { cv.bg = c[0]; cv.bg2 = c[1]; commit(); }); gp.appendChild(b); }); p.appendChild(gp);
+    if (cv.bg2) {
+      p.appendChild(row("Couleur 2", inp("color", cv.bg2, live(function (v) { cv.bg2 = v; }))));
+      p.appendChild(row("Angle", inp("range", cv.angle, live(function (v) { cv.angle = v; }), { min: 0, max: 360 })));
+      p.appendChild(btn("Revenir à un fond uni", function () { cv.bg2 = ""; commit(); }));
+    } else p.appendChild(btn("Personnaliser un dégradé", function () { cv.bg2 = ctx.state.color; commit(); }));
+    p.appendChild(h("h4", "", "Palettes assorties (fond + textes)"));
+    var pal = h("div", "pc-pal"); PAL.forEach(function (c) { var b = h("button", "pc-sw"); b.type = "button"; b.style.background = c[0]; b.title = "Appliquer cette palette"; b.addEventListener("click", function () { cv.bg = c[0]; cv.bg2 = ""; cv.els.forEach(function (x) { if (x.k === "t" && x.tx && !x.bg && !x.ac) x.c = c[1]; }); commit(); }); pal.appendChild(b); });
+    p.appendChild(pal);
+  }
+  function layersUI() {
+    var host = document.getElementById("studioLayers"), cv = ctx.state.canvas; if (!host) return; host.textContent = "";
+    if (!cv.els.length) { host.appendChild(h("p", "pc-hint", "Aucun élément pour le moment. Ajoute un texte, une forme ou une image.")); return; }
+    cv.els.slice().reverse().forEach(function (e) {
+      var i = cv.els.indexOf(e), r = h("div", "pc-layer" + (e.id === sel ? " on" : ""));
+      r.appendChild(btn(e.k === "i" ? "▧ Image" : e.tx ? "T  " + e.tx.slice(0, 18) : "▰ Forme", function () { sel = e.id; paint(); panel(); }, "pc-layer-name"));
+      r.appendChild(btn("↑", function () { if (i < cv.els.length - 1) { cv.els.splice(i + 1, 0, cv.els.splice(i, 1)[0]); commit(); } }));
+      r.appendChild(btn("↓", function () { if (i > 0) { cv.els.splice(i - 1, 0, cv.els.splice(i, 1)[0]); commit(); } }));
+      r.appendChild(btn("⧉", function () { var c = Object.assign({}, e, { id: nid(cv), x: e.x + 16, y: e.y + 16 }); cv.els.push(c); sel = c.id; commit(); }));
+      r.appendChild(btn("✕", function () { cv.els.splice(i, 1); if (sel === e.id) sel = null; commit(); }, "danger"));
+      host.appendChild(r);
+    });
+  }
+  function panel() { propsUI(); bgUI(); layersUI(); }
+  function dock() {
+    if (document.getElementById("pcTabs")) return;
+    var $ = function (i) { return document.getElementById(i); }, aside = document.querySelector(".studio-tools"), lay = $("studioLayers").closest(".grp"), g, tabs = h("div", "pc-tabs");
+    $("typeSeg").closest(".grp").classList.add("pc-g-always"); $("tplList").closest(".grp").classList.add("pc-g-models"); lay.classList.add("pc-g-layers"); tabs.id = "pcTabs";
+    [["models", "Modèles"], ["elements", "Éléments"], ["text", "Texte"], ["images", "Images"], ["bg", "Fond"], ["layers", "Calques"]].forEach(function (t) { var b = btn(t[1], function () { setTab(t[0]); }); b.dataset.t = t[0]; tabs.appendChild(b); });
+    aside.insertBefore(tabs, aside.querySelector(".panel-heading").nextSibling);
+    g = h("div", "grp pc-g-elements"); g.appendChild(h("h3", "", "Éléments")); g.appendChild(h("p", "pc-hint", "Clique sur une forme ou une icône : elle apparaît au centre de l’affiche.")); library(g); aside.insertBefore(g, lay);
+    g = h("div", "grp pc-g-text"); g.appendChild(h("h3", "", "Texte"));
+    TXT.forEach(function (x) { g.appendChild(btn(x[0], function () { addEl(Object.assign({ tx: x[1], c: ink() }, x[2])); }, "pc-big")); });
+    g.appendChild(h("h4", "", "Styles de texte")); var cb = h("div", "pc-btns");
+    COMBO.forEach(function (x) { var b = btn("Aa " + x[0], function () { addEl(Object.assign({ tx: x[0], c: x[1].fx ? "#ffffff" : ink(), w: 320, h: 80, fw: 700 }, x[1])); }, "pc-combo"); b.style.fontFamily = "'" + x[1].ff + "',sans-serif"; cb.appendChild(b); });
+    g.appendChild(cb); aside.insertBefore(g, lay);
+    g = h("div", "grp pc-g-images"); g.appendChild(h("h3", "", "Images")); g.appendChild(btn("+ Importer une image", function () { ctx.upload.click(); }, "pc-big"));
+    g.appendChild(h("p", "pc-hint", "PNG, JPG ou WebP, 6 images maximum. Une fois posée, déplace-la, redimensionne-la et applique un filtre ou une bordure depuis le panneau de droite.")); aside.insertBefore(g, lay);
+    g = h("div", "grp pc-g-bg"); g.appendChild(h("h3", "", "Fond de la page")); var body = h("div", "pc-bgbody"); body.id = "pcBgBody"; g.appendChild(body); aside.insertBefore(g, lay);
+    var bar = h("div", "pc-bar"); bar.id = "pcBar"; bar.appendChild(btn("↶ Annuler", function () { go(-1); })); bar.appendChild(btn("↷ Rétablir", function () { go(1); })); bar.appendChild(btn("🎨 Fond", function () { setTab("bg"); }));
+    bar.appendChild(h("span", "pc-hint", "Clique sur un élément pour le modifier · Suppr pour l’effacer"));
+    var st = document.querySelector(".studio-stage"); st.insertBefore(bar, st.querySelector(".studio-stagebar").nextSibling);
+  }
+  function enable(on) {
+    var a = document.querySelector(".studio-tools"), bar = document.getElementById("pcBar"), pn = document.getElementById("pcPanel");
+    if (a) a.classList.toggle("pc-on", on); if (bar) bar.hidden = !on; if (pn) pn.hidden = !on; if (on) setTab(curTab);
+  }
   function ink() { var cv = ctx.state.canvas, x = cv.bg.toLowerCase(); return x === "#ffffff" || x === "#f4eee5" ? "#14161f" : "#ffffff"; }
 
   function upload(file) {
@@ -214,10 +255,10 @@
     if (lastCv !== state.canvas && (!ctx || ctx.state !== state || hist.indexOf(JSON.stringify(state.canvas)) < 0)) { hist = []; hi = -1; sel = null; }
     var page = h("article", "pv-poster pc-page"), inner = h("div", "pc-inner"); page.appendChild(inner); root.appendChild(page);
     var host = document.getElementById("posterOptions"), pn = document.getElementById("pcPanel");
-    if (!pn) { pn = h("div", "pc-panel"); pn.id = "pcPanel"; host.insertBefore(pn, host.children[1] || null); var up = h("input"); up.type = "file"; up.accept = "image/png,image/jpeg,image/webp"; up.hidden = true; up.id = "pcUpload"; up.addEventListener("change", function () { upload(up.files[0]); up.value = ""; }); host.appendChild(up); }
+    if (!pn) { pn = h("div", "pc-panel"); pn.id = "pcPanel"; var pr = document.querySelector(".studio-properties"); pr.insertBefore(pn, pr.querySelector(".panel-heading").nextSibling); var up = h("input"); up.type = "file"; up.accept = "image/png,image/jpeg,image/webp"; up.hidden = true; up.id = "pcUpload"; up.addEventListener("change", function () { upload(up.files[0]); up.value = ""; }); host.appendChild(up); }
     ctx = { state: state, page: page, panel: pn, save: api.save, upload: document.getElementById("pcUpload") };
     if (lastCv !== state.canvas || !hist.length) { lastCv = state.canvas; if (!hist.length) snap(); }
-    pointers(page); paint(); panel();
+    dock(); enable(true); pointers(page); paint(); panel();
     if (!window.__pcKeys) { window.__pcKeys = 1; document.addEventListener("keydown", function (ev) {
       if (!ctx || ctx.state.type !== "poster" || /INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
       var e = find(sel), z = ev.key.toLowerCase() === "z", y = ev.key.toLowerCase() === "y";
@@ -247,5 +288,5 @@
     qi.addEventListener("input", function () { gq = qi.value; fill(); });
     host.appendChild(qi); host.appendChild(chips); host.appendChild(grid); fill();
   }
-  window.PosterCanvas = { seed: seed, draw: draw, gallery: gallery, TPLS: TPLS };
+  window.PosterCanvas = { seed: seed, draw: draw, gallery: gallery, TPLS: TPLS, release: function () { enable(false); } };
 })();

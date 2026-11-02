@@ -433,6 +433,7 @@
 
   function render() {
     var root = $("pv");
+    if (state.type !== "poster" && window.PosterCanvas.release) window.PosterCanvas.release();
     $("posterExport").hidden = state.type !== "cv";
     
     $("posterOptions").hidden = state.type !== "poster";
@@ -484,7 +485,7 @@
   }
 
   function renderLayers() {
-    var host = $("studioLayers"); if (!host) return;
+    var host = $("studioLayers"); if (!host || state.type === "poster") return;
     host.textContent = "";
     if (!state.blocks.length) { var empty = el("p", "identity-help", "Aucun élément ajouté pour le moment."); host.appendChild(empty); return; }
     state.blocks.forEach(function (block, index) {

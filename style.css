@@ -1063,3 +1063,21 @@ body.studio-dark .pc-btn{background:#1e2230;color:#f2f4ff;border-color:#2e3548}
 .pc-fold .pc-btns{margin-top:8px}
 .pc-shape{min-width:36px;font-size:1.05rem;padding:5px 9px}
 body.studio-dark .pc-search,body.studio-dark .pc-fold{border-color:#2e3548;background:#1e2230;color:#f2f4ff}
+
+/* Atelier Affiches : barre d'onglets façon Canva */
+.pc-tabs{display:none;flex-wrap:wrap;gap:6px;margin:10px 0}
+.pc-tabs .pc-btn{flex:1 1 30%;text-align:center}
+.pc-tabs .pc-btn[aria-pressed=true]{background:#2340ff;color:#fff;border-color:#2340ff}
+.studio-tools.pc-on>.pc-tabs{display:flex}
+.studio-tools.pc-on>.grp{display:none}
+.studio-tools.pc-on>.pc-g-always,.studio-tools.pc-on[data-pctab=models]>.pc-g-models,.studio-tools.pc-on[data-pctab=elements]>.pc-g-elements,.studio-tools.pc-on[data-pctab=text]>.pc-g-text,.studio-tools.pc-on[data-pctab=images]>.pc-g-images,.studio-tools.pc-on[data-pctab=bg]>.pc-g-bg,.studio-tools.pc-on[data-pctab=layers]>.pc-g-layers{display:block}
+.pc-bgbody{display:grid;gap:10px}
+.pc-bgbody h4{margin:6px 0 0;font-size:.85rem}
+.pc-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0}
+.pc-bar[hidden],.pc-panel[hidden]{display:none}
+.pc-big{display:block;width:100%;margin-bottom:8px;padding:12px;font-weight:700;font-size:.95rem;text-align:left}
+.pc-combo{font-size:1.15rem;padding:8px 12px}
+.pc-layer{display:flex;gap:4px;align-items:center;margin-bottom:6px}
+.pc-layer.on .pc-layer-name{background:#2340ff;color:#fff;border-color:#2340ff}
+.pc-layer-name{flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.studio-main:has(.frame.is-poster) .grp:has(#brandModeSeg),.studio-main:has(.frame.is-poster) .grp:has(#themeSeg){display:none}
