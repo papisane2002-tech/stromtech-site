@@ -9,6 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Dancing+Script:wght@700&family=Lobster&family=Montserrat:wght@400;700&family=Oswald:wght@400;700&family=Pacifico&family=Permanent+Marker&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@400;700&family=Raleway:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+.studio-access{min-height:calc(100vh - 90px);display:grid;place-items:center;padding:32px 18px}
+.studio-access-card{width:min(560px,100%);padding:36px;border:1px solid #ffffff22;border-radius:24px;background:#141d32;text-align:center;box-shadow:0 24px 80px #0005}
+.studio-access-mark{color:#38d6b0;font-size:.78rem;font-weight:900;letter-spacing:.16em}
+.studio-access-card h1{font-size:clamp(1.8rem,5vw,2.7rem);margin:16px 0}
+.studio-access-card p{color:#b8c2d9;margin:0 0 24px}
+.studio-access-card .btn{display:block}
+.studio-access-home{display:inline-block;margin-top:18px;color:#b8c2d9}
+</style>
 </head>
 <body>
 <header class="site-header">
@@ -20,7 +29,16 @@
   <div class="bar"><button class="btn btn-line theme-toggle" id="studioThemeToggle" type="button" aria-pressed="false">☾ Thème sombre</button><a class="btn btn-line" href="espace.html">Mon espace</a></div>
  </div>
 </header>
-<main class="container studio-main">
+<section class="studio-access" id="studioAccessGate" role="status">
+ <div class="studio-access-card">
+  <span class="studio-access-mark">STROMTECH · ÉQUIPE</span>
+  <h1>Studio Design réservé à l’équipe</h1>
+  <p>L’éditeur complet est un outil de production interne. Les clients peuvent choisir un style et commander leur création depuis nos pages de services.</p>
+  <a class="btn btn-blue" href="connexion.html?next=studio.html">Connexion équipe Stromtech</a>
+  <a class="studio-access-home" href="index.html">Retour au site public</a>
+ </div>
+</section>
+<main class="container studio-main" hidden>
  <div class="studio-head">
   <p class="studio-kicker">STROMTECH CREATIVE WORKSPACE</p>
   <h1 class="block-title">Studio de design</h1>
@@ -217,6 +235,21 @@
 <script src="app.js"></script>
 <script src="poster-canvas.js"></script>
 <script src="studio.js"></script>
+<script>
+(function(){
+  var gate=document.getElementById("studioAccessGate");
+  var workspace=document.querySelector("main.studio-main");
+  var adminId=window.STROMTECH&&window.STROMTECH.ADMIN_ID;
+  if(!window.sb||!adminId){gate.querySelector("p").textContent="La connexion sécurisée n’a pas pu être vérifiée. Recharge la page ou contacte Stromtech.";return;}
+  window.sb.auth.getSession().then(function(result){
+    var user=result.data&&result.data.session&&result.data.session.user;
+    if(user&&user.id===adminId){gate.hidden=true;workspace.hidden=false;}
+    else if(user){gate.querySelector("h1").textContent="Accès réservé à l’équipe Stromtech";gate.querySelector("p").textContent="Ce compte client ne peut pas ouvrir l’éditeur interne. Tu peux retourner aux services pour choisir un style et passer commande.";}
+  }).catch(function(){
+    gate.querySelector("p").textContent="Impossible de vérifier la connexion. Recharge la page puis réessaie.";
+  });
+})();
+</script>
 <script>
 (function(){
   var button=document.getElementById("studioThemeToggle");
