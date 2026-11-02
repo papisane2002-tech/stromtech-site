@@ -221,3 +221,52 @@ footer{border-top:1px solid var(--line);padding:34px 0 22px;color:var(--muted);m
 .sample-event4{background:linear-gradient(145deg,#0b1020,#4c1d95,#be185d);color:#fff}
 @media(max-width:860px){.poster-gallery-more{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.poster-gallery-more{grid-template-columns:1fr 1fr;gap:10px}.selected-poster-preview{gap:10px;padding:9px}}
+
+/* Galeries interactives des services Stromtech */
+.audience-choice{width:100%;text-align:left;color:inherit;cursor:pointer;font:inherit;transition:transform .2s,border-color .2s}
+.audience-choice:hover,.audience-choice:focus-visible{transform:translateY(-4px);border-color:var(--a);outline:none}
+.audience-cta{display:inline-block;margin-top:10px;color:var(--a);font-weight:800;font-size:.86rem}
+.service-model-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.service-model-card{display:flex;flex-direction:column;gap:10px;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:18px;min-width:0}
+.service-model-card[hidden]{display:none!important}
+.service-model-card h3{font-size:1.05rem}
+.service-model-card p{font-size:.9rem;margin:0}
+.service-model-card .btn{margin-top:auto}
+.service-model-art{aspect-ratio:16/10;border-radius:12px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;overflow:hidden;color:white;background:linear-gradient(135deg,#18314b,#168c82)}
+.service-model-art span{font-size:.68rem;font-weight:800;letter-spacing:.13em}
+.service-model-art strong{font-size:clamp(1.05rem,2vw,1.65rem);line-height:1.05;max-width:95%}
+.service-model-art small{font-size:.75rem;color:inherit;opacity:.9}
+.art-business{background:linear-gradient(135deg,#122c4d,#16a085)}
+.art-corporate{background:linear-gradient(135deg,#1b2a41,#526b8a)}
+.art-portfolio{background:linear-gradient(135deg,#43265f,#d05c91)}
+.art-photo{background:linear-gradient(135deg,#242424,#987d5e)}
+.art-food{background:linear-gradient(135deg,#6b251e,#e89b38)}
+.art-fastfood{background:linear-gradient(135deg,#a92d20,#f1a52b)}
+.art-shop{background:linear-gradient(135deg,#164b49,#6cb5a5)}
+.art-ecommerce{background:linear-gradient(135deg,#152e53,#537ac0)}
+.art-medical{background:linear-gradient(135deg,#0c5962,#38a6a0)}
+.art-clinic{background:linear-gradient(135deg,#173c5b,#71a8c7)}
+.art-dental{background:linear-gradient(135deg,#25627d,#80cbd0)}
+.art-stock{background:linear-gradient(135deg,#233c59,#4083a8)}
+.art-sales{background:linear-gradient(135deg,#154b44,#45a88b)}
+.art-booking{background:linear-gradient(135deg,#273f75,#687bd1)}
+.art-calendar{background:linear-gradient(135deg,#313e65,#a18bd0)}
+.art-crm{background:linear-gradient(135deg,#2b3159,#8b72c5)}
+.art-dashboard{background:linear-gradient(135deg,#152e40,#267d85)}
+.art-orders{background:linear-gradient(135deg,#603c22,#d18b3c)}
+.art-delivery{background:linear-gradient(135deg,#5a2c2d,#c55b54)}
+.art-health{background:linear-gradient(135deg,#0d6668,#52b8a9)}
+.art-clinicapp{background:linear-gradient(135deg,#17445c,#3994a5)}
+.art-cvclassic{background:linear-gradient(135deg,#34435a,#7588a2)}
+.art-cvclean{background:linear-gradient(135deg,#1c4a54,#68a69d)}
+.art-cvpro{background:linear-gradient(135deg,#172d4d,#4d719a)}
+.art-cvmodern{background:linear-gradient(135deg,#4b3169,#a17bc0)}
+.art-cvskills{background:linear-gradient(135deg,#355b4d,#8aaf83)}
+.art-cvminimal{background:linear-gradient(135deg,#3c414a,#929ba5)}
+.art-cvcreative{background:linear-gradient(135deg,#793c66,#e17d91)}
+.art-cvelegant{background:linear-gradient(135deg,#34303a,#b18c67)}
+.selected-poster-preview>.service-model-art{width:76px;flex:0 0 76px;aspect-ratio:3/4;padding:6px;gap:4px}
+.selected-poster-preview>.service-model-art span,.selected-poster-preview>.service-model-art small{font-size:5px}
+.selected-poster-preview>.service-model-art strong{font-size:9px}
+@media(max-width:850px){.service-model-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.service-model-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.service-model-card{padding:9px}.service-model-art{padding:12px}.service-model-card .btn{font-size:.82rem;padding:9px 8px}}
