@@ -518,6 +518,12 @@
         accBtn.classList.toggle("sc-admin", inn && isAdmin());
       }
       if (inn && isAdmin()) fab.textContent = "🛠️ Messages clients";
+      var siteNav = document.querySelector("header nav");
+      if (siteNav) {
+        siteNav.querySelectorAll('a[href$="studio.html"]').forEach(function (link) {
+          if (link.id !== "sc-studio-link") link.remove();
+        });
+      }
       if (navGroup && navCta) {
         if (isAdmin()) {
           if (!studioBtn) { studioBtn = el("a", "sc-nav-btn sc-admin", "🎨 Studio Design"); studioBtn.id = "sc-studio-link"; studioBtn.href = "studio.html"; navGroup.insertBefore(studioBtn, navCta); }
