@@ -1331,3 +1331,117 @@ body:has(.studio-main) .studio-stage .pv-grid4{
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+
+/* Correctif ciblé mobile : aperçu affiche, cadre et barre d'outils */
+@media (max-width: 600px) {
+  body:has(.studio-main) .studio-editor,
+  body:has(.studio-main) .studio-stage,
+  body:has(.studio-main) .studio-stagebar,
+  body:has(.studio-main) .studio-stage .preview-wrap,
+  body:has(.studio-main) .studio-stage .frame,
+  body:has(.studio-main) .studio-stage .frame.is-poster,
+  body:has(.studio-main) .studio-stage .frame.is-poster .pv {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body:has(.studio-main) .studio-stagebar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  body:has(.studio-main) .studio-stagebar .stage-heading,
+  body:has(.studio-main) .studio-stagebar .viewport-switch,
+  body:has(.studio-main) .studio-stagebar .block-toolbar {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body:has(.studio-main) .studio-stagebar .viewport-switch {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: stretch;
+    gap: 3px;
+  }
+
+  body:has(.studio-main) .studio-stagebar .viewport-switch button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 4px;
+    white-space: nowrap;
+    font-size: clamp(10px, 3vw, 12px);
+  }
+
+  body:has(.studio-main) .studio-stagebar .block-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  body:has(.studio-main) .studio-stagebar .block-toolbar button {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+    max-width: 100%;
+    padding: 8px 5px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 11px;
+  }
+
+  body:has(.studio-main) .studio-stage .frame.is-poster {
+    overflow: hidden;
+    padding: 0;
+  }
+
+  body:has(.studio-main) .studio-stage .frame.is-poster .frame-bar {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    gap: 5px;
+  }
+
+  body:has(.studio-main) .studio-stage .frame.is-poster .frame-bar i {
+    flex: 0 0 8px;
+    width: 8px;
+    height: 8px;
+  }
+
+  body:has(.studio-main) .studio-stage .frame.is-poster .pv {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: clamp(5px, 2vw, 12px);
+    overflow: hidden;
+  }
+
+  body:has(.studio-main) .studio-stage .frame.is-poster .pv-poster {
+    display: block;
+    flex: 0 1 560px;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0;
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+
+  body:has(.studio-main) .studio-stage .frame.is-poster .pv-poster.pc-page {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 380px) {
+  body:has(.studio-main) .studio-stagebar .block-toolbar button {
+    flex-basis: 100%;
+  }
+}
