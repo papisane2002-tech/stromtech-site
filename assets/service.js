@@ -99,6 +99,71 @@
     });
   });
 
+
+  /* Inspection locale des modèles : aperçu multi-pages sans quitter Stromtech. */
+  function installModelInspector() {
+    var modal = document.createElement("div");
+    modal.className = "model-inspector";
+    modal.hidden = true;
+    modal.innerHTML = '<div class="model-inspector-panel" role="dialog" aria-modal="true" aria-labelledby="model-inspector-title"><div class="model-inspector-top"><div><span class="tag">Aperçu interactif</span><h2 id="model-inspector-title">Modèle Stromtech</h2><p class="model-inspector-subtitle">Maquette de démonstration — les pages seront adaptées à ton projet.</p></div><button type="button" class="model-inspector-close" aria-label="Fermer">×</button></div><div class="model-inspector-tabs" role="tablist"></div><div class="model-inspector-screen"></div><div class="model-inspector-bottom"><span>Navigation de démonstration</span><button type="button" class="btn primary model-inspector-select">Choisir ce modèle</button></div></div>';
+    document.body.appendChild(modal);
+    var title=modal.querySelector("#model-inspector-title"), tabs=modal.querySelector(".model-inspector-tabs"), screen=modal.querySelector(".model-inspector-screen"), selected=modal.querySelector(".model-inspector-select"), close=modal.querySelector(".model-inspector-close");
+    var currentName="", currentCard=null, currentType="";
+    var pagesByType={
+      site:["Accueil","Services","À propos","Contact"],
+      app:["Tableau de bord","Activités","Profil","Paramètres"]
+    };
+    function renderPage(page,index) {
+      screen.replaceChildren();
+      if(currentType==="poster"){
+        var art=currentCard.querySelector(".poster-sample");
+        if(art) screen.appendChild(art.cloneNode(true));
+        return;
+      }
+      var frame=document.createElement("div"); frame.className="inspector-page "+(currentType==="app"?"inspector-app-page":"inspector-site-page");
+      var brand=document.createElement("div"); brand.className="inspector-brand"; brand.textContent=currentName+" · "+page; frame.appendChild(brand);
+      var hero=document.createElement("div"); hero.className="inspector-hero";
+      var eyebrow=document.createElement("small"); eyebrow.textContent=index===0?"BIENVENUE":"DÉCOUVREZ NOTRE UNIVERS";
+      var heading=document.createElement("h3"); heading.textContent=currentType==="app"?(["Votre espace en un coup d’œil","Toutes vos activités","Votre profil","Vos préférences"][index]):([currentName,"Nos services","Qui sommes-nous ?","Parlons de votre projet"][index]);
+      var desc=document.createElement("p"); desc.textContent=currentType==="app"?(["Retrouvez ici les informations essentielles.","Consultez les opérations et les dernières mises à jour.","Gérez vos informations personnelles.","Personnalisez votre expérience."][index]):(["Une présentation claire, moderne et pensée pour vos visiteurs.","Des solutions organisées pour répondre à vos besoins.","Une équipe engagée et une approche adaptée.","Retrouvez nos coordonnées et envoyez-nous un message."][index]);
+      hero.append(eyebrow,heading,desc);
+      var action=document.createElement("span"); action.className="inspector-action"; action.textContent=currentType==="app"?"Ouvrir":"En savoir plus"; hero.appendChild(action); frame.appendChild(hero);
+      var grid=document.createElement("div"); grid.className="inspector-content-grid";
+      var labels=currentType==="app"?["Activité récente","Éléments enregistrés","Notifications"]:index===3?["Téléphone","E-mail","Adresse"]:["Présentation","Nos engagements","Informations utiles"];
+      labels.forEach(function(label,i){var box=document.createElement("div");box.className="inspector-content-card";box.innerHTML="<b></b><span></span>";box.querySelector("b").textContent=label;box.querySelector("span").textContent=currentType==="app"?"Accès rapide et informations détaillées":"Un contenu organisé pour présenter clairement cette rubrique.";grid.appendChild(box);});
+      frame.appendChild(grid);screen.appendChild(frame);
+    }
+    function open(card,type) {
+      currentCard=card; currentType=type; currentName=card.querySelector("h3")?.textContent||"Modèle Stromtech";
+      title.textContent=currentName; tabs.replaceChildren();
+      if(type==="poster"){renderPage("Affiche",0);tabs.hidden=true;}
+      else{
+        tabs.hidden=false;
+        pagesByType[type].forEach(function(page,index){var b=document.createElement("button");b.type="button";b.className="model-inspector-tab"+(index===0?" active":"");b.textContent=page;b.setAttribute("role","tab");b.addEventListener("click",function(){tabs.querySelectorAll("button").forEach(x=>x.classList.remove("active"));b.classList.add("active");renderPage(page,index);});tabs.appendChild(b);});
+        renderPage(pagesByType[type][0],0);
+      }
+      selected.textContent="Choisir ce modèle";
+      modal.hidden=false;document.body.classList.add("model-inspector-open");close.focus();
+    }
+    function shut(){modal.hidden=true;document.body.classList.remove("model-inspector-open");}
+    close.addEventListener("click",shut);
+    modal.addEventListener("click",function(e){if(e.target===modal)shut();});
+    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)shut();});
+    selected.addEventListener("click",function(){if(!currentCard)return;var choose=currentCard.querySelector("[data-service-model], [data-poster-model]");if(choose)choose.click();shut();});
+    document.addEventListener("click",function(e){
+      var button=e.target.closest("[data-inspect-model]");if(!button)return;
+      var card=button.closest(".service-model-card, .poster-choice");if(!card)return;
+      var type=card.classList.contains("poster-choice")?"poster":(document.body.getAttribute("data-service")||"").indexOf("Application")===0?"app":"site";
+      open(card,type);
+    });
+    document.querySelectorAll(".service-model-card, .poster-choice").forEach(function(card){
+      var actions=card.querySelector(".btn");if(!actions)return;
+      var b=document.createElement("button");b.type="button";b.className="btn secondary inspect-model-btn";b.setAttribute("data-inspect-model","");b.textContent="Voir le modèle";
+      actions.parentNode.insertBefore(b,actions);
+    });
+  }
+  installModelInspector();
+
   quote.addEventListener("submit", async function (e) {
     e.preventDefault();
     status.className = ""; status.replaceChildren();
