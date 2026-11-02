@@ -39,10 +39,30 @@
   setType(o && o.type ? o.type : "devis");
   if (o) say("Ton brouillon a été restauré : vérifie-le, ajoute à nouveau tes PDF si besoin, puis envoie ta demande.", true);
   quote.addEventListener("input", function () { Draft.save({ type: reqType }); });
+  var audienceNames = { mariage: "Mariages et cérémonies", anniversaire: "Anniversaires et fêtes", commerce: "Commerces", evenement: "Organisateurs d’événements" };
+  document.querySelectorAll("[data-audience]").forEach(function (button) {
+    button.addEventListener("click", function () {
+      var category = button.getAttribute("data-audience");
+      document.querySelectorAll(".poster-choice").forEach(function (card) {
+        card.hidden = card.getAttribute("data-category") !== category;
+      });
+      var heading = document.querySelector("#modeles .section-head p");
+      if (heading) heading.textContent = "Modèles proposés pour : " + audienceNames[category] + ". Choisis celui qui te plaît.";
+      var gallery = $("modeles"); if (gallery) gallery.scrollIntoView({ behavior: "smooth" });
+    });
+  });
   document.querySelectorAll("[data-poster-model]").forEach(function (button) {
     button.addEventListener("click", function () {
       var field = $("posterModel");
-      if (field) { field.value = button.getAttribute("data-poster-model"); Draft.save({ type: reqType }); }
+      if (field) {
+        field.value = button.getAttribute("data-poster-model");
+        var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
+        var sample = button.closest(".poster-choice").querySelector(".poster-sample");
+        if (preview && sample) preview.replaceChildren(sample.cloneNode(true), preview.querySelector("div:last-child"));
+        if (title) title.textContent = field.value;
+        if (help) help.textContent = "Ce modèle sera indiqué dans ta demande Stromtech.";
+        Draft.save({ type: reqType });
+      }
       var form = $("demande"); if (form) form.scrollIntoView({ behavior: "smooth" });
     });
   });
