@@ -388,7 +388,8 @@
         lines = [real ? "🛠️ Demande de réalisation" : "📋 Demande de devis", "Nom : " + p.name];
         if (p.phone) lines.push("Téléphone : " + p.phone);
         lines.push("Service : " + p.service);
-        if (p.model) lines.push("Modèle : " + p.model);
+        if (p.model) lines.push("Style souhaité : " + p.model);
+        if (p.package) lines.push("Formule souhaitée : " + p.package);
         lines.push("Budget : " + p.budget, "Délai : " + p.deadline, "Projet : " + p.details);
       }
       var body = lines.join("\n");
