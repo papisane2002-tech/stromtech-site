@@ -12,6 +12,7 @@
   };
   var TPL = {
     site: {
+      blank: { label: "Page vierge", desc: "Une page vide à construire librement, bloc par bloc.", hero: "blank", sections: [] },
       vitrine: { label: "Vitrine", desc: "Présenter une activité : restaurant, salon, entreprise.", hero: "center", sections: ["about", "services", "galerie", "contact"] },
       portfolio: { label: "Portfolio", desc: "Montrer ses réalisations : artiste, photographe, freelance.", hero: "left", sections: ["about", "galerie", "temoignages", "contact"] },
       boutique: { label: "Boutique", desc: "Vendre des produits avec un catalogue.", hero: "banner", tag: "Vente en ligne", sections: ["produits", "temoignages", "contact"] },
@@ -332,6 +333,10 @@
   /* ---------- Aperçu : site ---------- */
   function previewSite(root) {
     var tpl = TPL.site[state.template], nm = state.name || "Ton entreprise", sl = state.slogan || "Ton slogan s’affiche ici";
+    if (state.template === "blank") {
+      renderCustomBlocks(root);
+      return;
+    }
     var nav = el("div", "pv-nav");
     if (state.brandMode === "logo" && state.brandLogo) { var brandImg = styleBrandLogo(el("img", "pv-brand-logo")); brandImg.src = state.brandLogo; brandImg.alt = nm; nav.appendChild(brandImg); }
     else nav.appendChild(editText("b", "", nm, "brandName", "Nom de l’entreprise"));
@@ -851,7 +856,21 @@
     $("color").addEventListener("input", function () { state.color = $("color").value; change(false); });
     $("color").addEventListener("change", function () { buildControls(); });
     ["name", "slogan", "notes"].forEach(function (id) { $(id).addEventListener("input", function () { state[id] = $(id).value; change(false); }); });
-    $("reset").addEventListener("click", function () { state = defaults(); try { localStorage.removeItem(KEY); } catch (e) {} change(true); showMsg($("warn"), ""); });
+    $("reset").addEventListener("click", function () {
+      var currentType = state.type;
+      var blankTemplate = currentType === "site" || currentType === "poster" ? "blank" : undefined;
+      state = defaults(currentType, blankTemplate);
+      pages = [];
+      activePageId = null;
+      selectedKey = null;
+      initPages(null);
+      buildControls();
+      render();
+      renderPages();
+      saveDraft();
+      showMsg($("warn"), "");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
     $("sendBtn").addEventListener("click", send);
     $("exportPosterPng").addEventListener("click", function () { exportPoster("png"); });
     $("exportPosterPdf").addEventListener("click", function () { exportPoster("pdf"); });
