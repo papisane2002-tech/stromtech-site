@@ -321,7 +321,7 @@
       if (!kind) return null;
       var o = { kind: kind }, i = 1;
       for (; i < lines.length; i++) {
-        var m = /^(Nom|Téléphone|Service|Modèle|Budget|Délai|Sujet|Projet) : (.*)$/.exec(lines[i]);
+        var m = /^(Nom|Téléphone|Service|Modèle|Formule|Budget|Délai|Sujet|Projet) : (.*)$/.exec(lines[i]);
         if (!m) break;
         if (m[1] === "Projet") { o.projet = [m[2]].concat(lines.slice(i + 1)).join("\n").trim(); i = lines.length; break; }
         o[m[1]] = m[2];
@@ -359,7 +359,7 @@
         card.append(el("div", "rq-lbl", "Modèle choisi"), fig, el("div", "rq-model", model));
       }
       var rows = el("dl", "rq-rows");
-      [["Client", "Nom"], ["Téléphone", "Téléphone"], ["Service", "Service"], ["Sujet", "Sujet"], ["Budget", "Budget"], ["Délai", "Délai"]].forEach(function (r) {
+      [["Client", "Nom"], ["Téléphone", "Téléphone"], ["Service", "Service"], ["Formule", "Formule"], ["Sujet", "Sujet"], ["Budget", "Budget"], ["Délai", "Délai"]].forEach(function (r) {
         if (o[r[1]]) rows.append(el("dt", null, r[0]), el("dd", null, o[r[1]]));
       });
       card.append(rows);
@@ -388,7 +388,8 @@
         lines = [real ? "🛠️ Demande de réalisation" : "📋 Demande de devis", "Nom : " + p.name];
         if (p.phone) lines.push("Téléphone : " + p.phone);
         lines.push("Service : " + p.service);
-        if (p.model) lines.push("Style souhaité : " + p.model);
+        if (p.model) lines.push("Modèle : " + p.model);
+        if (p.package) lines.push("Formule : " + p.package);
         if (p.package) lines.push("Formule souhaitée : " + p.package);
         lines.push("Budget : " + p.budget, "Délai : " + p.deadline, "Projet : " + p.details);
       }
