@@ -58,7 +58,7 @@
     say("Envoi en cours…", true);
     try {
       var r = await window.Stromtech.submitQuote({
-        type: reqType, service: SERVICE, model: "", name: v("name"), phone: v("phone"),
+        type: reqType, service: SERVICE, model: v("posterModel"), package: v("posterPackage"), name: v("name"), phone: v("phone"),
         budget: v("budget"), deadline: v("deadline"), details: v("details"), files: files
       });
       if (r.status === "cancelled") {
