@@ -274,7 +274,7 @@
     function slug(n) {
       return String(n).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     }
-    function modelImg(name) { return "modeles/" + slug(name) + ".jpg"; }
+    function modelImg(name) { return "modeles/" + slug(name) + ".svg"; }
 
     function parseSubject(subj) {
       var p = String(subj || "").split(" · ");
