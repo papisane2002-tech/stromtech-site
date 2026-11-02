@@ -48,7 +48,7 @@
 
   function defaults(type, tpl) {
     type = type || "site"; tpl = tpl || ({site:"vitrine",app:"commandes",cv:"classique",poster:"evenement"}[type] || "vitrine");
-    return { type: type, template: tpl, posterFormat: "portrait", posterVisualHeight: 310, posterImageFit: "cover", name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
+    return { type: type, template: tpl, posterFormat: "portrait", canvas: null, posterVisualHeight: 310, posterImageFit: "cover", name: "", brandMode: "name", brandLogo: "", brandLogoWidth: 150, brandLogoBorder: false, brandLogoBorderColor: "#dce3f5", brandLogoBorderWidth: 1, slogan: "", color: "#087f6b", font: "moderne", radius: "1", theme: "light", sections: TPL[type][tpl].sections.slice(), notes: "", content: {}, elementColors: {}, blocks: [], blockOffsets: {}, blockPositions: {}, blockSizes: {}, blockStyles: {}, imageStyles: {}, imageData: {}, imageWidths: {}, sectionImages: { galerie: [], produits: [] }, sectionImageSettings: { galerie: { fit: "cover", height: 150 }, produits: { fit: "contain", height: 120 } }, productDetails: [], serviceDetails: [], pricingDetails: [], testimonialDetails: [], contactDetails: { nameLabel: "Nom", firstNameLabel: "Prénom", phoneLabel: "Téléphone", emailLabel: "E-mail", buttonLabel: "Envoyer" } };
   }
   function clean(o) {
     var safeType = o && ["site","app","cv","poster"].indexOf(o.type) >= 0 ? o.type : "site";
@@ -65,6 +65,17 @@
     if (["portrait","square","story","landscape","a4"].indexOf(o.posterFormat) >= 0) d.posterFormat = o.posterFormat;
     if (typeof o.posterVisualHeight === "number" && isFinite(o.posterVisualHeight)) d.posterVisualHeight = Math.max(120, Math.min(460, o.posterVisualHeight));
     if (o.posterImageFit === "contain" || o.posterImageFit === "cover") d.posterImageFit = o.posterImageFit;
+    if (o.canvas && typeof o.canvas === "object" && Array.isArray(o.canvas.els)) {
+      var cx = o.canvas, hx = function (v) { return typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v) ? v : ""; }, nm = function (v, a, b, f) { return typeof v === "number" && isFinite(v) ? Math.max(a, Math.min(b, v)) : f; }, imgs = 0;
+      d.canvas = { W: nm(cx.W, 200, 1200, 560), H: nm(cx.H, 200, 1400, 700), bg: hx(cx.bg) || "#ffffff", bg2: hx(cx.bg2), angle: nm(cx.angle, 0, 360, 160), els: [] };
+      cx.els.slice(0, 40).forEach(function (e) {
+        if (!e || typeof e !== "object" || !/^e[0-9]{1,6}$/.test(e.id) || (e.k !== "t" && e.k !== "i")) return;
+        var z = { id: e.id, k: e.k, x: nm(e.x, -2000, 2000, 0), y: nm(e.y, -2000, 2000, 0), w: nm(e.w, 8, 2400, 100), h: nm(e.h, 8, 2400, 40), rot: nm(e.rot, -180, 180, 0), op: nm(e.op, 5, 100, 100), rad: nm(e.rad, 0, 999, 0), bg: hx(e.bg), ac: e.ac ? 1 : 0 };
+        if (e.k === "i") { if (imgs >= 6 || typeof e.src !== "string" || !/^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(e.src) || e.src.length > 500000) return; imgs++; z.src = e.src; }
+        else { z.tx = typeof e.tx === "string" ? e.tx.slice(0, 300) : ""; z.fs = nm(e.fs, 8, 200, 18); z.fw = e.fw >= 700 ? 700 : 400; z.fi = e.fi ? 1 : 0; z.ff = ["Figtree","Bebas Neue","Anton","Oswald","Montserrat","Poppins","Raleway","Playfair Display","Roboto Slab","Pacifico","Lobster","Dancing Script","Permanent Marker"].indexOf(e.ff) >= 0 ? e.ff : "Figtree"; z.c = hx(e.c) || "#14161f"; z.al = ["left","center","right"].indexOf(e.al) >= 0 ? e.al : "left"; }
+        d.canvas.els.push(z);
+      });
+    }
     if (typeof o.notes === "string") d.notes = o.notes.slice(0, 1000);
     if (/^#[0-9a-f]{6}$/i.test(o.color)) d.color = o.color;
     if (FONTS[o.font]) d.font = o.font;
@@ -375,6 +386,11 @@
     body.appendChild(side); body.appendChild(main); cv.appendChild(body); root.appendChild(cv);
   }
   function previewPoster(root) {
+    var F = { portrait: [560, 700], square: [560, 560], story: [420, 746], landscape: [760, 428], a4: [560, 792] }[state.posterFormat] || [560, 700];
+    if (!state.canvas) state.canvas = window.PosterCanvas.seed(state.template, F[0], F[1], state.name, state.slogan, state.color);
+    window.PosterCanvas.draw(root, state, F[0], F[1], { save: saveDraft });
+  }
+  function previewPosterOld(root) {
     var poster = el("article", "pv-document pv-poster pv-poster-" + state.template);
     var visual = el("div", "poster-visual");
     visual.style.height = state.posterVisualHeight + "px";
@@ -518,7 +534,7 @@
       b.appendChild(visual);
       b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || ({site:"Site Web",app:"Application",cv:"CV",poster:"Affiche"}[state.type])));
       b.appendChild(el("span", "", t.desc));
-      b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); change(true); }); tl.appendChild(b);
+      b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); if (state.type === "poster") state.canvas = null; change(true); }); tl.appendChild(b);
     });
     var sw = $("swatches"); sw.textContent = "";
     COLORS.forEach(function (c) { var b = el("button", "sw"); b.type = "button"; b.style.background = c[1]; b.title = c[0]; b.setAttribute("aria-label", c[0]); b.setAttribute("aria-pressed", String(state.color.toLowerCase() === c[1])); b.addEventListener("click", function () { state.color = c[1]; change(true); }); sw.appendChild(b); });

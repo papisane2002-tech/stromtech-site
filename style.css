@@ -1028,3 +1028,26 @@ body[data-studio-service="poster"] .studio-stage .block-toolbar{display:flex;fle
 body.studio-dark:has(.studio-main) .studio-layer-row button{background:#0b1224;color:#f6f7ff;border-color:#ffffff20}
 body.studio-dark:has(.studio-main) .studio-layer-row.is-active .studio-layer-select{background:#15352f;color:#8ff0d5;border-color:#38d6b0}
 @media(max-width:900px){.studio-layer-row{grid-template-columns:minmax(0,1fr) 34px 34px 34px}}
+
+/* Atelier Affiches : canevas libre */
+.studio-main:has(.frame.is-poster) .block-toolbar,.studio-main:has(.frame.is-poster) #elementInspector,#posterVisualHeight,#posterImageFit,label[for=posterVisualHeight],label[for=posterImageFit],#posterOptions .identity-help{display:none}
+.pv-poster.pc-page{display:block;position:relative;overflow:hidden;padding:0;margin:0 auto;box-shadow:0 10px 40px #0003;touch-action:none;user-select:none}
+.pc-inner{position:relative;transform-origin:0 0;overflow:hidden}
+.pc-el{position:absolute;box-sizing:border-box;cursor:move;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.15;display:flex;flex-direction:column;justify-content:center}
+.pc-el img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;border-radius:inherit}
+.pc-el.is-sel{outline:2px solid #2340ff;outline-offset:2px}
+.pc-handle{position:absolute;right:-9px;bottom:-9px;width:16px;height:16px;border-radius:50%;background:#2340ff;border:2px solid #fff;cursor:nwse-resize}
+.pc-panel{display:grid;gap:12px;margin-bottom:14px}
+.pc-grp{display:grid;gap:8px;padding:12px;border:1px solid #dce2ee;border-radius:12px}
+.pc-grp h4{margin:0;font-size:.95rem}
+.pc-row{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:8px;font-size:.85rem}
+.pc-row input[type=color]{width:100%;height:30px;padding:0;border:0;background:none}
+.pc-btns{display:flex;flex-wrap:wrap;gap:6px}
+.pc-btn{padding:7px 11px;border:1.5px solid #c9cfe4;border-radius:9px;background:#fff;color:#14161f;font:inherit;font-size:.82rem;cursor:pointer}
+.pc-btn.on{background:#2340ff;color:#fff;border-color:#2340ff}
+.pc-btn.danger{color:#d62839;border-color:#d62839}
+.pc-pal{display:flex;flex-wrap:wrap;gap:6px}
+.pc-sw{width:28px;height:28px;border-radius:50%;border:2px solid #dce2ee;cursor:pointer}
+.pc-hint{margin:0;font-size:.82rem;color:#68738a}
+body.studio-dark .pc-grp{border-color:#2e3548}
+body.studio-dark .pc-btn{background:#1e2230;color:#f2f4ff;border-color:#2e3548}
