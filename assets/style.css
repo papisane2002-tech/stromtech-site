@@ -326,3 +326,9 @@ footer{border-top:1px solid var(--line);padding:34px 0 22px;color:var(--muted);m
 .selected-poster-preview>.mock-art{width:110px;flex:0 0 110px;aspect-ratio:16/10;padding:0;overflow:hidden}
 .selected-poster-preview>.mock-art .mock-phone{min-width:0}
 @media(max-width:560px){.mock-site-nav span{font-size:4px}.mock-site-nav b{font-size:6px}.mock-site-nav em{font-size:4px}.mock-site-hero strong{font-size:10px}}
+
+.canva-inspiration-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.canva-inspiration-grid .card{display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.canva-inspiration-grid .card .btn{margin-top:auto}
+@media(max-width:760px){.canva-inspiration-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.canva-inspiration-grid{grid-template-columns:1fr}}
