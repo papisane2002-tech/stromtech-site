@@ -200,7 +200,7 @@
     var session = null, tab = "home";
     var pendingQuote = null, authNote = document.getElementById("sc-auth-note");
     var convs = [], conv = null, startNew = false, ui = {}, timer = null, tick = 0;
-    var accBtn = null;
+    var accBtn = null, studioBtn = null, navGroup = null, navCta = null;
 
     function el(tag, cls, text) {
       var e = document.createElement(tag);
@@ -518,6 +518,11 @@
         accBtn.classList.toggle("sc-admin", inn && isAdmin());
       }
       if (inn && isAdmin()) fab.textContent = "🛠️ Messages clients";
+      if (navGroup && navCta) {
+        if (isAdmin()) {
+          if (!studioBtn) { studioBtn = el("a", "sc-nav-btn sc-admin", "🎨 Studio Design"); studioBtn.id = "sc-studio-link"; studioBtn.href = "studio.html"; navGroup.insertBefore(studioBtn, navCta); }
+        } else if (studioBtn) { studioBtn.remove(); studioBtn = null; }
+      }
     }
 
     function setTab(t) {
@@ -794,6 +799,7 @@
       accBtn = el("button", "sc-nav-btn", "👤 Connexion");
       accBtn.type = "button";
       var grp = el("div", "sc-nav-grp");
+      navGroup = grp; navCta = cta;
       nav.insertBefore(grp, cta);
       grp.append(accBtn, cta);
       accBtn.onclick = function () { session ? openSpace("home") : openAuth("login"); };
