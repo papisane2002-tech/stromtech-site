@@ -69,7 +69,7 @@
       if (!field) return;
       field.value = button.getAttribute("data-service-model");
       var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
-      var art = button.closest(".service-model-card").querySelector(".service-model-art");
+      var art = button.closest(".service-model-card").querySelector(".service-model-art, .service-model-art-img");
       if (preview && art) { var details = title ? title.parentElement : null; preview.replaceChildren(art.cloneNode(true)); if (details) preview.appendChild(details); }
       if (title) title.textContent = field.value;
       if (help) help.textContent = "Ce modèle sera indiqué dans ta demande Stromtech.";
