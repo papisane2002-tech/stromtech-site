@@ -178,6 +178,43 @@
     if (preview) { var empty = preview.querySelector(".selected-poster-empty"); if (empty) empty.textContent = "🌐"; }
   })();
 
+  /* Galerie Web intégrée : aperçu multipages dans une fenêtre Stromtech. */
+  (function installWebTemplateGallery(){
+    var gallery=document.getElementById("galerie-modeles-web");
+    if(!gallery)return;
+    var filters=gallery.querySelectorAll("[data-web-filter]");
+    filters.forEach(function(btn){btn.addEventListener("click",function(){
+      filters.forEach(function(x){x.classList.toggle("active",x===btn);});
+      var key=btn.getAttribute("data-web-filter");
+      gallery.querySelectorAll(".web-gallery-category").forEach(function(section){section.hidden=key!=="all"&&section.getAttribute("data-web-category")!==key;});
+    });});
+    var modal=document.createElement("div");
+    modal.className="web-template-preview";modal.hidden=true;
+    modal.innerHTML='<div class="web-template-preview-panel" role="dialog" aria-modal="true" aria-label="Aperçu du modèle"><header><div><span class="tag">Aperçu interactif</span><h2 class="web-preview-title"></h2><p>Navigue dans le modèle comme sur un vrai site. Tu restes sur Stromtech.</p></div><button type="button" class="web-preview-close" aria-label="Fermer">×</button></header><iframe title="Aperçu du site modèle" loading="lazy"></iframe><footer><span>Les liens et pages de démonstration sont consultables dans cet aperçu.</span><button type="button" class="btn primary web-preview-choose">Choisir ce modèle</button></footer></div>';
+    document.body.appendChild(modal);
+    var frame=modal.querySelector("iframe"),title=modal.querySelector(".web-preview-title"),chosen="";
+    function close(){modal.hidden=true;document.body.classList.remove("web-preview-open");frame.src="about:blank";}
+    modal.querySelector(".web-preview-close").addEventListener("click",close);
+    modal.addEventListener("click",function(e){if(e.target===modal)close();});
+    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)close();});
+    gallery.addEventListener("click",function(e){
+      var btn=e.target.closest("[data-web-inspect]");if(!btn)return;
+      chosen=btn.getAttribute("data-preview-title");
+      title.textContent=chosen;frame.src=btn.getAttribute("data-preview-url");
+      modal.hidden=false;document.body.classList.add("web-preview-open");
+    });
+    modal.querySelector(".web-preview-choose").addEventListener("click",function(){
+      var field=document.getElementById("posterModel");
+      if(field){var option=Array.prototype.find.call(field.options,function(o){return o.value===chosen;});if(!option){option=document.createElement("option");option.value=chosen;option.textContent=chosen;field.appendChild(option);}field.value=chosen;
+        var n=document.getElementById("selectedPosterName"),h=document.getElementById("selectedPosterHelp");
+        if(n)n.textContent=chosen;if(h)h.textContent="Ce modèle de site Web sera joint à ta demande Stromtech.";
+        var p=document.getElementById("selectedPosterPreview");if(p){p.replaceChildren();var b=document.createElement("div");b.className="selected-poster-empty";b.textContent="🌐";p.appendChild(b);var d=document.createElement("div");var strong=document.createElement("strong");strong.textContent=chosen;var para=document.createElement("p");para.textContent="Modèle choisi dans la galerie Web.";d.append(strong,para);p.appendChild(d);}
+        Draft.save({type:reqType});
+      }
+      close();var form=document.getElementById("demande");if(form)form.scrollIntoView({behavior:"smooth"});
+    });
+  })();
+
   installModelInspector();
 
   quote.addEventListener("submit", async function (e) {
