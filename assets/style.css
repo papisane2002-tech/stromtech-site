@@ -397,3 +397,26 @@ body.model-inspector-open{overflow:hidden}
  .inspector-app-page{min-height:430px}
  .inspector-content-grid{grid-template-columns:1fr 1fr}
 }
+
+/* Galerie Web Stromtech : cartes intégrées et aperçu sans quitter le site */
+.web-template-gallery{padding:34px 0 64px}.web-template-gallery .section-head{max-width:850px}
+.web-gallery-filters{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 34px}
+.web-gallery-filters button{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:10px 15px;border-radius:999px;cursor:pointer;font:inherit;font-size:.88rem}
+.web-gallery-filters button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.web-gallery-category{margin:34px 0}.web-gallery-category[hidden]{display:none}
+.web-gallery-category>h3{font-size:1.5rem;margin:0 0 16px}
+.web-template-card{overflow:hidden}.web-template-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:var(--line)}
+.web-template-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.web-template-actions .btn{flex:1;min-width:125px;justify-content:center;font-size:.88rem;padding:10px}
+.web-template-preview{position:fixed;inset:0;z-index:10000;background:#07111ddd;display:grid;place-items:center;padding:16px}
+.web-template-preview[hidden]{display:none}
+.web-template-preview-panel{width:min(1180px,100%);height:min(92vh,900px);background:var(--bg,#fff);color:var(--txt,#17202b);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px #0008}
+.web-template-preview-panel>header,.web-template-preview-panel>footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;border-bottom:1px solid var(--line,#ddd)}
+.web-template-preview-panel>header h2{margin:2px 0;font-size:1.25rem}.web-template-preview-panel>header p{margin:0;font-size:.82rem}
+.web-template-preview-panel>header .tag{font-size:.7rem}
+.web-template-preview-panel iframe{width:100%;flex:1;border:0;background:white}
+.web-template-preview-panel>footer{border-top:1px solid var(--line,#ddd);border-bottom:0;font-size:.8rem}
+.web-preview-close{border:0;background:var(--panel,#eee);color:inherit;border-radius:50%;width:42px;height:42px;font-size:1.8rem;cursor:pointer;flex:none}
+body.web-preview-open{overflow:hidden}
+@media(max-width:760px){.web-template-gallery{padding:24px 0}.service-model-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.web-template-card{padding:10px}.web-template-actions{flex-direction:column}.web-template-preview{padding:6px}.web-template-preview-panel{height:96vh;border-radius:14px}.web-template-preview-panel>header,.web-template-preview-panel>footer{padding:10px;gap:8px}.web-template-preview-panel>footer span{display:none}}
+@media(max-width:480px){.service-model-grid{grid-template-columns:1fr}.web-gallery-filters{gap:6px}.web-gallery-filters button{font-size:.78rem;padding:8px 11px}}
