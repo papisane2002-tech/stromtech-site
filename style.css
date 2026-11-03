@@ -1331,3 +1331,9 @@ body:has(.studio-main) .studio-stage .pv-grid4{
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Calques : ligne compacte qui ne déborde plus */
+.pc-layer{display:grid;grid-template-columns:minmax(0,1fr) repeat(4,32px);gap:4px;align-items:center}
+.pc-layer .pc-btn{padding:7px 0;text-align:center;min-width:0}
+.pc-layer .pc-layer-name{padding:7px 10px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-say{color:#087f6b;font-weight:700}

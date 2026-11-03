@@ -63,11 +63,17 @@
       var gallery = $("modeles"); if (gallery) gallery.scrollIntoView({ behavior: "smooth" });
     });
   });
+  /* Choisit un modèle dans le menu, et l'ajoute s'il n'existe pas encore (sinon le choix était perdu). */
+  function setModel(field, value) {
+    var o = Array.prototype.find.call(field.options, function (x) { return x.value === value || x.textContent === value; });
+    if (!o) { o = document.createElement("option"); o.value = value; o.textContent = value; field.appendChild(o); }
+    field.value = o.value;
+  }
   document.querySelectorAll("[data-service-model]").forEach(function (button) {
     button.addEventListener("click", function () {
       var field = $("posterModel");
       if (!field) return;
-      field.value = button.getAttribute("data-service-model");
+      setModel(field, button.getAttribute("data-service-model"));
       var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
       var art = button.closest(".service-model-card").querySelector(".service-model-art, .service-model-art-img");
       if (preview && art) { var details = title ? title.parentElement : null; preview.replaceChildren(art.cloneNode(true)); if (details) preview.appendChild(details); }
@@ -81,7 +87,7 @@
     button.addEventListener("click", function () {
       var field = $("posterModel");
       if (field) {
-        field.value = button.getAttribute("data-poster-model");
+        setModel(field, button.getAttribute("data-poster-model"));
         var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
         var sample = button.closest(".poster-choice").querySelector(".poster-sample");
         if (preview && sample) { var details = title ? title.parentElement : null; preview.replaceChildren(sample.cloneNode(true)); if (details) preview.appendChild(details); }

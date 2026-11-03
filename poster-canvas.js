@@ -141,7 +141,7 @@
     var cv = ctx.state.canvas, p = ctx.panel, e = find(sel), g; p.textContent = "";
     g = h("div", "pc-grp"); g.appendChild(h("h4", "", e ? "Élément sélectionné" : "Élément sélectionné"));
     if (!e) { g.appendChild(h("p", "pc-hint", "Clique sur un élément de l’affiche pour le modifier, le déplacer ou le redimensionner avec la poignée d’angle.")); p.appendChild(g); return; }
-    if (e.k === "t") {
+    if (e.k === "t" && (e.tx || (!e.bg && !e.ac))) {
       var ta = h("textarea"); ta.rows = 3; ta.value = e.tx; ta.addEventListener("input", live(function () { e.tx = ta.value; })); ta.addEventListener("change", snap); g.appendChild(ta);
       var ff = h("select"); FONTS.forEach(function (f) { var o = h("option", "", f); o.value = f; o.style.fontFamily = "'" + f + "'"; ff.appendChild(o); }); ff.value = e.ff;
       ff.addEventListener("change", function () { e.ff = ff.value; commit(); }); g.appendChild(row("Police", ff));
@@ -174,8 +174,10 @@
     ac.appendChild(btn("Supprimer", function () { cv.els.splice(i, 1); sel = null; commit(); }, "danger"));
     g.appendChild(ac); p.appendChild(g);
   }
-  var curTab = "models";
-  function addEl(o) { var cv = ctx.state.canvas; o = Object.assign({ k: "t" }, o); sel = T(cv, Object.assign({ x: Math.round((cv.W - o.w) / 2), y: Math.round((cv.H - o.h) / 2) }, o)).id; commit(); }
+  var curTab = "models", HINT = "Clique sur un élément pour le modifier · Suppr pour l’effacer";
+  function say(t) { var m = document.getElementById("pcMsg"); if (!m) return; m.textContent = t; m.classList.add("pc-say"); clearTimeout(say.t); say.t = setTimeout(function () { m.textContent = HINT; m.classList.remove("pc-say"); }, 2800); }
+  function reveal() { var n = ctx.page.querySelector(".pc-el.is-sel"); if (n && n.scrollIntoView) n.scrollIntoView({ block: "center", inline: "nearest" }); }
+  function addEl(o) { var cv = ctx.state.canvas; o = Object.assign({ k: "t" }, o); sel = T(cv, Object.assign({ x: Math.round((cv.W - o.w) / 2), y: Math.round((cv.H - o.h) / 2) }, o)).id; commit(); reveal(); say("Élément ajouté au centre de l’affiche"); }
   function setTab(id) { curTab = id; var a = document.querySelector(".studio-tools"); if (a) a.dataset.pctab = id; [].forEach.call(document.querySelectorAll("#pcTabs button"), function (b) { b.setAttribute("aria-pressed", String(b.dataset.t === id)); }); }
   var SOL = ["#ffffff", "#f4eee5", "#fff4e0", "#ffd23f", "#f26b1d", "#d62839", "#ff2bd6", "#7a3cff", "#2340ff", "#00b4d8", "#087f6b", "#14301f", "#14161f", "#000000"];
   var GR = [["#ff6b6b", "#feca57"], ["#667eea", "#764ba2"], ["#00c6ff", "#0072ff"], ["#f857a6", "#ff5858"], ["#11998e", "#38ef7d"], ["#141e30", "#243b55"]];
@@ -201,11 +203,11 @@
     if (!cv.els.length) { host.appendChild(h("p", "pc-hint", "Aucun élément pour le moment. Ajoute un texte, une forme ou une image.")); return; }
     cv.els.slice().reverse().forEach(function (e) {
       var i = cv.els.indexOf(e), r = h("div", "pc-layer" + (e.id === sel ? " on" : ""));
-      r.appendChild(btn(e.k === "i" ? "▧ Image" : e.tx ? "T  " + e.tx.slice(0, 18) : "▰ Forme", function () { sel = e.id; paint(); panel(); }, "pc-layer-name"));
-      r.appendChild(btn("↑", function () { if (i < cv.els.length - 1) { cv.els.splice(i + 1, 0, cv.els.splice(i, 1)[0]); commit(); } }));
-      r.appendChild(btn("↓", function () { if (i > 0) { cv.els.splice(i - 1, 0, cv.els.splice(i, 1)[0]); commit(); } }));
-      r.appendChild(btn("⧉", function () { var c = Object.assign({}, e, { id: nid(cv), x: e.x + 16, y: e.y + 16 }); cv.els.push(c); sel = c.id; commit(); }));
-      r.appendChild(btn("✕", function () { cv.els.splice(i, 1); if (sel === e.id) sel = null; commit(); }, "danger"));
+      r.appendChild(btn(e.k === "i" ? "▧ Image" : e.tx ? "T  " + e.tx.slice(0, 18) : "▰ Forme", function () { sel = e.id; paint(); panel(); reveal(); }, "pc-layer-name"));
+      r.appendChild(btn("↑", function () { if (i < cv.els.length - 1) { cv.els.splice(i + 1, 0, cv.els.splice(i, 1)[0]); commit(); say("Calque monté"); } }));
+      r.appendChild(btn("↓", function () { if (i > 0) { cv.els.splice(i - 1, 0, cv.els.splice(i, 1)[0]); commit(); say("Calque descendu"); } }));
+      r.appendChild(btn("⧉", function () { var c = Object.assign({}, e, { id: nid(cv), x: e.x + 16, y: e.y + 16 }); cv.els.push(c); sel = c.id; commit(); reveal(); say("Élément dupliqué"); }));
+      r.appendChild(btn("✕", function () { cv.els.splice(i, 1); if (sel === e.id) sel = null; commit(); say("Élément supprimé"); }, "danger"));
       host.appendChild(r);
     });
   }
@@ -226,7 +228,7 @@
     g.appendChild(h("p", "pc-hint", "PNG, JPG ou WebP, 6 images maximum. Une fois posée, déplace-la, redimensionne-la et applique un filtre ou une bordure depuis le panneau de droite.")); aside.insertBefore(g, lay);
     g = h("div", "grp pc-g-bg"); g.appendChild(h("h3", "", "Fond de la page")); var body = h("div", "pc-bgbody"); body.id = "pcBgBody"; g.appendChild(body); aside.insertBefore(g, lay);
     var bar = h("div", "pc-bar"); bar.id = "pcBar"; bar.appendChild(btn("↶ Annuler", function () { go(-1); })); bar.appendChild(btn("↷ Rétablir", function () { go(1); })); bar.appendChild(btn("🎨 Fond", function () { setTab("bg"); }));
-    bar.appendChild(h("span", "pc-hint", "Clique sur un élément pour le modifier · Suppr pour l’effacer"));
+    var hint = h("span", "pc-hint", HINT); hint.id = "pcMsg"; bar.appendChild(hint);
     var st = document.querySelector(".studio-stage"); st.insertBefore(bar, st.querySelector(".studio-stagebar").nextSibling);
   }
   function enable(on) {
