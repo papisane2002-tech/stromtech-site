@@ -59,7 +59,7 @@
         card.hidden = category !== "all" && card.getAttribute("data-service-category") !== category;
       });
       var hint = $("service-gallery-hint");
-      if (hint) hint.textContent = "Modèles proposés pour : " + (serviceAudienceLabels[category] || category) + ". Choisis celui qui correspond à ton projet.";
+      if (hint) hint.textContent = category === "all" ? "Tous les modèles disponibles. Ouvre un aperçu pour parcourir les écrans, puis choisis celui qui correspond à ton projet." : "Modèles proposés pour : " + (serviceAudienceLabels[category] || category) + ". Choisis celui qui correspond à ton projet.";
       var gallery = $("modeles"); if (gallery) gallery.scrollIntoView({ behavior: "smooth" });
     });
   });
