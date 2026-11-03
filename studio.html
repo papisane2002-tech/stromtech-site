@@ -11,6 +11,29 @@
 <link rel="stylesheet" href="style.css">
 <style>
 .studio-main[hidden]{display:none!important}
+.studio-public[hidden]{display:none!important}
+.studio-public{max-width:1180px;margin:42px auto 80px;padding:0 22px;color:#f5f7ff}
+.studio-public-hero{text-align:center;max-width:760px;margin:0 auto 30px}
+.studio-public-hero h1{font-size:clamp(2.2rem,5vw,3.8rem);margin:12px 0}
+.studio-public-hero p{color:#b8c2d9;line-height:1.7}
+.studio-public-tabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:28px 0}
+.studio-public-tabs button{border:1px solid #ffffff25;border-radius:999px;padding:11px 20px;background:#141d32;color:#eaf0ff;font:inherit;cursor:pointer}
+.studio-public-tabs button.active{background:#087f6b;border-color:#38d6b0;color:white}
+.studio-public-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.studio-public-card{border:1px solid #ffffff20;border-radius:18px;padding:20px;background:#141d32;display:flex;flex-direction:column;gap:10px;min-height:190px}
+.studio-public-card.selected{outline:2px solid #38d6b0;background:#18283a}
+.studio-public-card .public-card-type{font-size:.7rem;letter-spacing:.14em;color:#38d6b0;font-weight:800}
+.studio-public-card h3{margin:0;font-size:1.2rem}
+.studio-public-card p{margin:0;color:#b8c2d9;line-height:1.55;flex:1}
+.studio-public-card button{border:1px solid #ffffff35;border-radius:10px;padding:10px;background:transparent;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.studio-public-card.selected button{background:#087f6b;border-color:#087f6b}
+.studio-public-selection{margin-top:24px;border:1px solid #38d6b055;background:#102b2a;border-radius:18px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.studio-public-selection span{font-size:.7rem;letter-spacing:.14em;color:#38d6b0;font-weight:800}
+.studio-public-selection strong{display:block;font-size:1.15rem;margin:6px 0}
+.studio-public-selection p,.studio-public-note{color:#b8c2d9;margin:0}
+.studio-public-note{text-align:center;margin:18px auto;max-width:800px;line-height:1.6}
+@media(max-width:760px){.studio-public-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.studio-public-selection{align-items:flex-start;flex-direction:column}}
+@media(max-width:480px){.studio-public{padding:0 14px}.studio-public-grid{grid-template-columns:1fr}.studio-public-card{min-height:160px}.studio-public-selection .btn{width:100%;text-align:center}}
 .studio-access[hidden]{display:none!important}
 .studio-access{min-height:calc(100vh - 90px);display:grid;place-items:center;padding:32px 18px}
 .studio-access-card{width:min(560px,100%);padding:36px;border:1px solid #ffffff22;border-radius:24px;background:#141d32;text-align:center;box-shadow:0 24px 80px #0005}
@@ -31,14 +54,24 @@
   <div class="bar"><button class="btn btn-line theme-toggle" id="studioThemeToggle" type="button" aria-pressed="false">☾ Thème sombre</button><a class="btn btn-line" href="espace.html">Mon espace</a></div>
  </div>
 </header>
-<section class="studio-access" id="studioAccessGate" role="status">
- <div class="studio-access-card">
-  <span class="studio-access-mark">STROMTECH · ÉQUIPE</span>
-  <h1>Studio Design réservé à l’équipe</h1>
-  <p>L’éditeur complet est un outil de production interne. Les clients peuvent choisir un style et commander leur création depuis nos pages de services.</p>
-  <a class="btn btn-blue" href="connexion.html?next=studio.html">Connexion équipe Stromtech</a>
-  <a class="studio-access-home" href="index.html">Retour au site public</a>
+<section class="studio-public" id="studioPublicCatalog">
+ <div class="studio-public-hero">
+  <span class="studio-access-mark">STROMTECH · STUDIO DESIGN</span>
+  <h1>Choisis ton modèle</h1>
+  <p>Explore les styles proposés par Stromtech et sélectionne celui qui correspond à ton projet. La personnalisation et la construction sont réalisées par notre équipe.</p>
  </div>
+ <div class="studio-public-tabs" role="group" aria-label="Catégories de modèles">
+  <button type="button" class="active" data-public-service="site">Sites Web</button>
+  <button type="button" data-public-service="app">Applications</button>
+  <button type="button" data-public-service="cv">CV</button>
+  <button type="button" data-public-service="poster">Affiches</button>
+ </div>
+ <div class="studio-public-grid" id="studioPublicGrid"></div>
+ <div class="studio-public-selection" id="studioPublicSelection" aria-live="polite">
+  <div><span>MODÈLE SÉLECTIONNÉ</span><strong id="studioPublicSelectedName">Aucun modèle sélectionné</strong><p id="studioPublicSelectedHint">Choisis un modèle dans la galerie pour le retenir.</p></div>
+  <a class="btn btn-blue" id="studioPublicRequest" href="services.html">Demander ce modèle</a>
+ </div>
+ <p class="studio-public-note">Tu peux choisir un modèle ici. La création, les modifications et l’export restent réservés au personnel et aux administrateurs Stromtech.</p>
 </section>
 <main class="container studio-main" hidden>
  <div class="studio-head">
@@ -236,21 +269,50 @@
 <script src="config.js"></script>
 <script src="app.js"></script>
 <script src="poster-canvas.js"></script>
-<script src="studio.js"></script>
+<script src="studio.js"></script><script>
+(function(){
+ var data={
+  site:[["vitrine","Site vitrine","Présenter une entreprise, un commerce ou un service."],["portfolio","Portfolio","Mettre en avant des réalisations et des projets."],["boutique","Boutique en ligne","Présenter un catalogue de produits."],["landing","Page de conversion","Présenter une offre avec un parcours direct."],["evenement","Événement","Communiquer autour d’un événement ou d’une activité."]],
+  app:[["commandes","Commandes","Catalogue, panier et suivi des commandes."],["rendezvous","Rendez-vous","Réservation de créneaux et échanges."],["gestion","Gestion","Suivi des produits, du stock et des clients."],["livraison","Livraison","Commandes et suivi de livraison."],["education","Éducation","Contenus et échanges pour la formation."]],
+  cv:[["classique","CV classique","Présentation sobre et professionnelle."],["moderne","CV moderne","Mise en page contemporaine avec colonne latérale."],["minimal","CV minimaliste","Présentation épurée et facile à lire."]],
+  poster:[["evenement","Soirée festive","Un visuel dynamique pour une fête ou une soirée."],["concert","Concert néon","Un style lumineux pour un concert ou un spectacle."],["ouverture","Grande ouverture","Annoncer l’ouverture d’un commerce."],["sport","Match / Sport","Un visuel pour tournoi et rencontre sportive."],["promotion","Promotion","Mettre en avant une offre commerciale."],["sale","Vente flash","Communiquer sur une offre limitée."],["restaurant","Menu restaurant","Présenter un menu ou une offre culinaire."],["elegant","Mariage élégant","Une invitation raffinée pour une cérémonie."],["minimal","Affiche minimaliste","Un style simple et épuré."],["formation","Conférence / Formation","Présenter un atelier, une conférence ou une formation."]]
+ };
+ var labels={site:"SITE WEB",app:"APPLICATION",cv:"CV",poster:"AFFICHE"};
+ var grid=document.getElementById("studioPublicGrid"),selected=document.getElementById("studioPublicSelectedName"),hint=document.getElementById("studioPublicSelectedHint"),link=document.getElementById("studioPublicRequest");
+ var active="site",choice=null;
+ function render(){
+  grid.innerHTML="";
+  data[active].forEach(function(item){
+   var card=document.createElement("article");card.className="studio-public-card"+(choice&&choice.type===active&&choice.id===item[0]?" selected":"");
+   var tag=document.createElement("span");tag.className="public-card-type";tag.textContent=labels[active];
+   var title=document.createElement("h3");title.textContent=item[1];
+   var desc=document.createElement("p");desc.textContent=item[2];
+   var button=document.createElement("button");button.type="button";button.textContent=choice&&choice.type===active&&choice.id===item[0]?"Modèle choisi ✓":"Choisir ce modèle";
+   button.addEventListener("click",function(){choice={type:active,id:item[0],name:item[1]};selected.textContent=item[1];hint.textContent="Modèle retenu : "+item[1]+". Indique ce nom dans ta demande à Stromtech.";link.href=({site:"site-web.html",app:"applications.html",cv:"cv.html",poster:"affiches.html"})[active]+"#demande";render();});
+   card.appendChild(tag);card.appendChild(title);card.appendChild(desc);card.appendChild(button);grid.appendChild(card);
+  });
+ }
+ document.querySelectorAll("[data-public-service]").forEach(function(b){b.addEventListener("click",function(){active=b.dataset.publicService;document.querySelectorAll("[data-public-service]").forEach(function(x){x.classList.toggle("active",x===b);});render();});});
+ render();
+})();
+</script>
 <script src="assets/site-model-gallery.js"></script>
 <script>
 (function(){
-  var gate=document.getElementById("studioAccessGate");
+  var catalog=document.getElementById("studioPublicCatalog");
   var workspace=document.querySelector("main.studio-main");
   var adminId=window.STROMTECH&&window.STROMTECH.ADMIN_ID;
-  if(!window.sb||!adminId){gate.querySelector("p").textContent="La connexion sécurisée n’a pas pu être vérifiée. Recharge la page ou contacte Stromtech.";return;}
+  function canBuild(user){
+    if(!user)return false;
+    if(adminId&&user.id===adminId)return true;
+    var role=user.app_metadata&&String(user.app_metadata.role||"").toLowerCase();
+    return ["admin","staff","personnel"].indexOf(role)>=0;
+  }
+  if(!window.sb||!window.cfgOk)return;
   window.sb.auth.getSession().then(function(result){
     var user=result.data&&result.data.session&&result.data.session.user;
-    if(user&&user.id===adminId){gate.hidden=true;workspace.hidden=false;}
-    else if(user){gate.querySelector("h1").textContent="Accès réservé à l’équipe Stromtech";gate.querySelector("p").textContent="Ce compte client ne peut pas ouvrir l’éditeur interne. Tu peux retourner aux services pour choisir un style et passer commande.";}
-  }).catch(function(){
-    gate.querySelector("p").textContent="Impossible de vérifier la connexion. Recharge la page puis réessaie.";
-  });
+    if(canBuild(user)){catalog.hidden=true;workspace.hidden=false;}
+  }).catch(function(){});
 })();
 </script>
 <script>
