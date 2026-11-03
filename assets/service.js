@@ -157,6 +157,7 @@
       open(card,type);
     });
     document.querySelectorAll(".service-model-card, .poster-choice").forEach(function(card){
+      if (card.classList.contains("web-template-card")) return;
       var actions=card.querySelector(".btn");if(!actions)return;
       var b=document.createElement("button");b.type="button";b.className="btn secondary inspect-model-btn";b.setAttribute("data-inspect-model","");b.textContent="Voir le modèle";
       actions.parentNode.insertBefore(b,actions);
