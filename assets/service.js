@@ -162,6 +162,22 @@
       actions.parentNode.insertBefore(b,actions);
     });
   }
+  /* Préselection d'un modèle provenant de la galerie multipages. */
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var chosen = params.get("modele");
+    var field = $("posterModel");
+    if (!chosen || !field) return;
+    var option = Array.prototype.find.call(field.options, function (o) { return o.value === chosen || o.textContent === chosen; });
+    if (!option) { option = document.createElement("option"); option.value = chosen; option.textContent = chosen; field.appendChild(option); }
+    field.value = option.value;
+    var title = $("selectedPosterName"), help = $("selectedPosterHelp");
+    if (title) title.textContent = chosen;
+    if (help) help.textContent = "Modèle choisi depuis la galerie des 24 sites Web. Il sera transmis avec ta demande.";
+    var preview = $("selectedPosterPreview");
+    if (preview) { var empty = preview.querySelector(".selected-poster-empty"); if (empty) empty.textContent = "🌐"; }
+  })();
+
   installModelInspector();
 
   quote.addEventListener("submit", async function (e) {
