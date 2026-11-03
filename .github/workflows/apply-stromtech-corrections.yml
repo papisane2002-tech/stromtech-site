@@ -1,0 +1,71 @@
+name: Apply Stromtech corrections
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "stromtech-corrections.zip"
+
+permissions:
+  contents: write
+
+jobs:
+  apply-corrections:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Apply approved site files from archive
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          archive = Path("stromtech-corrections.zip")
+          allowed = {
+              "admin.html",
+              "affiches.html",
+              "applications.html",
+              "assets/service.js",
+              "connexion.html",
+              "contact.html",
+              "cv.html",
+              "espace.html",
+              "favicon.svg",
+              "index.html",
+              "og-image.png",
+              "poster-canvas.js",
+              "services.html",
+              "site-web.html",
+              "studio.html",
+              "style.css",
+          }
+
+          with ZipFile(archive) as zf:
+              present = set(zf.namelist())
+              missing = allowed - present
+              if missing:
+                  raise SystemExit("Archive incomplète : " + ", ".join(sorted(missing)))
+              for name in sorted(allowed):
+                  target = Path(name)
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(zf.read(name))
+
+          archive.unlink()
+          PY
+
+      - name: Commit and push corrections
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Aucune modification à intégrer."
+            exit 0
+          fi
+          git commit -m "Intégrer les corrections Stromtech"
+          git push origin main
