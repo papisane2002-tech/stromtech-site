@@ -1122,23 +1122,40 @@
     location.href = "espace.html?open=" + encodeURIComponent(c.data.id);
   }
 
-  var d = new URLSearchParams(location.search).get("d"), shared = false, raw = null;
-  if (d) { try { raw = dec(d); state = clean(raw); shared = true; } catch (e) { state = null; raw = null; } }
-  if (!state) { raw = null; state = defaults("site"); }
-  if (shared) initPages(raw); else { pages = []; activePageId = null; }
-  if (shared) { $("sharedNote").hidden = false; }
+  function initEditor() {
+    var d = new URLSearchParams(location.search).get("d"), shared = false, raw = null;
+    if (d) { try { raw = dec(d); state = clean(raw); shared = true; } catch (e) { state = null; raw = null; } }
+    if (!state) { raw = null; state = defaults("site"); }
+    if (shared) initPages(raw); else { pages = []; activePageId = null; }
+    if (shared) { $("sharedNote").hidden = false; }
 
-  bind();
-  document.querySelectorAll("[data-studio-service]").forEach(function (button) {
-    button.addEventListener("click", function () { openStudioService(button.dataset.studioService); });
-  });
-  $("studioBackHub").addEventListener("click", showStudioHub);
-  if (shared) {
-    $("studioServiceHub").hidden = true; $("controls").hidden = false; $("studioBackHub").hidden = false;
-    setStudioWorkspace(state.type);
-    buildControls(); render(); renderPages();
-  } else {
-    $("studioServiceHub").hidden = false; $("controls").hidden = true; $("studioBackHub").hidden = true;
+    bind();
+    document.querySelectorAll("[data-studio-service]").forEach(function (button) {
+      button.addEventListener("click", function () { openStudioService(button.dataset.studioService); });
+    });
+    $("studioBackHub").addEventListener("click", showStudioHub);
+    if (shared) {
+      $("studioServiceHub").hidden = true; $("controls").hidden = false; $("studioBackHub").hidden = false;
+      setStudioWorkspace(state.type);
+      buildControls(); render(); renderPages();
+    } else {
+      $("studioServiceHub").hidden = false; $("controls").hidden = true; $("studioBackHub").hidden = true;
+    }
+    if (window.cfgOk) sb.auth.getSession().then(function (r) { var u = r.data.session && r.data.session.user; if (u && u.id === STROMTECH.ADMIN_ID) { $("sendBtn").hidden = true; } });
   }
-  if (window.cfgOk) sb.auth.getSession().then(function (r) { var u = r.data.session && r.data.session.user; if (u && u.id === STROMTECH.ADMIN_ID) { $("sendBtn").hidden = true; } });
+
+  function canBuild(user) {
+    if (!user) return false;
+    var adminId = window.STROMTECH && window.STROMTECH.ADMIN_ID;
+    if (adminId && user.id === adminId) return true;
+    var role = user.app_metadata && String(user.app_metadata.role || "").toLowerCase();
+    return ["admin", "staff", "personnel"].indexOf(role) >= 0;
+  }
+
+  if (window.cfgOk && window.sb) {
+    sb.auth.getSession().then(function (result) {
+      var user = result.data && result.data.session && result.data.session.user;
+      if (canBuild(user)) initEditor();
+    }).catch(function () {});
+  }
 })();
