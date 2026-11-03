@@ -420,3 +420,26 @@ body.model-inspector-open{overflow:hidden}
 body.web-preview-open{overflow:hidden}
 @media(max-width:760px){.web-template-gallery{padding:24px 0}.service-model-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.web-template-card{padding:10px}.web-template-actions{flex-direction:column}.web-template-preview{padding:6px}.web-template-preview-panel{height:96vh;border-radius:14px}.web-template-preview-panel>header,.web-template-preview-panel>footer{padding:10px;gap:8px}.web-template-preview-panel>footer span{display:none}}
 @media(max-width:480px){.service-model-grid{grid-template-columns:1fr}.web-gallery-filters{gap:6px}.web-gallery-filters button{font-size:.78rem;padding:8px 11px}}
+
+/* Galerie des applications : aperçus équilibrés et smartphone lisible */
+.gallery-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 20px;color:var(--muted);font-size:.88rem}
+.gallery-filter{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:9px 15px;border-radius:999px;font:700 .88rem system-ui;cursor:pointer}
+.gallery-filter.active,.gallery-filter:hover{background:var(--a);border-color:var(--a);color:#061b1a}
+.service-model-card[hidden]{display:none!important}
+.service-model-card.app-template-card .service-model-art-img{width:100%;height:235px;object-fit:contain;padding:12px;background:linear-gradient(145deg,#17243b,#202f4b);border-radius:14px}
+.service-model-card.app-template-card{min-width:0}
+.model-inspector-screen{min-height:390px}
+.inspector-app-page{width:min(100%,340px);min-height:500px;max-height:65vh;overflow:auto;border-width:8px;border-radius:30px}
+.inspector-app-page:before{content:"";display:block;width:62px;height:5px;border-radius:99px;background:#8290a8;margin:7px auto 10px}
+.inspector-app-page .inspector-content-grid{grid-template-columns:1fr 1fr}
+.inspector-app-page .inspector-content-card{background:#f8fafc}
+@media(max-width:760px){
+ .gallery-tools{align-items:flex-start;flex-direction:column}
+ .service-model-card.app-template-card .service-model-art-img{height:205px}
+ .inspector-app-page{width:min(100%,290px);min-height:450px;max-height:58vh}
+ .model-inspector-screen{min-height:320px}
+}
+@media(max-width:420px){
+ .service-model-card.app-template-card .service-model-art-img{height:190px}
+ .inspector-app-page{width:min(100%,260px)}
+}
