@@ -37,7 +37,7 @@ conversion:{bg:'#f5efe7',paper:'#fffaf3',ink:'#33251f',muted:'#796b60',accent:'#
 magazine:{bg:'#f1eee7',paper:'#fffdf8',ink:'#25231f',muted:'#777168',accent:'#8d3d35',font:'Georgia,serif'}
 }[family];
 const page=(location.pathname.split('/').pop()||'index.html').replace('.html','');
-const pages={index:['Accueil','catalogue','detail','about','contact'],catalogue:['Catalogue','index','detail','about','contact'],detail:['Projet phare','index','catalogue','about','contact'],about:['À propos','index','catalogue','contact'],contact:['Contact','index','catalogue','about']};
+const pages={index:['index','catalogue','detail','about','contact'],catalogue:['Catalogue','index','detail','about','contact'],detail:['Projet phare','index','catalogue','about','contact'],about:['À propos','index','catalogue','contact'],contact:['Contact','index','catalogue','about']};
 const labels={index:'Accueil',catalogue:kind==='portfolio'?'Portfolio':kind==='architecture'?'Projets':kind==='restaurant'?'Carte & chambres':kind==='boutique'?'Boutique':kind==='education'?'Programmes':'Expertises',detail:kind==='portfolio'?'Étude de cas':'À la une',about:'À propos',contact:'Contact'};
 const images=['photo-1600607687939-ce8a6c25118c','photo-1497366754035-f200968a6e72','photo-1517248135467-4c7edcad34c4','photo-1498050108023-c5249f4df085'];
 const img=(id,w=1000)=>'https://images.unsplash.com/'+id+'?auto=format&fit=crop&w='+w+'&q=85';
