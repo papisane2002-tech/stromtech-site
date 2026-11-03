@@ -56,7 +56,7 @@
     button.addEventListener("click", function () {
       var category = button.getAttribute("data-service-audience");
       document.querySelectorAll(".service-model-card").forEach(function (card) {
-        card.hidden = card.getAttribute("data-service-category") !== category;
+        card.hidden = category !== "all" && card.getAttribute("data-service-category") !== category;
       });
       var hint = $("service-gallery-hint");
       if (hint) hint.textContent = "Modèles proposés pour : " + (serviceAudienceLabels[category] || category) + ". Choisis celui qui correspond à ton projet.";
