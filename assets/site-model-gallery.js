@@ -35,7 +35,7 @@ function open(key,card){
  var note=document.createElement("p");note.className="wm-note";note.textContent="Aperçus visuels des différentes pages. Le contenu et les textes seront personnalisables dans le Studio.";
  var actions=document.createElement("div");actions.className="wm-actions";
  var use=document.createElement("button");use.type="button";use.className="wm-use";use.textContent="Utiliser ce modèle";
- use.addEventListener("click",function(){overlay.remove();var target=card.querySelector(".tpl");if(target)target.click();});
+ use.addEventListener("click",function(){overlay.remove();card.click();});
  actions.appendChild(use);dialog.append(head,layout,note,actions);overlay.appendChild(dialog);document.body.appendChild(overlay);
  overlay.addEventListener("click",function(e){if(e.target===overlay)overlay.remove();});
  document.addEventListener("keydown",function esc(e){if(e.key==="Escape"&&document.body.contains(overlay)){overlay.remove();document.removeEventListener("keydown",esc);}});
@@ -43,7 +43,7 @@ function open(key,card){
 }
 function enhance(){
  var host=document.getElementById("tplList");if(!host||document.body.getAttribute("data-studio-service")!=="site")return;
- Array.from(host.querySelectorAll(".tpl")).forEach(function(card){if(card.dataset.webPreviewReady)return;var key=findTemplateKey(card);if(!catalog[key])return;card.dataset.webPreviewReady="1";var b=document.createElement("button");b.type="button";b.className="web-model-preview";b.textContent="Voir les "+catalog[key].pages.length+" pages du modèle";b.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();open(key,card);});card.appendChild(b);});
+ Array.from(host.querySelectorAll(".tpl")).forEach(function(card){if(card.dataset.webPreviewReady)return;var key=findTemplateKey(card);if(!catalog[key])return;card.dataset.webPreviewReady="1";var b=document.createElement("div");b.setAttribute("role","button");b.setAttribute("tabindex","0");b.className="web-model-preview";b.textContent="Voir les "+catalog[key].pages.length+" pages du modèle";b.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();open(key,card);});b.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();open(key,card);}});card.appendChild(b);});
 }
 var root=document.getElementById("tplList");if(root)new MutationObserver(enhance).observe(root,{childList:true,subtree:true});
 document.addEventListener("click",function(e){if(e.target.closest('[data-studio-service="site"]'))setTimeout(enhance,80);});
