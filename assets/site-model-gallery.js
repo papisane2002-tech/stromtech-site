@@ -24,6 +24,8 @@ function open(key,card){
  head.append(h,close);
  var layout=document.createElement("div");layout.className="wm-layout";
  var screen=document.createElement("div");screen.className="wm-screen";
+ var browser=document.createElement("div");browser.className="wm-browser";for(var dot=0;dot<3;dot++)browser.appendChild(document.createElement("i"));
+ var sitebar=document.createElement("div");sitebar.className="wm-sitebar";var brand=document.createElement("span");brand.textContent="STUDIO / "+data.title.toUpperCase();var nav=document.createElement("small");nav.textContent="ACCUEIL   SERVICES   PROJETS   CONTACT";sitebar.append(brand,nav);
  var image=document.createElement("img");image.alt="Aperçu de la page "+data.pages[0][0];image.src=photo(data.pages[0][1]);
  var caption=document.createElement("div");caption.className="wm-caption";caption.textContent="Page 1 · "+data.pages[0][0];screen.append(browser,sitebar,image,caption);
  var thumbs=document.createElement("nav");thumbs.className="wm-thumbs";thumbs.setAttribute("aria-label","Pages du modèle");
