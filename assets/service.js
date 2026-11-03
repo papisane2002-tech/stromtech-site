@@ -121,6 +121,8 @@
         return;
       }
       var frame=document.createElement("div"); frame.className="inspector-page "+(currentType==="app"?"inspector-app-page":"inspector-site-page");
+      var sourceArt=currentCard.querySelector(".service-model-art-img");
+      if(sourceArt){var visual=document.createElement("div");visual.className="inspector-model-visual";var image=sourceArt.cloneNode(true);image.removeAttribute("loading");image.alt="Aperçu du modèle "+currentName;visual.appendChild(image);frame.appendChild(visual);}
       var brand=document.createElement("div"); brand.className="inspector-brand"; brand.textContent=currentName+" · "+page; frame.appendChild(brand);
       var hero=document.createElement("div"); hero.className="inspector-hero";
       var eyebrow=document.createElement("small"); eyebrow.textContent=index===0?"BIENVENUE":"DÉCOUVREZ NOTRE UNIVERS";
@@ -148,7 +150,16 @@
     function shut(){modal.hidden=true;document.body.classList.remove("model-inspector-open");}
     close.addEventListener("click",shut);
     modal.addEventListener("click",function(e){if(e.target===modal)shut();});
-    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)shut();});
+    document.addEventListener("keydown",function(e){
+      if(modal.hidden)return;
+      if(e.key==="Escape"){shut();return;}
+      if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+        var buttons=Array.from(tabs.querySelectorAll("button"));if(!buttons.length)return;
+        var active=buttons.findIndex(function(b){return b.classList.contains("active");});
+        var next=(active+(e.key==="ArrowRight"?1:-1)+buttons.length)%buttons.length;
+        buttons[next].click();buttons[next].focus();
+      }
+    });
     selected.addEventListener("click",function(){if(!currentCard)return;var choose=currentCard.querySelector("[data-service-model], [data-poster-model]");if(choose)choose.click();shut();});
     document.addEventListener("click",function(e){
       var button=e.target.closest("[data-inspect-model]");if(!button)return;
