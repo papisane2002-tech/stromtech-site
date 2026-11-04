@@ -23,7 +23,7 @@ jobs:
           from zipfile import ZipFile
           import shutil
 
-          archive = Path("stromtech-site-complet_v9.zip")
+          archive = Path("stromtech-site-complet_v10.zip")
           if not archive.is_file():
               raise SystemExit("Archive ZIP introuvable.")
           with ZipFile(archive) as z:
@@ -53,5 +53,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Remplacer le site par la version complète v9"
+          git commit -m "Remplacer le site par la version complète v10"
           git push origin version-complete-v9
