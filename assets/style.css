@@ -512,9 +512,6 @@ section{padding:60px 0}
 .model-inspector-devices button.on{border-color:var(--a);box-shadow:0 0 0 2px #38d6b033;color:var(--a)}
 .model-inspector-screen.dmstage{display:flex;align-items:center;justify-content:center;padding:22px 14px;min-height:0}
 .dm-frame{background:#fff;position:relative;overflow:hidden;box-shadow:0 22px 50px #0003;max-width:100%}
-.dm-frame.desktop{width:100%;max-width:900px;height:min(520px,60vh);border-radius:12px;display:flex;flex-direction:column;border:1px solid #0002}
-.dm-frame.phone{width:330px;height:min(560px,64vh);border:9px solid #141a26;border-radius:34px}
-.dm-frame.tablet{width:min(100%,820px);height:min(500px,58vh);border:11px solid #141a26;border-radius:24px}
 .dm-chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#eef1f5;border-bottom:1px solid #dde3ea;flex:0 0 auto}
 .dm-chrome i{width:9px;height:9px;border-radius:50%;background:#c9d0d9}
 .dm-chrome span{margin-left:10px;background:#fff;border-radius:6px;padding:3px 12px;font:11px system-ui;color:#5b6b7d;flex:1;max-width:340px}
@@ -679,7 +676,7 @@ section{padding:60px 0}
   .dm-kpis{grid-template-columns:1fr 1fr}.dm-kpis .dm-kpi:last-child{grid-column:1/3}
   .dm-main{padding:14px;padding-bottom:84px}
 }
-@media(max-width:700px){.dm-frame.phone{width:min(300px,100%)}.model-inspector-devices button{flex:1}}
+@media(max-width:700px){.model-inspector-devices button{flex:1}}
 .dm-app .dm-shell{display:flex;flex-direction:column;min-height:100%}
 .dm-app .dm-main{padding-bottom:14px;flex:1 0 auto}
 .dm-app .dm-bottom{position:sticky;bottom:0;margin-top:auto;flex:0 0 auto;z-index:3}
@@ -689,3 +686,27 @@ section{padding:60px 0}
 .dm-app.th-stock{--a:#12b5a0}.dm-app.th-booking{--bg:#fdf0f8;--a:#d6246e;--t:#3a1030;--m:#8b6580;--sb:#4a1038}.dm-app.th-crm{--bg:#f4f6fd;--a:#2f5bea;--sb:#16204a}.dm-app.th-food{--bg:#fff6e0;--a:#f59e0b;--t:#4a2509;--m:#8b6a45;--sb:#4a2509}
 .th-food .dm-btn,.th-food .dm-plus{color:#3a1d05}
 .dm-cover{max-width:100%;max-height:60vh;border-radius:12px;box-shadow:0 18px 44px #0003;display:block}.dm-prow span{white-space:nowrap}.dm-prow{flex-wrap:wrap}
+
+.dm-scale{position:relative;flex:0 0 auto}
+.dm-frame{position:absolute;left:0;top:0;max-width:none;box-sizing:border-box;display:flex;flex-direction:column}
+.dm-frame.desktop{border-radius:14px;border:1px solid #0002}
+.dm-frame.phone{border:11px solid #141a26;border-radius:46px}
+.dm-frame.tablet{border:15px solid #141a26;border-radius:30px}
+.dm-frame.phone::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:96px;height:20px;background:#141a26;border-radius:0 0 14px 14px;z-index:6}
+.dm-frame.phone .dm-screen{border-radius:34px}
+.dm-rotate{border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:10px;padding:8px 12px;font:700 .8rem inherit;cursor:pointer}
+.model-inspector-devices{flex-wrap:wrap}
+
+.dm-visual.med{background:linear-gradient(135deg,#0f9d8a,#2bb3c0)}.dm-visual.blue{background:linear-gradient(135deg,#1d4ed8,#38bdf8)}.dm-visual.mint{background:linear-gradient(135deg,#34d3b0,#5ec4f2)}
+.dm-cabinet-medical{--bg:#fff;--t:#0f3b3a;--m:#5c7a79;--a:#0f9d8a;--hb:#fff}
+.dm-site-de-clinique{--bg:#fff;--t:#10264f;--m:#5a6d8c;--a:#1d5fd8;--hb:#fff}
+.dm-centre-dentaire{--bg:#fbfffe;--t:#0e3b44;--m:#5b7f87;--a:#14b8a6;--hb:#fff}
+.dm-alert{background:#fee2e2;color:#991b1b;border-radius:12px;padding:12px 14px;font-size:.88rem}
+.dm-drop{text-align:center;border:2px dashed #0003;padding:24px 12px}
+.dm-app.th-med1{--bg:#eef7fd;--a:#2f80ed;--t:#10264f;--m:#5a6d8c;--sb:#12306b}
+.dm-app.th-med2{--bg:#effaf8;--a:#0f9d8a;--t:#0f3b3a;--m:#5c7a79;--sb:#0b3b38}
+.dm-app.th-med3{--bg:#eefaf1;--a:#10a35f;--t:#0d3b26;--m:#5b8068;--sb:#0d4a2d}
+.th-med2 .dm-crm{display:block}
+@container (min-width:620px){.th-med2 .dm-crm{display:grid;grid-template-columns:260px 1fr;gap:16px}.th-med2 .dm-detail{display:block}}
+
+.dmmode .model-inspector-subtitle{display:none}.dmmode .model-inspector-top h2{margin:6px 0 0;font-size:1.25rem}.dmmode .model-inspector-tabs{margin:10px 0 8px}.dmmode .model-inspector-bottom{margin-top:10px}
