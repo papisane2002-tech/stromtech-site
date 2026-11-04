@@ -314,6 +314,21 @@
       return b;
     }
 
+    function rqText(t) {
+      var d = el("div", "rq-text");
+      String(t).split(/(https?:\/\/\S+)/).forEach(function (p) {
+        var ok = false;
+        if (/^https?:\/\//.test(p)) { try { ok = new URL(p).origin === location.origin; } catch (_) {} }
+        if (ok) {
+          var a = document.createElement("a");
+          a.href = p; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Ouvrir la maquette";
+          a.style.cssText = "color:var(--a);font-weight:800;text-decoration:underline";
+          d.append(a);
+        } else d.append(document.createTextNode(p));
+      });
+      return d;
+    }
+
     function parseRequest(body) {
       var lines = String(body).split("\n");
       var first = lines[0].replace(/\uFE0F/g, "");
@@ -363,7 +378,7 @@
         if (o[r[1]]) rows.append(el("dt", null, r[0]), el("dd", null, o[r[1]]));
       });
       card.append(rows);
-      if (o.projet) card.append(el("div", "rq-lbl", o.kind === "contact" ? "Message" : "Projet"), el("div", "rq-text", o.projet));
+      if (o.projet) card.append(el("div", "rq-lbl", o.kind === "contact" ? "Message" : "Projet"), rqText(o.projet));
       return card;
     }
 

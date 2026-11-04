@@ -21,13 +21,32 @@ async function initMessaging(role) {
     $("emptyView").hidden = name !== "empty";
   }
 
-  function addText(node, text) {
+  function addLinks(node, text) {
     text.split(/(https?:\/\/\S+)/).forEach(function (part) {
       var ok = false;
       if (/^https?:\/\//.test(part)) { try { ok = new URL(part).origin === location.origin; } catch (e) {} }
       if (ok) { var a = document.createElement("a"); a.href = part; a.textContent = "Ouvrir la maquette"; a.target = "_blank"; a.rel = "noopener"; a.style.color = "inherit"; a.style.fontWeight = "700"; a.style.textDecoration = "underline"; node.appendChild(a); }
       else node.appendChild(document.createTextNode(part));
     });
+  }
+
+  function fileBtn(path, name) {
+    var b = document.createElement("button");
+    b.type = "button"; b.textContent = "📎 " + name; b.className = "btn btn-line"; b.style.cssText = "display:block;margin:4px 0;padding:6px 12px;font-size:.9rem";
+    b.addEventListener("click", async function () {
+      b.disabled = true;
+      var r = await sb.storage.from("project-files").createSignedUrl(path, 300);
+      b.disabled = false;
+      if (r.error || !r.data) { b.textContent = "⚠️ Fichier indisponible"; return; }
+      var a = document.createElement("a"); a.href = r.data.signedUrl; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
+    });
+    return b;
+  }
+  function addText(node, text) {
+    var buf = [];
+    function flush() { if (buf.length) { addLinks(node, buf.join("\n")); buf = []; } }
+    String(text).split("\n").forEach(function (l) { var m = /^\[\[file:(.+)\|(.+)\]\]$/.exec(l); if (m) { flush(); node.appendChild(fileBtn(m[1], m[2])); } else buf.push(l); });
+    flush();
   }
 
   async function loadThreads() {

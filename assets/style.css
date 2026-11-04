@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
 :root{--bg:#0b1020;--panel:#141d32;--txt:#f6f7ff;--muted:#b8c2d9;--a:#38d6b0;--line:#ffffff20}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 90% 0,#253363,transparent 30%),var(--bg);background-color:var(--bg);color:var(--txt);font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -398,48 +399,109 @@ body.model-inspector-open{overflow:hidden}
  .inspector-content-grid{grid-template-columns:1fr 1fr}
 }
 
-/* Galerie Web Stromtech : cartes intégrées et aperçu sans quitter le site */
-.web-template-gallery{padding:34px 0 64px}.web-template-gallery .section-head{max-width:850px}
-.web-gallery-filters{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 34px}
-.web-gallery-filters button{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:10px 15px;border-radius:999px;cursor:pointer;font:inherit;font-size:.88rem}
-.web-gallery-filters button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.web-gallery-category{margin:34px 0}.web-gallery-category[hidden]{display:none}
-.web-gallery-category>h3{font-size:1.5rem;margin:0 0 16px}
-.web-template-card{overflow:hidden}.web-template-thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:12px;background:var(--line)}
-.web-template-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
-.web-template-actions .btn{flex:1;min-width:125px;justify-content:center;font-size:.88rem;padding:10px}
-.web-template-preview{position:fixed;inset:0;z-index:10000;background:#07111ddd;display:grid;place-items:center;padding:16px}
-.web-template-preview[hidden]{display:none}
-.web-template-preview-panel{width:min(1180px,100%);height:min(92vh,900px);background:var(--bg,#fff);color:var(--txt,#17202b);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px #0008}
-.web-template-preview-panel>header,.web-template-preview-panel>footer{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;border-bottom:1px solid var(--line,#ddd)}
-.web-template-preview-panel>header h2{margin:2px 0;font-size:1.25rem}.web-template-preview-panel>header p{margin:0;font-size:.82rem}
-.web-template-preview-panel>header .tag{font-size:.7rem}
-.web-template-preview-panel iframe{width:100%;flex:1;border:0;background:white}
-.web-template-preview-panel>footer{border-top:1px solid var(--line,#ddd);border-bottom:0;font-size:.8rem}
-.web-preview-close{border:0;background:var(--panel,#eee);color:inherit;border-radius:50%;width:42px;height:42px;font-size:1.8rem;cursor:pointer;flex:none}
-body.web-preview-open{overflow:hidden}
-@media(max-width:760px){.web-template-gallery{padding:24px 0}.service-model-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.web-template-card{padding:10px}.web-template-actions{flex-direction:column}.web-template-preview{padding:6px}.web-template-preview-panel{height:96vh;border-radius:14px}.web-template-preview-panel>header,.web-template-preview-panel>footer{padding:10px;gap:8px}.web-template-preview-panel>footer span{display:none}}
-@media(max-width:480px){.service-model-grid{grid-template-columns:1fr}.web-gallery-filters{gap:6px}.web-gallery-filters button{font-size:.78rem;padding:8px 11px}}
 
-/* Galerie des applications : aperçus équilibrés et smartphone lisible */
-.gallery-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 20px;color:var(--muted);font-size:.88rem}
-.gallery-filter{border:1px solid var(--line);background:var(--panel);color:var(--txt);padding:9px 15px;border-radius:999px;font:700 .88rem system-ui;cursor:pointer}
-.gallery-filter.active,.gallery-filter:hover{background:var(--a);border-color:var(--a);color:#061b1a}
-.service-model-card[hidden]{display:none!important}
-.service-model-card.app-template-card .service-model-art-img{width:100%;height:235px;object-fit:contain;padding:12px;background:linear-gradient(145deg,#17243b,#202f4b);border-radius:14px}
-.service-model-card.app-template-card{min-width:0}
-.model-inspector-screen{min-height:390px}
-.inspector-app-page{width:min(100%,340px);min-height:500px;max-height:65vh;overflow:auto;border-width:8px;border-radius:30px}
-.inspector-app-page:before{content:"";display:block;width:62px;height:5px;border-radius:99px;background:#8290a8;margin:7px auto 10px}
-.inspector-app-page .inspector-content-grid{grid-template-columns:1fr 1fr}
-.inspector-app-page .inspector-content-card{background:#f8fafc}
-@media(max-width:760px){
- .gallery-tools{align-items:flex-start;flex-direction:column}
- .service-model-card.app-template-card .service-model-art-img{height:205px}
- .inspector-app-page{width:min(100%,290px);min-height:450px;max-height:58vh}
- .model-inspector-screen{min-height:320px}
+/* ===== v7 refonte : identité visuelle, accueil, services ===== */
+:root{--bg:#070b17;--panel:#111a2e;--a:#38d6b0;--a2:#7885ff;--warm:#ffc857;--txt:#f5f7ff;--muted:#aab6d0;--line:#ffffff1c;--r:20px}
+body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 88% -5%,#2a3a7a66,transparent 60%),radial-gradient(700px 420px at -5% 30%,#38d6b01f,transparent 60%),var(--bg)}
+h1,h2,h3,.logo{font-family:Sora,"Plus Jakarta Sans",system-ui,sans-serif}
+h1{letter-spacing:-.04em}
+.logo{letter-spacing:-.04em}
+header{background:#070b17e6}
+.primary{background:linear-gradient(135deg,#38d6b0,#5be9c6);box-shadow:0 6px 20px #38d6b030}
+.primary:hover{box-shadow:0 10px 28px #38d6b055}
+section{padding:60px 0}
+.tag{background:#38d6b012}
+.card,.hero-card,.form-card,.panel,.model,.step{border-radius:var(--r)}
+.eyebrow{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:600;font-size:.9rem;margin-top:18px}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--a);box-shadow:0 0 0 4px #38d6b033;display:inline-block}
+
+/* Accueil : héros */
+.hero2{padding:70px 0 40px;position:relative}
+.hero2 .grid{grid-template-columns:1.05fr .95fr;gap:40px}
+.hero2 h1 span{background:linear-gradient(120deg,#38d6b0,#7885ff 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stats{display:flex;flex-wrap:wrap;gap:26px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+.stats b{display:block;font:800 1.7rem Sora,sans-serif;color:var(--txt)}
+.stats span{font-size:.86rem;color:var(--muted)}
+.collage{position:relative;height:460px}
+.collage a{position:absolute;display:block;border-radius:18px;overflow:hidden;border:1px solid #ffffff2e;background:#0b1224;box-shadow:0 24px 50px #0008;transition:transform .35s}
+.collage img{width:100%;height:100%;object-fit:cover;display:block}
+.collage .c1{width:52%;height:72%;left:0;top:8%;transform:rotate(-6deg)}
+.collage .c2{width:50%;height:66%;right:0;top:0;transform:rotate(5deg);z-index:2}
+.collage .c3{width:46%;height:46%;left:28%;bottom:0;transform:rotate(-2deg);z-index:3}
+.collage a:hover{transform:rotate(0) scale(1.04);z-index:5}
+.badge{position:absolute;z-index:6;right:2%;bottom:8%;background:#0b1224f2;border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-weight:700;font-size:.9rem;box-shadow:0 12px 30px #0008}
+.badge em{font-style:normal;color:var(--a)}
+
+/* Cartes de service avec visuel */
+.svc{padding:0;overflow:hidden}
+.svc .pic{aspect-ratio:16/10;overflow:hidden;background:#0b1224;border-bottom:1px solid var(--line)}
+.svc .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.svc:hover .pic img{transform:scale(1.06)}
+.svc .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:6px;flex:1}
+.svc h3{margin-top:0}
+
+/* Galerie défilante */
+.strip{display:flex;gap:16px;overflow-x:auto;padding:6px 2px 18px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.strip a{flex:0 0 190px;scroll-snap-align:start;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#0b1224;text-decoration:none;transition:transform .25s,border-color .25s}
+.strip a:hover{transform:translateY(-5px);border-color:#38d6b077}
+.strip img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+.strip span{display:block;padding:9px 12px;font-weight:700;font-size:.88rem}
+
+/* Étapes et avantages */
+.steps.four{grid-template-columns:repeat(4,1fr)}
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.why .card .ico{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#38d6b022,#7885ff2a);font-size:1.5rem}
+.band{position:relative;overflow:hidden;background:linear-gradient(135deg,#1c2a63,#0f4f4a);border-radius:28px;padding:54px 30px}
+.band h2{font-size:clamp(1.8rem,4vw,2.6rem)}
+.band::after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-80px;top:-120px;background:radial-gradient(#38d6b055,transparent 70%)}
+.band>*{position:relative;z-index:1}
+
+/* Page Services */
+.svc-list{display:grid;gap:22px}
+.svc-row{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;background:var(--panel);border:1px solid var(--line);border-radius:24px;overflow:hidden}
+.svc-row:nth-child(even){grid-template-columns:1.1fr .9fr}
+.svc-row:nth-child(even) .pics{order:2}
+.svc-row .pics{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px;background:linear-gradient(140deg,#7885ff1f,#38d6b012)}
+.svc-row .pics img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;border:1px solid var(--line);display:block}
+.svc-row .pics img:nth-child(2){margin-top:22px}
+.svc-row .txt{padding:30px 30px 28px;display:flex;flex-direction:column;gap:6px;justify-content:center}
+.svc-row h2{margin-top:6px;font-size:1.6rem}
+.price{display:inline-block;margin-top:4px;font-weight:800;color:var(--warm)}
+
+@media(max-width:900px){
+  .hero2 .grid{grid-template-columns:1fr}
+  .collage{height:380px;max-width:520px;margin:0 auto;width:100%}
+  .steps.four,.why{grid-template-columns:repeat(2,1fr)}
+  .svc-row,.svc-row:nth-child(even){grid-template-columns:1fr}
+  .svc-row:nth-child(even) .pics{order:0}
 }
-@media(max-width:420px){
- .service-model-card.app-template-card .service-model-art-img{height:190px}
- .inspector-app-page{width:min(100%,260px)}
+@media(max-width:560px){
+  section{padding:42px 0}
+  .hero2{padding-top:42px}
+  .steps.four,.why{grid-template-columns:1fr}
+  .collage{height:330px}
+  .stats{gap:18px}
+  .strip a{flex-basis:160px}
 }
+
+/* v7 : thème clair (suit le système) */
+.band h2{color:#fff}.band p{color:#d5e2f0}
+.band .secondary{background:#ffffff14;color:#fff;border-color:#ffffff44}
+@media(prefers-color-scheme:light){
+ :root{--bg:#f4f7f8;--panel:#ffffff;--txt:#14252b;--muted:#586b70;--a:#087f6b;--line:#dce7e5;--warm:#b36b00}
+ body{background:radial-gradient(800px 460px at 90% -5%,#cfe3ff99,transparent 60%),radial-gradient(700px 420px at -5% 30%,#d9f3ed,transparent 60%),var(--bg)}
+ header{background:#f7fbf9ed}
+ .primary{background:linear-gradient(135deg,#087f6b,#0aa088);color:#fff;box-shadow:0 6px 18px #087f6b30}
+ .hero2 h1 span{background:linear-gradient(120deg,#087f6b,#4a5bd6 70%);-webkit-background-clip:text;background-clip:text;color:transparent}
+ .tag{background:#087f6b0f;border-color:#087f6b40}
+ .badge{background:#ffffffee;color:var(--txt);box-shadow:0 12px 30px #1a2c3a26}
+ .collage a{border-color:#fff;box-shadow:0 22px 44px #1a2c3a30}
+ .svc-row .pics{background:linear-gradient(140deg,#dce9ff,#d9f3ed)}
+ .strip a,.svc .pic{background:#fff}
+ .card,.svc-row,.step,.model{box-shadow:0 1px 2px #1a2c3a0d}
+ .band .primary{background:#fff;color:#0f4f4a;box-shadow:none}
+}
+@media(prefers-color-scheme:dark){.band .primary{color:#07131a}}
+.svc-row .pics.wide{grid-template-columns:1fr;align-content:center}
+.svc-row .pics.wide img{aspect-ratio:16/10;object-position:top}
+.svc-row .pics.wide img:nth-child(2){margin-top:0}
