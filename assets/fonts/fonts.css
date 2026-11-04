@@ -1,0 +1,51 @@
+/* Polices auto-hébergées (latin) — aucune dépendance à Google Fonts */
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400;font-display:swap;src:url('plus-jakarta-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:500;font-display:swap;src:url('plus-jakarta-sans-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:600;font-display:swap;src:url('plus-jakarta-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:700;font-display:swap;src:url('plus-jakarta-sans-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:800;font-display:swap;src:url('plus-jakarta-sans-latin-800-normal.woff2') format('woff2')}
+@font-face{font-family:'Sora';font-style:normal;font-weight:600;font-display:swap;src:url('sora-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Sora';font-style:normal;font-weight:700;font-display:swap;src:url('sora-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Sora';font-style:normal;font-weight:800;font-display:swap;src:url('sora-latin-800-normal.woff2') format('woff2')}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:400;font-display:swap;src:url('figtree-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:500;font-display:swap;src:url('figtree-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Figtree';font-style:normal;font-weight:700;font-display:swap;src:url('figtree-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Anton';font-style:normal;font-weight:400;font-display:swap;src:url('anton-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Bebas Neue';font-style:normal;font-weight:400;font-display:swap;src:url('bebas-neue-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Dancing Script';font-style:normal;font-weight:700;font-display:swap;src:url('dancing-script-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Lobster';font-style:normal;font-weight:400;font-display:swap;src:url('lobster-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:400;font-display:swap;src:url('montserrat-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:700;font-display:swap;src:url('montserrat-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:400;font-display:swap;src:url('oswald-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Oswald';font-style:normal;font-weight:700;font-display:swap;src:url('oswald-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Pacifico';font-style:normal;font-weight:400;font-display:swap;src:url('pacifico-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Permanent Marker';font-style:normal;font-weight:400;font-display:swap;src:url('permanent-marker-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:400;font-display:swap;src:url('playfair-display-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:700;font-display:swap;src:url('playfair-display-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:italic;font-weight:400;font-display:swap;src:url('playfair-display-latin-400-italic.woff2') format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url('poppins-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url('poppins-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Raleway';font-style:normal;font-weight:400;font-display:swap;src:url('raleway-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Raleway';font-style:normal;font-weight:700;font-display:swap;src:url('raleway-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:400;font-display:swap;src:url('roboto-slab-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Roboto Slab';font-style:normal;font-weight:700;font-display:swap;src:url('roboto-slab-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Great Vibes';font-style:normal;font-weight:400;font-display:swap;src:url('great-vibes-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Allura';font-style:normal;font-weight:400;font-display:swap;src:url('allura-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Parisienne';font-style:normal;font-weight:400;font-display:swap;src:url('parisienne-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Sacramento';font-style:normal;font-weight:400;font-display:swap;src:url('sacramento-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Alex Brush';font-style:normal;font-weight:400;font-display:swap;src:url('alex-brush-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:400;font-display:swap;src:url('cormorant-garamond-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:swap;src:url('cormorant-garamond-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:700;font-display:swap;src:url('cormorant-garamond-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:italic;font-weight:400;font-display:swap;src:url('cormorant-garamond-latin-400-italic.woff2') format('woff2')}
+@font-face{font-family:'Bodoni Moda';font-style:normal;font-weight:400;font-display:swap;src:url('bodoni-moda-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Bodoni Moda';font-style:normal;font-weight:700;font-display:swap;src:url('bodoni-moda-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Italiana';font-style:normal;font-weight:400;font-display:swap;src:url('italiana-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:400;font-display:swap;src:url('cinzel-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Cinzel';font-style:normal;font-weight:700;font-display:swap;src:url('cinzel-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Marcellus';font-style:normal;font-weight:400;font-display:swap;src:url('marcellus-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Tenor Sans';font-style:normal;font-weight:400;font-display:swap;src:url('tenor-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Josefin Sans';font-style:normal;font-weight:400;font-display:swap;src:url('josefin-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Josefin Sans';font-style:normal;font-weight:700;font-display:swap;src:url('josefin-sans-latin-700-normal.woff2') format('woff2')}
+@font-face{font-family:'Abril Fatface';font-style:normal;font-weight:400;font-display:swap;src:url('abril-fatface-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Bricolage Grotesque';font-style:normal;font-weight:200 800;font-display:swap;src:url('bricolage-grotesque-latin-wght-normal.woff2') format('woff2')}
