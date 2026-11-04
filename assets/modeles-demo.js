@@ -118,17 +118,100 @@
       return app("Livraison", this.pages, ["🍔", "🛒", "🛵", "👤"], b);
     } };
 
+  /* ---------- SANTÉ ET MÉDECINE ---------- */
+  function docRows(a) { return a.map(function (d) { return '<div class="dm-crow"><span class="dm-av" style="background:' + d[2] + '">' + d[3] + '</span><div><b>' + d[0] + '</b><span>' + d[1] + '</span></div><a class="dm-mini" data-go="3">Réserver</a></div>'; }).join(""); }
+  var DOCS = [["Dr Awa Ndiaye", "Médecine générale", "#0f9d8a", "AN"], ["Dr Moussa Fall", "Pédiatrie", "#2f80ed", "MF"], ["Dr Khady Sow", "Gynécologie", "#e0589a", "KS"]];
+  M["cabinet-medical"] = { type: "site", url: "www.cabinet-medical-sante.sn", stage: "linear-gradient(135deg,#d3f1ee,#e4f4f9)", pages: ["Accueil", "Soins", "Équipe", "Rendez-vous"],
+    html: function (i) {
+      var head = '<header class="dm-top"><b class="dm-logo">✚ Cabinet <em>Santé+</em></b><nav class="dm-nav">' + nav(["Accueil", "Soins", "Équipe", "Rendez-vous"]) + '</nav><a data-go="3" class="dm-btn">Prendre rendez-vous</a></header>';
+      var body = [
+        '<section class="dm-hero2"><div><small>MÉDECINE GÉNÉRALE · DAKAR</small><h3>Votre santé, notre priorité au quotidien.</h3><p>Consultations sur rendez-vous, suivi des familles et urgences du jour.</p><div class="dm-row"><a data-go="3" class="dm-btn dark">Prendre rendez-vous</a><a data-go="1" class="dm-btn ghost">Nos soins</a></div></div><div class="dm-visual med"><div class="dm-chart"><small>Prochain créneau</small><b style="display:block;font:800 1.2rem Sora,sans-serif;margin-top:4px">Aujourd’hui · 16h30</b></div></div></section><section class="dm-sec"><div class="dm-cards3"><div class="dm-card"><b>🩺 Consultation</b><span>Médecine générale et suivi.</span></div><div class="dm-card"><b>💉 Vaccination</b><span>Enfants et adultes.</span></div><div class="dm-card"><b>🧪 Bilans</b><span>Analyses et dépistages.</span></div></div></section>',
+        '<section class="dm-sec"><h3 class="dm-h">Nos soins</h3><div class="dm-list"><div class="dm-item"><span class="dm-ico">🩺</span><div><b>Consultation générale</b><p>Diagnostic, prescription et suivi médical.</p></div></div><div class="dm-item"><span class="dm-ico">👶</span><div><b>Pédiatrie</b><p>Suivi de croissance et vaccinations des enfants.</p></div></div><div class="dm-item"><span class="dm-ico">🫀</span><div><b>Bilan de santé</b><p>Tension, glycémie et examens de contrôle.</p></div></div></div></section>',
+        '<section class="dm-sec"><h3 class="dm-h">Notre équipe</h3><div class="dm-panel">' + docRows(DOCS) + "</div></section>",
+        '<section class="dm-sec dm-two"><div><h3 class="dm-h">Prendre rendez-vous</h3><p class="dm-p">Réponse rapide par téléphone ou message.</p><ul class="dm-ul"><li>📞 77 000 00 00</li><li>📍 Dakar, Point E</li><li>🕘 Lun–Ven : 8h – 18h · Sam : 8h – 13h</li></ul></div><form class="dm-form" onsubmit="return false"><input placeholder="Ton nom"><input placeholder="Téléphone"><div class="dm-row2"><input placeholder="Date"><input placeholder="Heure"></div><a class="dm-btn">Confirmer</a></form></section>'
+      ][i];
+      return head + body;
+    } };
+
+  M["site-de-clinique"] = { type: "site", url: "www.clinique-du-plateau.sn", stage: "linear-gradient(135deg,#d6e6fb,#e8f0fb)", pages: ["Accueil", "Spécialités", "Urgences", "Contact"],
+    html: function (i) {
+      var head = '<header class="dm-top"><b class="dm-logo">Clinique <em>du Plateau</em></b><nav class="dm-nav">' + nav(["Accueil", "Spécialités", "Urgences", "Contact"]) + '</nav><a data-go="2" class="dm-btn">Urgences 24h/24</a></header>';
+      var body = [
+        '<section class="dm-hero2"><div><small>CLINIQUE PRIVÉE · DAKAR</small><h3>Des soins de qualité, une équipe à votre écoute.</h3><p>Hospitalisation, maternité, imagerie et consultations de spécialistes.</p><div class="dm-row"><a data-go="1" class="dm-btn dark">Nos spécialités</a><a data-go="3" class="dm-btn ghost">Nous contacter</a></div></div><div class="dm-visual blue"><div class="dm-chart"><small>Prise en charge</small><b style="display:block;font:800 1.2rem Sora,sans-serif;margin-top:4px">24h/24 · 7j/7</b></div></div></section><section class="dm-sec"><div class="dm-cards3"><div class="dm-card center"><b class="big">12</b><span>spécialités</span></div><div class="dm-card center"><b class="big">40</b><span>lits</span></div><div class="dm-card center"><b class="big">24/7</b><span>urgences</span></div></div></section>',
+        '<section class="dm-sec"><h3 class="dm-h">Spécialités</h3><div class="dm-cards3"><div class="dm-card"><b>❤️ Cardiologie</b><span>Bilans et suivi cardiaque.</span></div><div class="dm-card"><b>🤰 Maternité</b><span>Suivi de grossesse et accouchement.</span></div><div class="dm-card"><b>🦴 Orthopédie</b><span>Traumatologie et rééducation.</span></div><div class="dm-card"><b>🩻 Imagerie</b><span>Radiologie et échographie.</span></div><div class="dm-card"><b>🧪 Laboratoire</b><span>Analyses médicales.</span></div><div class="dm-card"><b>👶 Pédiatrie</b><span>Soins des enfants.</span></div></div></section>',
+        '<section class="dm-sec"><div class="dm-alert">🚑 Urgences ouvertes 24h/24 — Appelez le <b>77 000 00 00</b></div><h3 class="dm-h" style="margin-top:14px">Que faire en cas d’urgence ?</h3><div class="dm-list"><div class="dm-item"><span class="dm-ico">1</span><div><b>Appelez le service d’urgence</b><p>Décrivez la situation et l’état du patient.</p></div></div><div class="dm-item"><span class="dm-ico">2</span><div><b>Rendez-vous à l’accueil</b><p>Entrée des urgences, rue du Plateau.</p></div></div></div></section>',
+        '<section class="dm-sec dm-two"><div><h3 class="dm-h">Nous contacter</h3><ul class="dm-ul"><li>📞 77 000 00 00</li><li>✉️ contact@clinique-plateau.sn</li><li>📍 Dakar, Plateau</li></ul></div><form class="dm-form" onsubmit="return false"><input placeholder="Ton nom"><input placeholder="Téléphone"><textarea placeholder="Ton message"></textarea><a class="dm-btn">Envoyer</a></form></section>'
+      ][i];
+      return head + body;
+    } };
+
+  M["centre-dentaire"] = { type: "site", url: "www.sourire-dentaire.sn", stage: "linear-gradient(135deg,#d8f5ef,#e7f6fb)", pages: ["Accueil", "Soins", "Tarifs", "Rendez-vous"],
+    html: function (i) {
+      var head = '<header class="dm-top"><b class="dm-logo">😁 Sourire <em>Dentaire</em></b><nav class="dm-nav">' + nav(["Accueil", "Soins", "Tarifs", "Rendez-vous"]) + '</nav><a data-go="3" class="dm-btn">Réserver</a></header>';
+      var body = [
+        '<section class="dm-hero2"><div><small>CENTRE DENTAIRE · DAKAR</small><h3>Un sourire sain, des soins sans stress.</h3><p>Détartrage, soins, blanchiment et orthodontie dans un cabinet moderne.</p><div class="dm-row"><a data-go="3" class="dm-btn dark">Prendre rendez-vous</a><a data-go="2" class="dm-btn ghost">Voir les tarifs</a></div></div><div class="dm-visual mint"><div class="dm-chart"><small>Premier rendez-vous</small><b style="display:block;font:800 1.2rem Sora,sans-serif;margin-top:4px">Bilan offert</b></div></div></section><section class="dm-sec"><div class="dm-cards3"><div class="dm-card"><b>🦷 Soins courants</b><span>Caries, détartrage.</span></div><div class="dm-card"><b>✨ Blanchiment</b><span>Un sourire éclatant.</span></div><div class="dm-card"><b>😬 Orthodontie</b><span>Alignement des dents.</span></div></div></section>',
+        '<section class="dm-sec"><h3 class="dm-h">Nos soins</h3><div class="dm-list"><div class="dm-item"><span class="dm-ico">🦷</span><div><b>Soins et détartrage</b><p>Prévention et traitement des caries.</p></div></div><div class="dm-item"><span class="dm-ico">✨</span><div><b>Blanchiment</b><p>Séance en cabinet, résultat visible.</p></div></div><div class="dm-item"><span class="dm-ico">😬</span><div><b>Orthodontie</b><p>Appareils pour enfants et adultes.</p></div></div></div></section>',
+        '<section class="dm-sec"><h3 class="dm-h">Tarifs indicatifs</h3><div class="dm-panel"><div class="dm-mrow"><div><b>Consultation</b></div><em>10 000 FCFA</em></div><div class="dm-mrow"><div><b>Détartrage</b></div><em>25 000 FCFA</em></div><div class="dm-mrow"><div><b>Soin de carie</b></div><em>à partir de 20 000 FCFA</em></div><div class="dm-mrow"><div><b>Blanchiment</b></div><em>80 000 FCFA</em></div></div><p class="dm-p">Tarifs donnés à titre d’exemple.</p></section>',
+        '<section class="dm-sec"><h3 class="dm-h">Réserver un créneau</h3><form class="dm-form" onsubmit="return false"><input placeholder="Ton nom"><input placeholder="Téléphone"><div class="dm-row2"><input placeholder="Date"><input placeholder="Motif (soin, contrôle…)"></div><a class="dm-btn">Confirmer le rendez-vous</a></form></section>'
+      ][i];
+      return head + body;
+    } };
+
+  /* Applications santé */
+  M["rdv-patient"] = { type: "app", stage: "linear-gradient(135deg,#d6ecfb,#dff3ee)", pages: ["Accueil", "Médecins", "Mes rendez-vous", "Profil"], cls: "med1",
+    html: function (i) {
+      var b = [
+        '<small class="dm-eyebrow">BONJOUR AWA 👋</small><h3 class="dm-h">Comment vas-tu aujourd’hui ?</h3><div class="dm-panel"><small class="dm-eyebrow">PROCHAIN RENDEZ-VOUS</small><b>Dr Awa Ndiaye · Médecine générale</b><p class="dm-p" style="margin:2px 0 0">Jeudi 19 nov. · 10:30</p></div><div class="dm-kpis"><div class="dm-kpi"><span>Ordonnances</span><b>2</b></div><div class="dm-kpi"><span>Rappels</span><b>1</b></div><div class="dm-kpi"><span>Résultats</span><b>3</b></div></div><a data-go="1" class="dm-btn wide">Prendre un rendez-vous</a>',
+        '<h3 class="dm-h">Trouver un médecin</h3><input class="dm-search" placeholder="Spécialité ou nom…"><div class="dm-chips"><span class="on">Tous</span><span>Généraliste</span><span>Pédiatre</span></div><div class="dm-panel">' + docRows(DOCS) + "</div>",
+        '<h3 class="dm-h">Mes rendez-vous</h3><div class="dm-panel"><div class="dm-mrow"><div><b>Dr Awa Ndiaye</b><span>Jeu. 19 nov. · 10:30</span></div><em class="pos">À venir</em></div><div class="dm-mrow"><div><b>Dr Moussa Fall</b><span>Lun. 2 nov. · 09:00</span></div><em>Terminé</em></div><div class="dm-mrow"><div><b>Analyse sanguine</b><span>Ven. 23 oct. · 08:00</span></div><em>Terminé</em></div></div>',
+        '<div class="dm-profile"><div class="dm-avatar">AD</div><h3 class="dm-h">Awa Diop</h3><p class="dm-p">Patiente depuis 2024</p></div><div class="dm-panel"><div class="dm-mrow"><div><b>Rappels de rendez-vous</b><span>SMS la veille</span></div><em class="pos">Activés</em></div><div class="dm-mrow"><div><b>Dossier médical</b><span>Partagé avec ton médecin</span></div><em class="pos">Oui</em></div></div>'
+      ][i];
+      return app("Santé+", this.pages, ["🏠", "🩺", "📅", "👤"], b);
+    } };
+
+  M["dossier-patient"] = { type: "app", stage: "linear-gradient(135deg,#d7f0ee,#e3eefb)", pages: ["Patients", "Dossier", "Consultations", "Rappels"], cls: "med2",
+    html: function (i) {
+      var PA = [["Awa Diop", "34 ans · Dernier RDV 2 nov.", "#0f9d8a", "AD"], ["Moussa Sy", "52 ans · Dernier RDV 28 oct.", "#2f80ed", "MS"], ["Fatou Ndiaye", "29 ans · Dernier RDV 15 oct.", "#e0589a", "FN"], ["Ibrahima Ba", "61 ans · Dernier RDV 9 oct.", "#f59e0b", "IB"]];
+      var list = PA.map(function (c, k) { return '<a data-go="1" class="dm-crow' + (k === 0 ? " sel" : "") + '"><span class="dm-av" style="background:' + c[2] + '">' + c[3] + "</span><div><b>" + c[0] + "</b><span>" + c[1] + "</span></div></a>"; }).join("");
+      var fiche = '<div class="dm-fh"><span class="dm-av big" style="background:#0f9d8a">AD</span><div><h3 class="dm-h">Awa Diop</h3><span class="dm-p">34 ans · Groupe sanguin O+</span></div><em class="pos">Suivi régulier</em></div><div class="dm-kpis"><div class="dm-kpi"><span>Tension</span><b>12/8</b></div><div class="dm-kpi"><span>Poids</span><b>62 kg</b></div><div class="dm-kpi"><span>Prochain RDV</span><b>19 nov.</b></div></div><div class="dm-panel"><h4>Dernières consultations</h4><div class="dm-tl"><i></i><div><b>Contrôle annuel</b><span>2 nov. 2026</span></div></div><div class="dm-tl"><i></i><div><b>Vaccin grippe</b><span>15 sept. 2026</span></div></div></div>';
+      var b = [
+        '<h3 class="dm-h">Patients</h3><div class="dm-crm"><div><input class="dm-search" placeholder="Rechercher un patient…"><div class="dm-panel">' + list + '</div><a class="dm-btn">+ Nouveau patient</a></div><div class="dm-detail">' + fiche + "</div></div>",
+        fiche,
+        '<h3 class="dm-h">Consultations</h3><div class="dm-panel"><div class="dm-mrow"><div><b>Awa Diop · Contrôle annuel</b><span>Aujourd’hui · 09:00</span></div><em class="pos">Terminée</em></div><div class="dm-mrow"><div><b>Moussa Sy · Hypertension</b><span>Aujourd’hui · 10:30</span></div><em class="pos">En cours</em></div><div class="dm-mrow"><div><b>Fatou Ndiaye · Pédiatrie</b><span>Aujourd’hui · 11:15</span></div><em>À venir</em></div></div>',
+        '<h3 class="dm-h">Rappels patients</h3><div class="dm-panel"><label class="dm-check2"><input type="checkbox" checked><span>Rappeler Awa Diop · RDV du 19 nov.</span></label><label class="dm-check2"><input type="checkbox"><span>Renouveler l’ordonnance de Moussa Sy</span></label><label class="dm-check2"><input type="checkbox"><span>Vaccin de rappel · Fatou Ndiaye</span></label></div>'
+      ][i];
+      return app("Dossiers", this.pages, ["👥", "📋", "🩺", "⏰"], b);
+    } };
+
+  M["pharmacie-ordonnance"] = { type: "app", stage: "linear-gradient(135deg,#dcf5e4,#e3f3f7)", pages: ["Ordonnance", "Médicaments", "Panier", "Suivi"], cls: "med3",
+    html: function (i) {
+      var MED = [["Paracétamol 500 mg", "Boîte de 16", "1 200", "#10b981"], ["Amoxicilline 1 g", "Boîte de 12", "3 500", "#3b82f6"], ["Vitamine C 1000", "Tube de 20", "2 800", "#f59e0b"], ["Sérum physiologique", "Boîte de 20", "1 500", "#8b5cf6"]];
+      var meds = MED.map(function (f) { return '<div class="dm-frow"><span class="dm-fimg" style="background:' + f[3] + '"></span><div><b>' + f[0] + "</b><span>" + f[1] + " · " + f[2] + ' FCFA</span></div><a class="dm-plus" data-add>+</a></div>'; }).join("");
+      var b = [
+        '<small class="dm-eyebrow">PHARMACIE DU CENTRE</small><h3 class="dm-h">Envoie ton ordonnance</h3><div class="dm-panel dm-drop"><div style="font-size:2rem">📄</div><b>Photographier l’ordonnance</b><p class="dm-p" style="margin:0">Le pharmacien prépare ta commande.</p></div><a data-go="2" class="dm-btn wide">Envoyer à la pharmacie</a>',
+        '<h3 class="dm-h">Médicaments</h3><input class="dm-search" placeholder="Rechercher un médicament…">' + meds,
+        '<h3 class="dm-h">Mon panier</h3><div class="dm-panel"><div class="dm-mrow"><div><b>Paracétamol 500 mg</b><span>× 1</span></div><em>1 200 F</em></div><div class="dm-mrow"><div><b>Amoxicilline 1 g</b><span>× 1</span></div><em>3 500 F</em></div><div class="dm-mrow total"><div><b>Total</b></div><em>4 700 F</em></div></div><a data-go="3" class="dm-btn wide">Commander</a>',
+        '<h3 class="dm-h">Suivi de commande</h3><div class="dm-panel"><div class="dm-step done"><i>✓</i><div><b>Ordonnance reçue</b><span>10:02</span></div></div><div class="dm-step done"><i>✓</i><div><b>Préparation</b><span>10:10</span></div></div><div class="dm-step now"><i>●</i><div><b>Prête à retirer</b><span>Retrait en pharmacie</span></div></div></div>'
+      ][i];
+      return app("Pharma", this.pages, ["📄", "💊", "🛒", "📦"], b);
+    } };
+
   window.StromDemo = {
     get: function (key) { return M[key] || null; },
     devices: function (type) { return type === "app" ? [["phone", "📱 Téléphone"], ["tablet", "📲 Tablette"]] : [["desktop", "🖥️ Ordinateur"], ["phone", "📱 Mobile"]]; },
-    render: function (key, i, device) {
+    /* Tailles logiques réelles (px) : le cadre est dessiné à cette taille puis réduit pour tenir dans la fenêtre. */
+    size: function (device, portrait) { return device === "phone" ? [390, 844] : device === "tablet" ? (portrait ? [768, 1024] : [1024, 768]) : [1280, 800]; },
+    render: function (key, i, device, portrait) {
       var m = M[key]; if (!m) return null;
-      var frame = document.createElement("div"); frame.className = "dm-frame " + device;
+      var sz = this.size(device, portrait);
+      var frame = document.createElement("div"); frame.className = "dm-frame " + device + (device === "tablet" && portrait ? " portrait" : "");
+      frame.style.width = sz[0] + "px"; frame.style.height = sz[1] + "px";
       if (m.type === "site" && device === "desktop") frame.innerHTML = '<div class="dm-chrome"><i></i><i></i><i></i><span>' + m.url + "</span></div>";
       var scr = document.createElement("div"); scr.className = "dm-screen";
       var dm = document.createElement("div"); dm.className = "dm dm-" + key + (m.cls ? " dm-app th-" + m.cls : " dm-site");
       dm.innerHTML = m.html(i); scr.appendChild(dm); frame.appendChild(scr);
-      return frame;
+      var wrap = document.createElement("div"); wrap.className = "dm-scale"; wrap.appendChild(frame); wrap._w = sz[0]; wrap._h = sz[1];
+      return wrap;
     }
   };
 })();

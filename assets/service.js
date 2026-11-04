@@ -39,7 +39,7 @@
   setType(o && o.type ? o.type : "devis");
   if (o) say("Ton brouillon a été restauré : vérifie-le, ajoute à nouveau tes PDF si besoin, puis envoie ta demande.", true);
   quote.addEventListener("input", function () { Draft.save({ type: reqType }); });
-  var audienceNames = { mariage: "Mariages et cérémonies", anniversaire: "Anniversaires et fêtes", commerce: "Commerces", evenement: "Organisateurs d’événements" };
+  var audienceNames = { mariage: "Mariages et cérémonies", anniversaire: "Anniversaires et fêtes", commerce: "Commerces", evenement: "Organisateurs d’événements", beaute: "Beauté et mode", restauration: "Restauration", pro: "Pro et services", foi: "Foi et solidarité" };
   document.querySelectorAll("[data-audience]").forEach(function (button) {
     button.addEventListener("click", function () {
       var category = button.getAttribute("data-audience");
@@ -115,17 +115,30 @@
     };
     var demoKey="", demoDevice="", demoPage=0;
     var devBox=document.createElement("div"); devBox.className="model-inspector-devices"; devBox.hidden=true; tabs.parentNode.insertBefore(devBox,tabs);
+    var rot=document.createElement("button"); rot.type="button"; rot.className="dm-rotate"; rot.textContent="⟳ Pivoter"; rot.hidden=true; rot.addEventListener("click",function(){demoPortrait=!demoPortrait;demoRender();});
+    var demoPortrait=false;
+    function demoFit(){
+      var w=screen.querySelector(".dm-scale"); if(!w)return;
+      var panel=screen.parentNode; panel.classList.add("dmmode"); screen.style.height="0px";
+      var over=panel.scrollHeight-0, avail=Math.max(240,Math.min(780,Math.floor(window.innerHeight*0.94-over-34))); screen.style.height=avail+"px";
+      var aw=screen.clientWidth-28, ah=avail-28, k=Math.min(1,aw/w._w,ah/w._h); if(!(k>0))k=.5;
+      w.style.width=Math.round(w._w*k)+"px"; w.style.height=Math.round(w._h*k)+"px";
+      var f=w.firstChild; f.style.transform="scale("+k+")"; f.style.transformOrigin="top left";
+    }
+    window.addEventListener("resize",function(){if(demoKey&&!modal.hidden)demoFit();});
     function demoRender(){
-      var f=window.StromDemo.render(demoKey,demoPage,demoDevice); if(!f)return;
-      screen.replaceChildren(f); screen.className="model-inspector-screen dmstage";
-      screen.style.background=window.StromDemo.get(demoKey).stage;
-      f.querySelectorAll(".dm-sl,.dm-bl").forEach(function(a,i){a.classList.toggle("on",i%window.StromDemo.get(demoKey).pages.length===demoPage);});
+      var m=window.StromDemo.get(demoKey);
+      var w=window.StromDemo.render(demoKey,demoPage,demoDevice,demoPortrait); if(!w)return;
+      screen.replaceChildren(w); screen.className="model-inspector-screen dmstage"; screen.style.background=m.stage; demoFit();
+      w.querySelectorAll(".dm-sl,.dm-bl").forEach(function(a,i){a.classList.toggle("on",i%m.pages.length===demoPage);});
       tabs.querySelectorAll("button").forEach(function(x,i){x.classList.toggle("active",i===demoPage);});
+      rot.hidden=demoDevice!=="tablet";
     }
     function demoOpen(key,type){
       var m=window.StromDemo.get(key); demoKey=key; demoPage=0; var dv=window.StromDemo.devices(m.type); demoDevice=dv[0][0];
-      devBox.hidden=false; devBox.replaceChildren();
+      devBox.hidden=false; devBox.replaceChildren(); demoPortrait=false;
       dv.forEach(function(d){var b=document.createElement("button");b.type="button";b.textContent=d[1];b.className=d[0]===demoDevice?"on":"";b.addEventListener("click",function(){demoDevice=d[0];devBox.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b);});demoRender();});devBox.appendChild(b);});
+      devBox.appendChild(rot);
       tabs.hidden=false; tabs.replaceChildren();
       m.pages.forEach(function(pg,i){var b=document.createElement("button");b.type="button";b.className="model-inspector-tab"+(i===0?" active":"");b.textContent=pg;b.setAttribute("role","tab");b.addEventListener("click",function(){demoPage=i;demoRender();});tabs.appendChild(b);});
       demoRender();
@@ -158,7 +171,7 @@
     }
     function open(card,type) {
       currentCard=card; currentType=type; currentName=card.querySelector("h3")?.textContent||"Modèle Stromtech";
-      title.textContent=currentName; tabs.replaceChildren(); demoKey=""; devBox.hidden=true; screen.className="model-inspector-screen"; screen.style.background="";
+      title.textContent=currentName; tabs.replaceChildren(); demoKey=""; demoPortrait=false; devBox.hidden=true; screen.className="model-inspector-screen"; screen.style.background=""; screen.style.height=""; screen.parentNode.classList.remove("dmmode");
       var im=card.querySelector("img"), key=im?(im.getAttribute("src")||"").split("/").pop().replace(/\.\w+$/,""):"";
       if(type!=="poster"&&im&&!(window.StromDemo&&window.StromDemo.get(key))){var big=im.cloneNode(true);big.className="dm-cover";screen.replaceChildren(big);tabs.hidden=true;selected.textContent="Choisir ce modèle";modal.hidden=false;document.body.classList.add("model-inspector-open");close.focus();return;}
       if(type!=="poster"&&window.StromDemo&&window.StromDemo.get(key)){demoOpen(key,type);selected.textContent="Choisir ce modèle";modal.hidden=false;document.body.classList.add("model-inspector-open");close.focus();return;}
