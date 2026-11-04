@@ -3,16 +3,12 @@ name: Replace Stromtech site from ZIP
 on:
   push:
     branches: [version-complete-v7]
-    paths:
-      - "stromtech-site-complet_v7.zip"
-      - ".github/workflows/replace-site-from-zip.yml"
 
 permissions:
   contents: write
 
 jobs:
   replace-site:
-    if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout uploaded branch
@@ -40,10 +36,9 @@ jobs:
               for info in z.infolist():
                   p = Path(info.filename)
                   if p.is_absolute() or ".." in p.parts:
-                      raise SystemExit(f"Chemin interdit dans l'archive : {info.filename}")
-              keep = {Path(".git"), Path(".github")}
+                      raise SystemExit(f"Chemin interdit : {info.filename}")
               for item in list(Path(".").iterdir()):
-                  if item not in keep:
+                  if item.name not in {".git", ".github"}:
                       shutil.rmtree(item) if item.is_dir() else item.unlink()
               for info in z.infolist():
                   if info.is_dir():
