@@ -113,6 +113,29 @@
       site:["Accueil","Services","À propos","Contact"],
       app:["Tableau de bord","Activités","Profil","Paramètres"]
     };
+    var demoKey="", demoDevice="", demoPage=0;
+    var devBox=document.createElement("div"); devBox.className="model-inspector-devices"; devBox.hidden=true; tabs.parentNode.insertBefore(devBox,tabs);
+    function demoRender(){
+      var f=window.StromDemo.render(demoKey,demoPage,demoDevice); if(!f)return;
+      screen.replaceChildren(f); screen.className="model-inspector-screen dmstage";
+      screen.style.background=window.StromDemo.get(demoKey).stage;
+      f.querySelectorAll(".dm-sl,.dm-bl").forEach(function(a,i){a.classList.toggle("on",i%window.StromDemo.get(demoKey).pages.length===demoPage);});
+      tabs.querySelectorAll("button").forEach(function(x,i){x.classList.toggle("active",i===demoPage);});
+    }
+    function demoOpen(key,type){
+      var m=window.StromDemo.get(key); demoKey=key; demoPage=0; var dv=window.StromDemo.devices(m.type); demoDevice=dv[0][0];
+      devBox.hidden=false; devBox.replaceChildren();
+      dv.forEach(function(d){var b=document.createElement("button");b.type="button";b.textContent=d[1];b.className=d[0]===demoDevice?"on":"";b.addEventListener("click",function(){demoDevice=d[0];devBox.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b);});demoRender();});devBox.appendChild(b);});
+      tabs.hidden=false; tabs.replaceChildren();
+      m.pages.forEach(function(pg,i){var b=document.createElement("button");b.type="button";b.className="model-inspector-tab"+(i===0?" active":"");b.textContent=pg;b.setAttribute("role","tab");b.addEventListener("click",function(){demoPage=i;demoRender();});tabs.appendChild(b);});
+      demoRender();
+    }
+    screen.addEventListener("click",function(e){
+      if(!demoKey||currentType==="poster")return;
+      var g=e.target.closest("[data-go]"); if(g){demoPage=+g.getAttribute("data-go");demoRender();return;}
+      var grp=e.target.closest("[data-grp]"); if(grp){var n=grp.getAttribute("data-grp");screen.querySelectorAll('[data-grp="'+n+'"]').forEach(function(x){x.classList.remove("sel");});grp.classList.add("sel");return;}
+      var add=e.target.closest("[data-add]"); if(add){var t=document.createElement("div");t.className="dm-toast";t.textContent="✓ Ajouté (démonstration)";screen.querySelector(".dm-frame").appendChild(t);setTimeout(function(){t.remove();},1100);}
+    });
     function renderPage(page,index) {
       screen.replaceChildren();
       if(currentType==="poster"){
@@ -135,7 +158,10 @@
     }
     function open(card,type) {
       currentCard=card; currentType=type; currentName=card.querySelector("h3")?.textContent||"Modèle Stromtech";
-      title.textContent=currentName; tabs.replaceChildren();
+      title.textContent=currentName; tabs.replaceChildren(); demoKey=""; devBox.hidden=true; screen.className="model-inspector-screen"; screen.style.background="";
+      var im=card.querySelector("img"), key=im?(im.getAttribute("src")||"").split("/").pop().replace(/\.\w+$/,""):"";
+      if(type!=="poster"&&im&&!(window.StromDemo&&window.StromDemo.get(key))){var big=im.cloneNode(true);big.className="dm-cover";screen.replaceChildren(big);tabs.hidden=true;selected.textContent="Choisir ce modèle";modal.hidden=false;document.body.classList.add("model-inspector-open");close.focus();return;}
+      if(type!=="poster"&&window.StromDemo&&window.StromDemo.get(key)){demoOpen(key,type);selected.textContent="Choisir ce modèle";modal.hidden=false;document.body.classList.add("model-inspector-open");close.focus();return;}
       if(type==="poster"){renderPage("Affiche",0);tabs.hidden=true;}
       else{
         tabs.hidden=false;

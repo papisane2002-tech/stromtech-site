@@ -2,7 +2,7 @@ name: Replace Stromtech site from ZIP
 
 on:
   push:
-    branches: [version-complete-v7]
+    branches: [version-complete-v9]
 
 permissions:
   contents: write
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout uploaded branch
         uses: actions/checkout@v4
         with:
-          ref: version-complete-v7
+          ref: version-complete-v9
           fetch-depth: 0
       - name: Validate and replace repository contents
         run: |
@@ -23,7 +23,7 @@ jobs:
           from zipfile import ZipFile
           import shutil
 
-          archive = Path("stromtech-site-complet_v7.zip")
+          archive = Path("stromtech-site-complet_v9.zip")
           if not archive.is_file():
               raise SystemExit("Archive ZIP introuvable.")
           with ZipFile(archive) as z:
@@ -53,5 +53,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Remplacer le site par la version complète v7"
-          git push origin version-complete-v7
+          git commit -m "Remplacer le site par la version complète v9"
+          git push origin version-complete-v9
