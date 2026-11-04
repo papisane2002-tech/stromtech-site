@@ -56,24 +56,18 @@
     button.addEventListener("click", function () {
       var category = button.getAttribute("data-service-audience");
       document.querySelectorAll(".service-model-card").forEach(function (card) {
-        card.hidden = category !== "all" && card.getAttribute("data-service-category") !== category;
+        card.hidden = card.getAttribute("data-service-category") !== category;
       });
       var hint = $("service-gallery-hint");
-      if (hint) hint.textContent = category === "all" ? "Tous les modèles disponibles. Ouvre un aperçu pour parcourir les écrans, puis choisis celui qui correspond à ton projet." : "Modèles proposés pour : " + (serviceAudienceLabels[category] || category) + ". Choisis celui qui correspond à ton projet.";
+      if (hint) hint.textContent = "Modèles proposés pour : " + (serviceAudienceLabels[category] || category) + ". Choisis celui qui correspond à ton projet.";
       var gallery = $("modeles"); if (gallery) gallery.scrollIntoView({ behavior: "smooth" });
     });
   });
-  /* Choisit un modèle dans le menu, et l'ajoute s'il n'existe pas encore (sinon le choix était perdu). */
-  function setModel(field, value) {
-    var o = Array.prototype.find.call(field.options, function (x) { return x.value === value || x.textContent === value; });
-    if (!o) { o = document.createElement("option"); o.value = value; o.textContent = value; field.appendChild(o); }
-    field.value = o.value;
-  }
   document.querySelectorAll("[data-service-model]").forEach(function (button) {
     button.addEventListener("click", function () {
       var field = $("posterModel");
       if (!field) return;
-      setModel(field, button.getAttribute("data-service-model"));
+      field.value = button.getAttribute("data-service-model");
       var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
       var art = button.closest(".service-model-card").querySelector(".service-model-art, .service-model-art-img");
       if (preview && art) { var details = title ? title.parentElement : null; preview.replaceChildren(art.cloneNode(true)); if (details) preview.appendChild(details); }
@@ -87,7 +81,7 @@
     button.addEventListener("click", function () {
       var field = $("posterModel");
       if (field) {
-        setModel(field, button.getAttribute("data-poster-model"));
+        field.value = button.getAttribute("data-poster-model");
         var preview = $("selectedPosterPreview"), title = $("selectedPosterName"), help = $("selectedPosterHelp");
         var sample = button.closest(".poster-choice").querySelector(".poster-sample");
         if (preview && sample) { var details = title ? title.parentElement : null; preview.replaceChildren(sample.cloneNode(true)); if (details) preview.appendChild(details); }
@@ -127,8 +121,6 @@
         return;
       }
       var frame=document.createElement("div"); frame.className="inspector-page "+(currentType==="app"?"inspector-app-page":"inspector-site-page");
-      var sourceArt=currentCard.querySelector(".service-model-art-img");
-      if(sourceArt){var visual=document.createElement("div");visual.className="inspector-model-visual";var image=sourceArt.cloneNode(true);image.removeAttribute("loading");image.alt="Aperçu du modèle "+currentName;visual.appendChild(image);frame.appendChild(visual);}
       var brand=document.createElement("div"); brand.className="inspector-brand"; brand.textContent=currentName+" · "+page; frame.appendChild(brand);
       var hero=document.createElement("div"); hero.className="inspector-hero";
       var eyebrow=document.createElement("small"); eyebrow.textContent=index===0?"BIENVENUE":"DÉCOUVREZ NOTRE UNIVERS";
@@ -156,16 +148,7 @@
     function shut(){modal.hidden=true;document.body.classList.remove("model-inspector-open");}
     close.addEventListener("click",shut);
     modal.addEventListener("click",function(e){if(e.target===modal)shut();});
-    document.addEventListener("keydown",function(e){
-      if(modal.hidden)return;
-      if(e.key==="Escape"){shut();return;}
-      if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
-        var buttons=Array.from(tabs.querySelectorAll("button"));if(!buttons.length)return;
-        var active=buttons.findIndex(function(b){return b.classList.contains("active");});
-        var next=(active+(e.key==="ArrowRight"?1:-1)+buttons.length)%buttons.length;
-        buttons[next].click();buttons[next].focus();
-      }
-    });
+    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)shut();});
     selected.addEventListener("click",function(){if(!currentCard)return;var choose=currentCard.querySelector("[data-service-model], [data-poster-model]");if(choose)choose.click();shut();});
     document.addEventListener("click",function(e){
       var button=e.target.closest("[data-inspect-model]");if(!button)return;
@@ -174,65 +157,11 @@
       open(card,type);
     });
     document.querySelectorAll(".service-model-card, .poster-choice").forEach(function(card){
-      if (card.classList.contains("web-template-card")) return;
       var actions=card.querySelector(".btn");if(!actions)return;
       var b=document.createElement("button");b.type="button";b.className="btn secondary inspect-model-btn";b.setAttribute("data-inspect-model","");b.textContent="Voir le modèle";
       actions.parentNode.insertBefore(b,actions);
     });
   }
-  /* Préselection d'un modèle provenant de la galerie multipages. */
-  (function () {
-    var params = new URLSearchParams(window.location.search);
-    var chosen = params.get("modele");
-    var field = $("posterModel");
-    if (!chosen || !field) return;
-    var option = Array.prototype.find.call(field.options, function (o) { return o.value === chosen || o.textContent === chosen; });
-    if (!option) { option = document.createElement("option"); option.value = chosen; option.textContent = chosen; field.appendChild(option); }
-    field.value = option.value;
-    var title = $("selectedPosterName"), help = $("selectedPosterHelp");
-    if (title) title.textContent = chosen;
-    if (help) help.textContent = "Modèle choisi depuis la galerie des 24 sites Web. Il sera transmis avec ta demande.";
-    var preview = $("selectedPosterPreview");
-    if (preview) { var empty = preview.querySelector(".selected-poster-empty"); if (empty) empty.textContent = "🌐"; }
-  })();
-
-  /* Galerie Web intégrée : aperçu multipages dans une fenêtre Stromtech. */
-  (function installWebTemplateGallery(){
-    var gallery=document.getElementById("galerie-modeles-web");
-    if(!gallery)return;
-    var filters=gallery.querySelectorAll("[data-web-filter]");
-    filters.forEach(function(btn){btn.addEventListener("click",function(){
-      filters.forEach(function(x){x.classList.toggle("active",x===btn);});
-      var key=btn.getAttribute("data-web-filter");
-      gallery.querySelectorAll(".web-gallery-category").forEach(function(section){section.hidden=key!=="all"&&section.getAttribute("data-web-category")!==key;});
-    });});
-    var modal=document.createElement("div");
-    modal.className="web-template-preview";modal.hidden=true;
-    modal.innerHTML='<div class="web-template-preview-panel" role="dialog" aria-modal="true" aria-label="Aperçu du modèle"><header><div><span class="tag">Aperçu interactif</span><h2 class="web-preview-title"></h2><p>Navigue dans le modèle comme sur un vrai site. Tu restes sur Stromtech.</p></div><button type="button" class="web-preview-close" aria-label="Fermer">×</button></header><iframe title="Aperçu du site modèle" loading="lazy"></iframe><footer><span>Les liens et pages de démonstration sont consultables dans cet aperçu.</span><button type="button" class="btn primary web-preview-choose">Choisir ce modèle</button></footer></div>';
-    document.body.appendChild(modal);
-    var frame=modal.querySelector("iframe"),title=modal.querySelector(".web-preview-title"),chosen="";
-    function close(){modal.hidden=true;document.body.classList.remove("web-preview-open");frame.src="about:blank";}
-    modal.querySelector(".web-preview-close").addEventListener("click",close);
-    modal.addEventListener("click",function(e){if(e.target===modal)close();});
-    document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)close();});
-    gallery.addEventListener("click",function(e){
-      var btn=e.target.closest("[data-web-inspect]");if(!btn)return;
-      chosen=btn.getAttribute("data-preview-title");
-      title.textContent=chosen;frame.src=btn.getAttribute("data-preview-url");
-      modal.hidden=false;document.body.classList.add("web-preview-open");
-    });
-    modal.querySelector(".web-preview-choose").addEventListener("click",function(){
-      var field=document.getElementById("posterModel");
-      if(field){var option=Array.prototype.find.call(field.options,function(o){return o.value===chosen;});if(!option){option=document.createElement("option");option.value=chosen;option.textContent=chosen;field.appendChild(option);}field.value=chosen;
-        var n=document.getElementById("selectedPosterName"),h=document.getElementById("selectedPosterHelp");
-        if(n)n.textContent=chosen;if(h)h.textContent="Ce modèle de site Web sera joint à ta demande Stromtech.";
-        var p=document.getElementById("selectedPosterPreview");if(p){p.replaceChildren();var b=document.createElement("div");b.className="selected-poster-empty";b.textContent="🌐";p.appendChild(b);var d=document.createElement("div");var strong=document.createElement("strong");strong.textContent=chosen;var para=document.createElement("p");para.textContent="Modèle choisi dans la galerie Web.";d.append(strong,para);p.appendChild(d);}
-        Draft.save({type:reqType});
-      }
-      close();var form=document.getElementById("demande");if(form)form.scrollIntoView({behavior:"smooth"});
-    });
-  })();
-
   installModelInspector();
 
   quote.addEventListener("submit", async function (e) {

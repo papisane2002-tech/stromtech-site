@@ -33,6 +33,24 @@
       education: { label: "Éducation", desc: "Organiser des contenus, rendez-vous et échanges avec les apprenants.", tag: "Formation", sections: ["accueil", "catalogue", "rdv", "messages", "profil"] }
     }
   };
+  (function () {
+    var P = window.StudioPresets; if (!P) return;
+    ["site", "app"].forEach(function (type) { Object.keys(P[type]).forEach(function (k) { var m = P[type][k]; TPL[type][k] = { label: m.label, desc: m.desc, tag: m.tag, hero: m.hero, sections: m.sections.slice(), preset: m.preset }; }); });
+    Object.keys(P.appSections).forEach(function (k) { SEC.app[k] = P.appSections[k]; });
+  })();
+  var lastPresetSlogan = "";
+  function clone(x) { return JSON.parse(JSON.stringify(x)); }
+  function applyTemplatePreset(prev, t) {
+    var p = t.preset, had = prev && prev.preset;
+    if (!p && !had) return;
+    state.content = {}; state.elementColors = {}; state.productDetails = []; state.serviceDetails = []; state.pricingDetails = []; state.testimonialDetails = [];
+    if (p) {
+      state.color = p.color; state.theme = p.theme; state.font = p.font; state.radius = p.radius;
+      Object.keys(p.content || {}).forEach(function (k) { state.content[k] = p.content[k]; });
+      ["productDetails", "serviceDetails", "pricingDetails", "testimonialDetails"].forEach(function (f) { if (p[f]) state[f] = clone(p[f]); });
+      if (!state.slogan || state.slogan === lastPresetSlogan) { state.slogan = p.slogan || ""; lastPresetSlogan = p.slogan || ""; }
+    } else if (state.slogan === lastPresetSlogan) { state.slogan = ""; lastPresetSlogan = ""; }
+  }
   var KEY = "stromtech_studio_draft";
   var state;
   var viewport = "desktop";
@@ -62,9 +80,9 @@
       d.canvas = { W: nm(cx.W, 200, 1200, 560), H: nm(cx.H, 200, 1400, 700), bg: hx(cx.bg) || "#ffffff", bg2: hx(cx.bg2), angle: nm(cx.angle, 0, 360, 160), els: [] };
       cx.els.slice(0, 40).forEach(function (e) {
         if (!e || typeof e !== "object" || !/^e[0-9]{1,6}$/.test(e.id) || (e.k !== "t" && e.k !== "i")) return;
-        var z = { id: e.id, k: e.k, x: nm(e.x, -2000, 2000, 0), y: nm(e.y, -2000, 2000, 0), w: nm(e.w, 8, 2400, 100), h: nm(e.h, 8, 2400, 40), rot: nm(e.rot, -180, 180, 0), op: nm(e.op, 5, 100, 100), rad: nm(e.rad, 0, 999, 0), bg: hx(e.bg), ac: e.ac ? 1 : 0, sp: ["tri","star","diamond","hex","arrow","plus"].indexOf(e.sp) >= 0 ? e.sp : "", fx: ["shadow","glow","outline","relief"].indexOf(e.fx) >= 0 ? e.fx : "", fc: hx(e.fc) || "#ff2bd6", bd: hx(e.bd), bw: nm(e.bw, 0, 30, 0), fl: ["bw","sepia","blur","dark","vivid"].indexOf(e.fl) >= 0 ? e.fl : "" };
-        if (e.k === "i") { if (imgs >= 6 || typeof e.src !== "string" || !/^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(e.src) || e.src.length > 500000) return; imgs++; z.src = e.src; }
-        else { z.tx = typeof e.tx === "string" ? e.tx.slice(0, 300) : ""; z.fs = nm(e.fs, 8, 200, 18); z.fw = e.fw >= 700 ? 700 : 400; z.fi = e.fi ? 1 : 0; z.ff = ["Figtree","Bebas Neue","Anton","Oswald","Montserrat","Poppins","Raleway","Playfair Display","Roboto Slab","Pacifico","Lobster","Dancing Script","Permanent Marker"].indexOf(e.ff) >= 0 ? e.ff : "Figtree"; z.c = hx(e.c) || "#14161f"; z.al = ["left","center","right"].indexOf(e.al) >= 0 ? e.al : "left"; }
+        var z = { id: e.id, k: e.k, x: nm(e.x, -2000, 2000, 0), y: nm(e.y, -2000, 2000, 0), w: nm(e.w, 8, 2400, 100), h: nm(e.h, 8, 2400, 40), rot: nm(e.rot, -180, 180, 0), op: nm(e.op, 5, 100, 100), rad: nm(e.rad, 0, 999, 0), bg: hx(e.bg), ac: e.ac ? 1 : 0, sp: ["tri","star","diamond","hex","arrow","plus","balloon","arch","oval"].indexOf(e.sp) >= 0 ? e.sp : "", fx: ["shadow","glow","outline","relief","gold","rosegold","silver"].indexOf(e.fx) >= 0 ? e.fx : "", ls: nm(e.ls, 0, 60, 0), lh: nm(e.lh, 0, 3, 0), gr: (window.PosterCanvas.GRADS && Object.prototype.hasOwnProperty.call(window.PosterCanvas.GRADS, e.gr)) ? e.gr : "", ph: e.ph ? 1 : 0, fc: hx(e.fc) || "#ff2bd6", bd: hx(e.bd), bw: nm(e.bw, 0, 30, 0), fl: ["bw","sepia","blur","dark","vivid"].indexOf(e.fl) >= 0 ? e.fl : "" };
+        if (e.k === "i") { if (imgs >= 6 || typeof e.src !== "string" || (e.src !== "" && (!/^data:image\/webp;base64,[A-Za-z0-9+/=]+$/.test(e.src) || e.src.length > 500000))) return; imgs++; z.src = e.src; }
+        else { z.tx = typeof e.tx === "string" ? e.tx.slice(0, 300) : ""; z.fs = nm(e.fs, 8, 200, 18); z.fw = e.fw >= 700 ? 700 : 400; z.fi = e.fi ? 1 : 0; z.ff = window.PosterCanvas.FONTS.indexOf(e.ff) >= 0 ? e.ff : "Figtree"; z.c = hx(e.c) || "#14161f"; z.al = ["left","center","right"].indexOf(e.al) >= 0 ? e.al : "left"; }
         d.canvas.els.push(z);
       });
     }
@@ -176,8 +194,48 @@
     var next = pages[Math.max(0, index - 1)]; applyPage(next);
     buildControls(); render(); renderPages(); saveDraft();
   }
-  function enc(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
-  function dec(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; return JSON.parse(decodeURIComponent(escape(atob(s)))); }
+  function b64u(bytes) { var s = ""; for (var i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+  function unb64u(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); while (s.length % 4) s += "="; var b = atob(s), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return a; }
+  async function pipeBytes(bytes, Ctor) { var st = new Blob([bytes]).stream().pipeThrough(new Ctor("deflate-raw")); return new Uint8Array(await new Response(st).arrayBuffer()); }
+  async function enc(o) {
+    var json = new TextEncoder().encode(JSON.stringify(o));
+    if (window.CompressionStream) { try { return "z" + b64u(await pipeBytes(json, CompressionStream)); } catch (e) {} }
+    return b64u(json);
+  }
+  async function dec(s) {
+    var bytes;
+    if (s.charAt(0) === "z") { if (!window.DecompressionStream) throw new Error("Navigateur trop ancien pour ouvrir ce lien."); bytes = await pipeBytes(unb64u(s.slice(1)), DecompressionStream); }
+    else bytes = unb64u(s);
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
+  /* Les images ne voyagent pas dans le lien : elles sont jointes à la conversation. */
+  function stripImages(o) {
+    var c = JSON.parse(JSON.stringify(o));
+    (function walk(x) {
+      if (!x || typeof x !== "object") return;
+      if (Array.isArray(x)) { x.forEach(walk); return; }
+      if ("imageData" in x) x.imageData = {};
+      if ("brandLogo" in x) { x.brandLogo = ""; if (x.brandMode === "logo") x.brandMode = "name"; }
+      if (Array.isArray(x.els)) x.els.forEach(function (e) { if (e && e.k === "i") e.src = ""; });
+      if ("sectionImages" in x) x.sectionImages = { galerie: [], produits: [] };
+      Object.keys(x).forEach(function (k) { if (x[k] && typeof x[k] === "object") walk(x[k]); });
+    })(c);
+    return c;
+  }
+  function collectImages(o) {
+    var list = [], seen = {};
+    function add(d, n) { if (typeof d === "string" && /^data:image\/webp;base64,[A-Za-z0-9+\/=]+$/.test(d) && !seen[d] && list.length < 8) { seen[d] = 1; list.push({ data: d, name: n }); } }
+    (function walk(x) {
+      if (!x || typeof x !== "object") return;
+      if (x.brandLogo) add(x.brandLogo, "logo.webp");
+      if (x.imageData && typeof x.imageData === "object") Object.keys(x.imageData).forEach(function (k) { add(x.imageData[k], "image-" + (list.length + 1) + ".webp"); });
+      if (x.canvas && Array.isArray(x.canvas.els)) x.canvas.els.forEach(function (e) { if (e && e.k === "i") add(e.src, "affiche-image-" + (list.length + 1) + ".webp"); });
+      if (x.sectionImages) ["galerie", "produits"].forEach(function (k) { (x.sectionImages[k] || []).forEach(function (d) { add(d, k + "-" + (list.length + 1) + ".webp"); }); });
+      if (Array.isArray(x.pages)) x.pages.forEach(function (p) { walk(p && p.data); });
+    })(o);
+    return list;
+  }
+  function dataToBlob(d) { var b = atob(d.split(",")[1]), a = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) a[i] = b.charCodeAt(i); return new Blob([a], { type: "image/webp" }); }
   function draftKey(type) { return KEY + "_" + type; }
   function saveDraft() { try { localStorage.setItem(draftKey(state.type), JSON.stringify(exportState())); } catch (e) {} }
   function loadDraft(type) {
@@ -344,7 +402,7 @@
     nav.appendChild(el("i", "pv-btn", "Contact")); root.appendChild(nav);
     var hero = el("div", "pv-hero pv-" + tpl.hero);
     var box = el("div", "pv-herotxt"); box.appendChild(editText("h4", "pv-h", sl, "heroTitle", "Titre principal")); box.appendChild(editText("p", "", "Une phrase courte pour expliquer ce que tu proposes à tes clients.", "heroDescription", "Description principale")); box.appendChild(editText("i", "pv-btn", tpl.hero === "banner" ? "Voir les nouveautés" : "Nous contacter", "heroButton", "Bouton principal")); hero.appendChild(box);
-    if (tpl.hero === "left") hero.appendChild(el("div", "pv-avatar"));
+    if (tpl.hero === "left") hero.appendChild(el("div", "pv-avatar", tpl.preset && tpl.preset.icon || "")); else if (tpl.hero === "split") hero.appendChild(el("div", "pv-deco", tpl.preset && tpl.preset.icon || "★"));
     root.appendChild(hero);
     renderCustomBlocks(root);
     var builders = {
@@ -430,7 +488,11 @@
       messages: function () { scr.appendChild(el("div", "pv-bub", "Bonjour, comment puis-je t’aider ?")); scr.appendChild(el("div", "pv-bub me", "Je voudrais plus d’informations.")); scr.appendChild(el("div", "pv-input", "Écris ton message")); },
       profil: function () { scr.appendChild(el("div", "pv-avatar pv-center")); scr.appendChild(el("h4", "pv-h pv-ctr", "Ton profil")); ["Mes informations", "Mes commandes", "Aide"].forEach(function (t) { scr.appendChild(el("div", "pv-row", t)); }); }
     };
-    S[appTab](); renderCustomBlocks(scr); ph.appendChild(scr);
+    var SC = (window.StudioPresets && window.StudioPresets.screens) || {};
+    Object.keys(SC).forEach(function (k) { S[k] = function () { SC[k](scr, el, state); }; });
+    var origHome = S.accueil;
+    S.accueil = function () { var pt = TPL.app[state.template] && TPL.app[state.template].preset; if (pt && pt.home && window.StudioPresets.home) window.StudioPresets.home(scr, el, state, pt.home, editText, sl); else origHome(); };
+    (S[appTab] || S.accueil)(); renderCustomBlocks(scr); ph.appendChild(scr);
     var bar = el("div", "pv-tabs");
     state.sections.forEach(function (k) { var b = el("button", k === appTab ? "on" : "", SEC.app[k]); b.type = "button"; b.addEventListener("click", function () { appTab = k; render(); }); bar.appendChild(b); });
     ph.appendChild(bar); root.appendChild(ph);
@@ -442,17 +504,16 @@
     $("posterExport").hidden = state.type !== "cv";
     
     $("posterOptions").hidden = state.type !== "poster";
-    $("posterExport").hidden = true;
-    $("posterOrderNote").hidden = state.type !== "poster" && state.type !== "cv";
-    if (state.type === "cv" || state.type === "poster") {
-      $("posterOrderNote").querySelector("h3").textContent = state.type === "cv" ? "Ton CV est prêt à être finalisé" : "Ton affiche est prête à être finalisée";
+    $("posterExport").hidden = state.type !== "poster";
+    $("posterOrderNote").hidden = true;
+    if (state.type === "poster") {
+      $("designExportTitle").textContent = "Exporter l’affiche";
+      $("designExportHelp").textContent = "Télécharge l’affiche en haute définition : PNG (réseaux sociaux) ou PDF (impression).";
+      $("exportPosterPng").hidden = false;
+    } else if (state.type === "cv") {
+      $("posterOrderNote").hidden = false;
+      $("posterOrderNote").querySelector("h3").textContent = "Ton CV est prêt à être finalisé";
       $("posterOrderNote").querySelector("p").textContent = "Tu peux créer et modifier ton design dans le Studio. Le téléchargement du fichier final est réservé aux commandes payantes auprès de Stromtech.";
-    }
-    $("posterOrderNote").hidden = state.type !== "poster" && state.type !== "cv";
-    if (state.type === "cv" || state.type === "poster") {
-      $("designExportTitle").textContent = "Exporter ton CV";
-      $("designExportHelp").textContent = "Télécharge ton CV au format PDF A4, prêt à être partagé ou imprimé.";
-      $("exportPosterPng").hidden = true;
     }
     root.textContent = "";
     var dark = state.theme === "dark";
@@ -526,12 +587,12 @@
     var tl = $("tplList"); tl.textContent = "";
     (state.type === "poster" ? [] : Object.keys(TPL[state.type])).forEach(function (k) {
       var t = TPL[state.type][k], b = el("button", "tpl"); b.type = "button"; b.setAttribute("aria-pressed", String(k === state.template));
-      var visual = el("span", "tpl-preview tpl-preview-" + k);
+      var visual = el("span", "tpl-preview tpl-preview-" + k); if (t.preset) { visual.style.setProperty("--tc", t.preset.color); if (t.preset.theme === "dark") visual.classList.add("tpl-dark"); }
       visual.appendChild(el("i", "tpl-preview-top")); visual.appendChild(el("i", "tpl-preview-hero")); visual.appendChild(el("i", "tpl-preview-content"));
       b.appendChild(visual);
       b.appendChild(el("b", "", t.label)); b.appendChild(el("span", "tpl-tag", t.tag || ({site:"Site Web",app:"Application",cv:"CV",poster:"Affiche"}[state.type])));
       b.appendChild(el("span", "", t.desc));
-      b.addEventListener("click", function () { state.template = k; state.sections = t.sections.slice(); if (state.type === "poster") state.canvas = null; change(true); }); tl.appendChild(b);
+      b.addEventListener("click", function () { var prevT = TPL[state.type][state.template]; state.template = k; state.sections = t.sections.slice(); if (state.type === "poster") state.canvas = null; else applyTemplatePreset(prevT, t); change(true); }); tl.appendChild(b);
     });
     if (state.type === "poster") window.PosterCanvas.gallery(tl, state, function (k) {
       if (k === state.template && state.canvas) return;
@@ -697,7 +758,7 @@
       site: { eyebrow: "WEB DESIGN STUDIO", title: "Atelier Sites Web", description: "Compose des pages web, organise tes sections et adapte le rendu aux écrans ordinateur, tablette et mobile.", templates: "Modèles de sites Web", help: "Choisis une structure adaptée : vitrine, portfolio, boutique, page de conversion ou événement." },
       app: { eyebrow: "MOBILE APP STUDIO", title: "Atelier Applications mobiles", description: "Imagine les écrans de ton application, son parcours et ses principales fonctionnalités.", templates: "Modèles d’applications", help: "Démarre avec une base Commandes, Rendez-vous, Gestion, Livraison ou Éducation." },
       cv: { eyebrow: "CV DESIGN STUDIO", title: "Atelier CV professionnels", description: "Construis un CV clair et soigné, rubrique par rubrique, avec un aperçu de document.", templates: "Modèles de CV", help: "Compare les présentations Classique, Moderne et Minimaliste avant de personnaliser ton contenu." },
-      poster: { eyebrow: "GRAPHIC DESIGN STUDIO", title: "Atelier Affiches et visuels", description: "Crée une composition visuelle, choisis son format et organise titres, images et informations.", templates: "Modèles d’affiches", help: "Choisis une direction graphique : événement, promotion, élégante, concert, éditoriale ou minimaliste." }
+      poster: { eyebrow: "GRAPHIC DESIGN STUDIO", title: "Atelier Affiches et visuels", description: "Crée une composition visuelle, choisis son format et organise titres, images et informations.", templates: "Modèles d’affiches", help: "Choisis un modèle par catégorie (fêtes, mariage, soirée, commerce, beauté, restauration…). Tout est modifiable : textes, couleurs, cadres photo." }
     };
     var data = info[type] || info.site;
     $("studioWorkspaceEyebrow").textContent = data.eyebrow;
@@ -877,7 +938,25 @@
   }
 
   async function exportPoster(format) {
-    if (state.type === "poster" || state.type === "cv") { $("exportStatus").textContent = "Le téléchargement du fichier final est réservé aux commandes payantes Stromtech."; return; }
+    if (state.type === "cv") { $("exportStatus").textContent = "Le téléchargement du fichier final est réservé aux commandes payantes Stromtech."; return; }
+    if (state.type === "poster" && state.canvas && window.PosterCanvas && window.PosterCanvas.toCanvas) {
+      var st = $("exportStatus"), b1 = $("exportPosterPng"), b2 = $("exportPosterPdf");
+      if (format === "pdf" && !(window.jspdf && window.jspdf.jsPDF)) { st.textContent = "Le module PDF n’a pas pu se charger. Vérifie ta connexion puis recharge la page."; return; }
+      b1.disabled = true; b2.disabled = true; st.textContent = "Préparation du fichier…";
+      try {
+        var cv = await window.PosterCanvas.toCanvas(state, Math.min(3, 4200 / Math.max(state.canvas.W, state.canvas.H)));
+        var fn = (state.name || "stromtech-affiche").toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "") || "stromtech-affiche";
+        if (format === "png") { var a = document.createElement("a"); a.download = fn + ".png"; a.href = cv.toDataURL("image/png"); a.click(); }
+        else {
+          var wmm = state.canvas.W >= state.canvas.H ? 297 : 210, hmm = wmm * cv.height / cv.width;
+          var pd = new window.jspdf.jsPDF({ orientation: hmm > wmm ? "portrait" : "landscape", unit: "mm", format: [wmm, hmm], compress: true });
+          pd.addImage(cv.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, wmm, hmm, undefined, "FAST"); pd.save(fn + ".pdf");
+        }
+        st.textContent = format === "png" ? "Image PNG téléchargée." : "PDF téléchargé.";
+      } catch (err) { console.error("Export affiche :", err); st.textContent = "L’export a échoué (image externe bloquée ?). Réessaie."; }
+      finally { b1.disabled = false; b2.disabled = false; }
+      return;
+    }
     var poster = $("pv").querySelector(state.type === "cv" ? ".pv-cv" : ".pv-poster");
     var status = $("exportStatus"), pngBtn = $("exportPosterPng"), pdfBtn = $("exportPosterPdf");
     if (!poster) { status.textContent = "Sélectionne d’abord le type Affiche."; return; }
@@ -1107,55 +1186,84 @@
     if (!window.cfgOk) return showMsg(warn, "Configuration manquante : renseigne config.js.", true);
     var s = (await sb.auth.getSession()).data.session;
     if (!s) { saveDraft(); location.href = "connexion.html?next=studio.html"; return; }
-    var user = s.user; btn.disabled = true;
-    var meta = user.user_metadata || {}, who = state.name || meta.name || user.email;
-    var kind = ({site:"site Web",app:"application",cv:"CV professionnel",poster:"affiche"})[state.type];
-    var link = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + "studio.html?d=" + enc(exportState());
-    var secs = state.sections.map(function (k) { return SEC[state.type][k]; }).join(", ");
-    var body = ["Maquette " + kind + " créée dans le studio de design", "", "Modèle : " + TPL[state.type][state.template].label, "Nom : " + (state.name || "—"), "Slogan : " + (state.slogan || "—"), "Couleur : " + state.color, "Thème : " + (state.theme === "dark" ? "sombre" : "clair"), "Police : " + FONTS[state.font][0], "Coins : " + RADII[state.radius][0], (({site:"Sections : ",app:"Écrans : ",cv:"Rubriques : ",poster:"Composition : "})[state.type]) + secs, state.notes ? "Remarques : " + state.notes : null, meta.phone ? "Téléphone : " + meta.phone : null, "", "Voir la maquette : " + link].filter(function (x) { return x !== null; }).join("\n");
-    var c = await sb.from("conversations").insert({ customer_id: user.id, subject: "Maquette " + kind + " · " + who }).select("id").single();
-    if (c.error) { btn.disabled = false; return showMsg(warn, "Maquette non envoyée : " + c.error.message, true); }
-    var m = await sb.from("messages").insert({ conversation_id: c.data.id, sender_id: user.id, body: body });
-    btn.disabled = false;
-    if (m.error) return showMsg(warn, "Conversation créée mais message non envoyé : " + m.error.message, true);
-    try { localStorage.removeItem(KEY); } catch (e) {}
-    location.href = "espace.html?open=" + encodeURIComponent(c.data.id);
+    var user = s.user; btn.disabled = true; showMsg(warn, "Envoi en cours…", false);
+    try {
+      var meta = user.user_metadata || {}, who = meta.full_name || meta.name || (user.email || "").split("@")[0] || "Client";
+      var kind = ({ site: "site Web", app: "application", cv: "CV", poster: "affiche" })[state.type] || "projet";
+      var snap = exportState(), images = collectImages(snap);
+      var link = location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + "studio.html?d=" + await enc(stripImages(snap));
+      var secs = state.sections.map(function (k) { return SEC[state.type][k]; }).join(", ");
+      var label = ({ site: "Sections : ", app: "Écrans : ", cv: "Rubriques : ", poster: "Composition : " })[state.type] || "Éléments : ";
+      var head = ["📋 Demande de devis", "Nom : " + who];
+      if (meta.phone) head.push("Téléphone : " + meta.phone);
+      head.push("Service : Maquette " + kind + " (studio)", "Budget : À discuter", "Délai : À discuter");
+      var rows = ["Maquette " + kind + " créée dans le studio de design", "Modèle : " + TPL[state.type][state.template].label, "Nom du projet : " + (state.name || "—"), "Slogan : " + (state.slogan || "—"), "Couleur : " + state.color, "Thème : " + (state.theme === "dark" ? "sombre" : "clair"), "Police : " + FONTS[state.font][0], "Coins : " + RADII[state.radius][0], label + secs];
+      if (state.type === "poster" && state.canvas && Array.isArray(state.canvas.els)) {
+        var tx = state.canvas.els.filter(function (e) { return e.k === "t" && e.tx && e.tx.trim(); }).slice(0, 6).map(function (e) { return e.tx.replace(/\s+/g, " ").trim().slice(0, 50); });
+        if (tx.length) rows.push("Textes de l’affiche : " + tx.join(" / "));
+      }
+      if (images.length) rows.push("Images : " + images.length + " jointe(s) à la conversation");
+      var tail = "\nVoir la maquette : " + link, base = head.concat(["Projet : " + rows[0]], rows.slice(1)).join("\n") + tail;
+      var notes = state.notes ? String(state.notes) : "", room = 1950 - base.length - 14;
+      if (notes && room > 20) { if (notes.length > room) notes = notes.slice(0, room - 1) + "…"; rows.push("Remarques : " + notes); }
+      var body = head.concat(["Projet : " + rows[0]], rows.slice(1)).join("\n") + tail;
+      var subject = ("Devis · Maquette " + kind + " (studio) · " + who).slice(0, 120);
+
+      /* Envoi par la messagerie du site (fonction « chat »), avec repli direct si besoin */
+      async function post(text, cid) {
+        try {
+          var r = await sb.functions.invoke("chat", { body: cid ? { action: "send", conversation_id: cid, body: text } : { action: "send", subject: subject, body: text } });
+          if (!r.error && r.data && r.data.message) return r.data.message.conversation_id;
+        } catch (e) {}
+        if (!cid) {
+          var c = await sb.from("conversations").insert({ customer_id: user.id, subject: subject }).select("id").single();
+          if (c.error) throw new Error(c.error.message);
+          cid = c.data.id;
+        }
+        var m = await sb.from("messages").insert({ conversation_id: cid, sender_id: user.id, body: text });
+        if (m.error) throw new Error(m.error.message);
+        return cid;
+      }
+      var cid = await post(body);
+
+      if (images.length) {
+        var ok = [], failed = 0;
+        for (var i = 0; i < images.length; i++) {
+          var path = user.id + "/" + Date.now() + "-studio-" + i + ".webp";
+          var up = await sb.storage.from("project-files").upload(path, dataToBlob(images[i].data), { contentType: "image/webp", upsert: false });
+          if (up.error) failed++; else ok.push({ path: path, name: images[i].name });
+        }
+        try {
+          if (ok.length) await post(ok.map(function (x) { return "[[file:" + x.path + "|" + x.name + "]]"; }).join("\n"), cid);
+          if (failed) await post("ℹ️ " + failed + " image(s) de la maquette n’ont pas pu être jointes automatiquement : je te les envoie ici dans le chat.", cid);
+        } catch (e) {}
+      }
+      try { localStorage.removeItem(KEY); } catch (e) {}
+      location.href = "espace.html?open=" + encodeURIComponent(cid);
+    } catch (err) {
+      showMsg(warn, "Maquette non envoyée : " + (err && err.message ? err.message : "erreur inconnue"), true);
+    } finally { btn.disabled = false; }
   }
 
-  function initEditor() {
-    var d = new URLSearchParams(location.search).get("d"), shared = false, raw = null;
-    if (d) { try { raw = dec(d); state = clean(raw); shared = true; } catch (e) { state = null; raw = null; } }
-    if (!state) { raw = null; state = defaults("site"); }
-    if (shared) initPages(raw); else { pages = []; activePageId = null; }
-    if (shared) { $("sharedNote").hidden = false; }
+  (async function start() {
+  var d = new URLSearchParams(location.search).get("d"), shared = false, raw = null;
+  if (d) { try { raw = await dec(d); state = clean(raw); shared = true; } catch (e) { state = null; raw = null; showMsg($("warn"), "Ce lien de maquette n’est pas valide. Ton propre brouillon est affiché.", true); } }
+  if (!state) { raw = null; state = defaults("site"); }
+  if (shared) initPages(raw); else { pages = []; activePageId = null; }
+  if (shared) { $("sharedNote").hidden = false; }
 
-    bind();
-    document.querySelectorAll("[data-studio-service]").forEach(function (button) {
-      button.addEventListener("click", function () { openStudioService(button.dataset.studioService); });
-    });
-    $("studioBackHub").addEventListener("click", showStudioHub);
-    if (shared) {
-      $("studioServiceHub").hidden = true; $("controls").hidden = false; $("studioBackHub").hidden = false;
-      setStudioWorkspace(state.type);
-      buildControls(); render(); renderPages();
-    } else {
-      $("studioServiceHub").hidden = false; $("controls").hidden = true; $("studioBackHub").hidden = true;
-    }
-    if (window.cfgOk) sb.auth.getSession().then(function (r) { var u = r.data.session && r.data.session.user; if (u && u.id === STROMTECH.ADMIN_ID) { $("sendBtn").hidden = true; } });
+  bind();
+  document.querySelectorAll("[data-studio-service]").forEach(function (button) {
+    button.addEventListener("click", function () { openStudioService(button.dataset.studioService); });
+  });
+  $("studioBackHub").addEventListener("click", showStudioHub);
+  if (shared) {
+    $("studioServiceHub").hidden = true; $("controls").hidden = false; $("studioBackHub").hidden = false;
+    setStudioWorkspace(state.type);
+    buildControls(); render(); renderPages();
+  } else {
+    $("studioServiceHub").hidden = false; $("controls").hidden = true; $("studioBackHub").hidden = true;
   }
-
-  function canBuild(user) {
-    if (!user) return false;
-    var adminId = window.STROMTECH && window.STROMTECH.ADMIN_ID;
-    if (adminId && user.id === adminId) return true;
-    var role = user.app_metadata && String(user.app_metadata.role || "").toLowerCase();
-    return ["admin", "staff", "personnel"].indexOf(role) >= 0;
-  }
-
-  if (window.cfgOk && window.sb) {
-    sb.auth.getSession().then(function (result) {
-      var user = result.data && result.data.session && result.data.session.user;
-      if (canBuild(user)) initEditor();
-    }).catch(function () {});
-  }
+  if (window.cfgOk) sb.auth.getSession().then(function (r) { var u = r.data.session && r.data.session.user; if (u && u.id === STROMTECH.ADMIN_ID) { $("sendBtn").hidden = true; } });
+  })();
 })();
