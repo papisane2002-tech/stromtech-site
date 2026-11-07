@@ -710,3 +710,17 @@ section{padding:60px 0}
 @container (min-width:620px){.th-med2 .dm-crm{display:grid;grid-template-columns:260px 1fr;gap:16px}.th-med2 .dm-detail{display:block}}
 
 .dmmode .model-inspector-subtitle{display:none}.dmmode .model-inspector-top h2{margin:6px 0 0;font-size:1.25rem}.dmmode .model-inspector-tabs{margin:10px 0 8px}.dmmode .model-inspector-bottom{margin-top:10px}
+
+/* v11 : correctifs aperçus (texte des boutons, hauteur du menu latéral) */
+.dm a.dm-btn{color:var(--ab,#fff)}
+.dm a.dm-btn.dark{color:var(--bg)}
+.dm a.dm-btn.light{color:var(--a)}
+.dm a.dm-btn.ghost{color:var(--t)}
+.dm a.dm-mini{color:var(--ab,#fff)}
+.dm a.dm-plus{color:#fff}
+.dm a.dm-sl,.dm a.dm-side .dm-logo{color:#fff}
+.dm a.dm-bl{color:var(--m)}.dm a.dm-bl.on{color:var(--a)}
+.dm-portfolio-creatif a.dm-btn{color:#fff}
+.th-food a.dm-btn,.th-food a.dm-plus{color:#3a1d05}
+.dm-app{display:flex;flex-direction:column}
+.dm-app .dm-shell{flex:1 1 auto;min-height:0}
